@@ -1,0 +1,695 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   OrbisMoneta — Design System
+   Palette derived from the OrbisMoneta mark:
+     navy  #002EA6  · sky  #01A4FF  · green #01AC32
+   Gold #C98A16 carries the accent role the client's own hero artwork uses.
+   ========================================================================== */
+
+@theme {
+  /* ---- Brand ---- */
+  --color-navy-50: #eef3ff;
+  --color-navy-100: #dbe5ff;
+  --color-navy-200: #b9cbff;
+  --color-navy-300: #8aa8ff;
+  --color-navy-400: #4f77f5;
+  --color-navy-500: #1f4ce0;
+  --color-navy-600: #002ea6; /* logo navy */
+  --color-navy-700: #002583;
+  --color-navy-800: #001b4d;
+  --color-navy-900: #0a1533;
+  --color-navy-950: #050f28;
+
+  --color-sky-400: #4dc0ff;
+  --color-sky-500: #01a4ff; /* logo sky */
+  --color-sky-600: #0086d6;
+
+  --color-green-400: #3ecb6a;
+  --color-green-500: #01ac32; /* logo green */
+  --color-green-600: #018a28;
+
+  --color-gold-400: #e3a32c;
+  --color-gold-500: #c98a16;
+  --color-gold-600: #a06d0f;
+
+  /* ---- Deep canvas (from the client's artwork) ---- */
+  --color-abyss: #030d22;
+  --color-abyss-2: #061634;
+  --color-abyss-3: #0a1f45;
+
+  /* ---- Semantic surfaces ---- */
+  --color-canvas: #ffffff;
+  --color-surface: #f7f9fc;
+  --color-surface-2: #eef2f8;
+  --color-elevated: #ffffff;
+  --color-line: #e3e9f2;
+  --color-line-strong: #c9d4e4;
+
+  /* ---- Semantic text ---- */
+  --color-ink: #0a1533;
+  --color-ink-2: #47536b;
+  --color-ink-3: #6e7a90;
+  --color-ink-inv: #ffffff;
+  --color-ink-inv-2: #b6c4dd;
+  --color-ink-inv-3: #8797b5;
+
+  /* ---- Semantic state ---- */
+  --color-positive: #01ac32;
+  --color-caution: #c98a16;
+  --color-critical: #c2352b;
+  --color-info: #01a4ff;
+
+  /* ---- Type ---- */
+  --font-display: var(--font-inter-tight), "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-sans: var(--font-inter-tight), "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+
+  /* ---- Radius ---- */
+  /* Softened from 0.875/0.625rem. At the old values every panel on the site
+     read as a rectangle with the corners barely taken off, which is what made
+     the pages look boxy. */
+  --radius-card: 1.25rem;
+  --radius-tile: 0.875rem;
+
+  /* ---- Elevation (restrained; finance reads flat and confident) ---- */
+  --shadow-subtle: 0 1px 2px rgba(10, 21, 51, 0.05);
+  --shadow-card: 0 2px 4px rgba(10, 21, 51, 0.04), 0 12px 28px -12px rgba(10, 21, 51, 0.12);
+  --shadow-lift: 0 4px 8px rgba(10, 21, 51, 0.06), 0 28px 56px -20px rgba(10, 21, 51, 0.22);
+  --shadow-float: 0 18px 48px -12px rgba(0, 27, 77, 0.34);
+
+  /* ---- Motion ---- */
+  --ease-out-quint: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out-soft: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* ---- Fluid display scale ---- */
+  --text-display-1: clamp(2.5rem, 1.55rem + 3.8vw, 4.25rem);
+  --text-display-2: clamp(2.125rem, 1.35rem + 3.1vw, 3.5rem);
+  --text-display-3: clamp(1.75rem, 1.25rem + 2vw, 2.625rem);
+  --text-display-4: clamp(1.375rem, 1.1rem + 1.1vw, 1.875rem);
+
+  --breakpoint-xs: 30rem;
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
+@layer base {
+  * {
+    border-color: var(--color-line);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    /*
+     * Deliberately NOT `scroll-padding-top`. That property and the
+     * `scroll-margin-top` below both offset an anchor landing, and the browser
+     * applies them one after the other — the two together were pushing every
+     * target down by twice the intended distance (measured: 176px against an
+     * 88px offset), which is what left deep links looking like they opened
+     * halfway down a section. One mechanism only.
+     */
+  }
+
+  /*
+   * One offset for every anchor landing, so a deep link always arrives with its
+   * heading just clear of the fixed header rather than underneath it. Kept in
+   * step with `ANCHOR_OFFSET` in components/AnchorScroll.tsx, which re-applies
+   * the same figure after late-loading imagery has changed the page height.
+   *
+   * `:where()` makes this zero-specificity, so any `scroll-mt-*` utility on a
+   * particular element still wins.
+   */
+  :root {
+    --om-anchor-offset: 5.5rem;
+  }
+  :where([id]) {
+    scroll-margin-top: var(--om-anchor-offset);
+  }
+
+  body {
+    background: var(--color-canvas);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    /* A hair of negative tracking on body text too, so paragraphs sit in the
+       same world as the headings rather than looking loose beside them. */
+    letter-spacing: -0.006em;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+
+  /* Optical tracking: one flat value cannot serve a 68px headline and a 15px
+     card title. Large type has visible air between letters and wants it taken
+     out; small type needs that air to stay legible. Tracking therefore eases
+     as the heading level drops. */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+    color: var(--color-ink);
+    font-weight: 600;
+    text-wrap: balance;
+  }
+
+  h1,
+  h2 {
+    letter-spacing: -0.036em;
+    line-height: 1.06;
+  }
+
+  h3 {
+    letter-spacing: -0.028em;
+    line-height: 1.14;
+  }
+
+  h4,
+  h5,
+  h6 {
+    letter-spacing: -0.02em;
+    line-height: 1.24;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Numerals must line up in tables, stats and tickers. */
+  .tabular,
+  table,
+  time,
+  .stat-value {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+  }
+
+  /*
+   * Tracking for statistics.
+   *
+   * The display tracking in this file is drawn for display sizes. A short
+   * numeral set at 52px can carry -0.04em and still breathe; the same value on
+   * a multi-word phrase at 20px closes the gaps between words and the letters
+   * start to touch. Putting the tracking on a container therefore leaks it onto
+   * every small child — which is exactly how "30+ Years" ended up with its unit
+   * crushed against the figure.
+   *
+   * These three make the choice explicit at each size instead:
+   *   figure  a short numeral, set large        (30+, 75+)
+   *   phrase  several words, set small          (Advisory + Products + Engineering)
+   *   unit    a word riding beside a figure     (Years, Banks)
+   */
+  /*
+   * Section ground.
+   *
+   * Sub-pages were a stack of flat panels — white, then grey, then navy — with
+   * hard seams between them, which is the other half of why they read as boxy.
+   * This lays a very low-contrast brand wash into a section so the surface has
+   * somewhere to fall away to. Decorative and behind everything, so it can
+   * never affect the contrast of type sitting on it.
+   */
+  .ground-soft {
+    position: relative;
+    isolation: isolate;
+  }
+  .ground-soft::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(52% 58% at 84% 12%, rgba(1, 164, 255, 0.09), transparent 64%),
+      radial-gradient(42% 48% at 8% 92%, rgba(1, 172, 50, 0.06), transparent 68%);
+  }
+  .ground-deep::before {
+    background:
+      radial-gradient(58% 62% at 78% 16%, rgba(1, 164, 255, 0.16), transparent 66%),
+      radial-gradient(45% 52% at 10% 88%, rgba(1, 172, 50, 0.09), transparent 70%);
+  }
+
+  .stat-figure {
+    letter-spacing: -0.04em;
+  }
+  .stat-phrase {
+    letter-spacing: -0.012em;
+    word-spacing: 0.02em;
+  }
+  .stat-unit {
+    letter-spacing: -0.002em;
+  }
+
+  ::selection {
+    background: var(--color-navy-600);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-sky-500);
+    outline-offset: 3px;
+    border-radius: 3px;
+  }
+
+  /* Dark sections opt in; everything inside inherits legible defaults. */
+  .on-dark {
+    color: var(--color-ink-inv-2);
+  }
+  .on-dark h1,
+  .on-dark h2,
+  .on-dark h3,
+  .on-dark h4,
+  .on-dark h5 {
+    color: #fff;
+  }
+  .on-dark :focus-visible {
+    outline-color: var(--color-sky-400);
+  }
+}
+
+/* ==========================================================================
+   Composition utilities
+   ========================================================================== */
+
+@layer components {
+  .shell {
+    width: 100%;
+    max-width: 84rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 768px) {
+    .shell {
+      padding-inline: 2rem;
+    }
+  }
+  @media (min-width: 1280px) {
+    .shell {
+      padding-inline: 2.5rem;
+    }
+  }
+
+  .shell-narrow {
+    width: 100%;
+    max-width: 52rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 768px) {
+    .shell-narrow {
+      padding-inline: 2rem;
+    }
+  }
+
+  .section {
+    padding-block: clamp(4rem, 2.5rem + 6vw, 8rem);
+  }
+  .section-tight {
+    padding-block: clamp(3rem, 2rem + 4vw, 5.5rem);
+  }
+
+  /* Brand gradient — used sparingly, on one phrase per page at most. */
+  .text-brand-gradient {
+    color: var(--color-navy-600);
+    background: linear-gradient(
+      95deg,
+      var(--color-navy-600) 0%,
+      var(--color-sky-500) 52%,
+      var(--color-green-500) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .on-dark .text-brand-gradient,
+  .text-brand-gradient-inv {
+    color: var(--color-sky-400);
+    background: linear-gradient(
+      95deg,
+      var(--color-sky-400) 0%,
+      #35d3c0 50%,
+      var(--color-green-400) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Tracking tightens and leading closes as the size grows — the bigger the
+     type, the more air there is between letters to take back out. */
+  .h-display-1 {
+    font-size: var(--text-display-1);
+    font-weight: 600;
+    letter-spacing: -0.042em;
+    line-height: 0.98;
+  }
+  .h-display-2 {
+    font-size: var(--text-display-2);
+    font-weight: 600;
+    letter-spacing: -0.038em;
+    line-height: 1.02;
+  }
+  .h-display-3 {
+    font-size: var(--text-display-3);
+    font-weight: 600;
+    letter-spacing: -0.034em;
+    line-height: 1.06;
+  }
+  .h-display-4 {
+    font-size: var(--text-display-4);
+    font-weight: 600;
+    letter-spacing: -0.028em;
+    line-height: 1.14;
+  }
+
+  .rule-brand {
+    height: 3px;
+    width: 3.5rem;
+    border-radius: 999px;
+    background: linear-gradient(
+      90deg,
+      var(--color-navy-600),
+      var(--color-sky-500) 45%,
+      var(--color-green-500) 78%,
+      var(--color-gold-400)
+    );
+  }
+
+  .surface-deep {
+    background:
+      radial-gradient(120% 90% at 78% 8%, rgba(1, 164, 255, 0.16), transparent 58%),
+      radial-gradient(90% 70% at 12% 92%, rgba(1, 172, 50, 0.12), transparent 62%),
+      linear-gradient(168deg, var(--color-abyss) 0%, var(--color-abyss-2) 58%, var(--color-abyss-3) 100%);
+  }
+
+  /* Hairline grid used behind dark editorial sections. */
+  .grid-veil::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+    background-size: 88px 88px;
+    -webkit-mask-image: radial-gradient(85% 70% at 50% 40%, #000 20%, transparent 100%);
+    mask-image: radial-gradient(85% 70% at 50% 40%, #000 20%, transparent 100%);
+    pointer-events: none;
+  }
+}
+
+/* ==========================================================================
+   Motion — scroll reveals, marquees, entrances.
+   Every animation is opt-in via a data attribute so nothing moves by accident.
+   ========================================================================== */
+
+/* Gated on `[data-js]`, set by an inline script in the document head, so that
+   without JavaScript nothing is ever left hidden. An attribute rather than a
+   class because React owns `className` on <html> — see app/layout.tsx. */
+[data-js] [data-reveal] {
+  opacity: 0;
+  transform: translate3d(0, 18px, 0);
+  transition:
+    opacity 0.62s var(--ease-out-quint),
+    transform 0.62s var(--ease-out-quint);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+[data-js] [data-reveal="fade"] {
+  transform: none;
+}
+[data-js] [data-reveal="left"] {
+  transform: translate3d(-22px, 0, 0);
+}
+[data-js] [data-reveal="right"] {
+  transform: translate3d(22px, 0, 0);
+}
+[data-js] [data-reveal="scale"] {
+  transform: scale(0.965);
+}
+/* Sideways entrances read as jitter on a narrow screen — and their pre-reveal
+   offset widens the scroll area. Fall back to the vertical rise on mobile. */
+@media (max-width: 47.99rem) {
+  [data-js] [data-reveal="left"],
+  [data-js] [data-reveal="right"] {
+    transform: translate3d(0, 18px, 0);
+  }
+}
+[data-js] [data-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+@keyframes om-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+.marquee-track {
+  animation: om-marquee var(--marquee-duration, 48s) linear infinite;
+}
+.marquee:hover .marquee-track,
+.marquee:focus-within .marquee-track {
+  animation-play-state: paused;
+}
+
+@keyframes om-slide-in-right {
+  from {
+    opacity: 0;
+    transform: translate3d(24px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes om-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes om-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes om-float {
+  0%,
+  100% {
+    transform: translate3d(0, -0.55%, 0);
+  }
+  50% {
+    transform: translate3d(0, 0.55%, 0);
+  }
+}
+/* Advisory hero orbit. The satellites drift out of phase with one another, so
+   the diagram reads as something live rather than as a static illustration —
+   the rings carry the rotation, the cards only breathe. Rotating the cards
+   themselves was tried and reads as busy at this size. */
+/* The experience carousel's progress bar. Filling it over exactly one interval
+   is what tells the reader the panel is advancing on its own — a static rail
+   reads as a manual control that nobody is operating. */
+@keyframes om-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes om-satellite {
+  0%,
+  100% {
+    transform: translateY(-5px);
+  }
+  50% {
+    transform: translateY(5px);
+  }
+}
+/* Halo under the core, so the hub is a light source rather than a flat disc. */
+@keyframes om-core-halo {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.09);
+  }
+}
+@keyframes om-breathe {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(0.97);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.03);
+  }
+}
+@keyframes om-marker-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes om-art-in {
+  from {
+    opacity: 0;
+    transform: scale(1.045);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+/* Docked CTA tab: leans out of its edge, then settles back.
+   Driven on a 5s cycle, so the percentages below are a ~1.4s movement
+   (62%→90%) followed by a ~3.1s hold. Short movement, long pause — enough to
+   catch the eye in peripheral vision without becoming something the reader has
+   to keep ignoring. It travels far enough to read as "this slides out" rather
+   than as a twitch, because this hint is now the only thing teaching that; the
+   panel no longer opens itself to demonstrate.
+
+   The distance comes from `--om-peek`, set on the tab itself, so that hovering
+   — which parks the tab at exactly this position — cannot drift away from the
+   peak the animation reaches. */
+@keyframes om-tab-nudge {
+  0%,
+  62% {
+    transform: translateX(0);
+  }
+  72% {
+    transform: translateX(calc(var(--om-peek, 9px) * -1));
+  }
+  82% {
+    transform: translateX(calc(var(--om-peek, 9px) * -0.33));
+  }
+  90%,
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes om-scroll-hint {
+  0% {
+    opacity: 0;
+    transform: translateY(-70%);
+  }
+  35%,
+  65% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(70%);
+  }
+}
+@keyframes om-orbit {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes om-progress {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* Staggered entrance for the direct children of an activating slide. */
+.stagger-rise > * {
+  animation: om-rise 0.55s var(--ease-out-quint) both;
+}
+.stagger-rise > *:nth-child(1) {
+  animation-delay: 60ms;
+}
+.stagger-rise > *:nth-child(2) {
+  animation-delay: 120ms;
+}
+.stagger-rise > *:nth-child(3) {
+  animation-delay: 180ms;
+}
+.stagger-rise > *:nth-child(4) {
+  animation-delay: 240ms;
+}
+.stagger-rise > *:nth-child(5) {
+  animation-delay: 300ms;
+}
+.stagger-rise > *:nth-child(6) {
+  animation-delay: 360ms;
+}
+.stagger-rise > *:nth-child(n + 7) {
+  animation-delay: 420ms;
+}
+
+.anim-slide-in-right {
+  animation: om-slide-in-right 0.5s var(--ease-out-quint) both;
+}
+.anim-rise {
+  animation: om-rise 0.55s var(--ease-out-quint) both;
+}
+.anim-fade {
+  animation: om-fade 0.4s ease both;
+}
+.anim-float {
+  animation: om-float 11s var(--ease-in-out-soft) infinite;
+}
+.anim-breathe {
+  animation: om-breathe 7s var(--ease-in-out-soft) infinite;
+}
+.anim-marker-in {
+  animation: om-marker-in 0.6s var(--ease-out-quint) both;
+}
+.anim-art-in {
+  animation: om-art-in 1.1s var(--ease-out-quint) both;
+}
+
+/* Respect the user's system preference — no exceptions. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  [data-js] [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .marquee-track {
+    animation: none !important;
+  }
+}
