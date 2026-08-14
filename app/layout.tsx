@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter_Tight, IBM_Plex_Mono } from "next/font/google";
+import { Inter_Tight, IBM_Plex_Mono, Source_Serif_4 } from "next/font/google";
 import { site } from "@/content/site";
 import { SiteHeader } from "@/components/Header";
 import { SiteFooter } from "@/components/Footer";
@@ -34,6 +34,23 @@ const plexMono = IBM_Plex_Mono({
   variable: "--font-plex-mono",
   display: "swap",
   weight: ["400", "500"],
+});
+
+/**
+ * The editorial serif, italic only.
+ *
+ * Source Serif 4 is a text face drawn for long-form reading rather than a
+ * display face with a serif attached, which is what this is for: one pulled
+ * quote set at 30-odd pixels that has to read like an institutional report and
+ * not like a decorative flourish. Only the italic is loaded — that is the only
+ * cut used — so the extra face costs one file.
+ */
+const sourceSerif = Source_Serif_4({
+  subsets: ["latin"],
+  variable: "--font-source-serif",
+  display: "swap",
+  style: ["italic"],
+  weight: ["300", "400"],
 });
 
 export const metadata: Metadata = {
@@ -133,7 +150,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="en"
-      className={`${interTight.variable} ${plexMono.variable}`}
+      className={`${interTight.variable} ${plexMono.variable} ${sourceSerif.variable}`}
       /*
         Tells Next the smooth scrolling in globals.css is deliberate. Without
         it, Next's own scroll restoration on a route change inherits

@@ -67,7 +67,7 @@ export function InsightBody({ blocks }: { blocks: InsightBlock[] }) {
             return (
               <aside
                 key={i}
-                className="flex gap-4 rounded-[--radius-card] bg-surface p-6 ring-1 ring-line"
+                className="flex gap-4 rounded-[var(--radius-card)] bg-surface p-6 ring-1 ring-line"
               >
                 <Icon name="spark" className="h-5 w-5 shrink-0 text-navy-600" strokeWidth={1.6} />
                 <div className="flex flex-col gap-1.5">
@@ -80,7 +80,7 @@ export function InsightBody({ blocks }: { blocks: InsightBlock[] }) {
           case "image":
             return (
               <figure key={i} className="my-2 flex flex-col gap-3">
-                <div className="relative aspect-[16/9] overflow-hidden rounded-[--radius-card] bg-surface-2">
+                <div className="relative aspect-[16/9] overflow-hidden rounded-[var(--radius-card)] bg-surface-2">
                   <Image
                     src={block.src}
                     alt={block.alt}
@@ -98,7 +98,7 @@ export function InsightBody({ blocks }: { blocks: InsightBlock[] }) {
           case "video":
             return (
               <figure key={i} className="my-2 flex flex-col gap-3">
-                <div className="relative aspect-video overflow-hidden rounded-[--radius-card] bg-abyss">
+                <div className="relative aspect-video overflow-hidden rounded-[var(--radius-card)] bg-abyss">
                   {block.embedUrl ? (
                     <iframe
                       src={block.embedUrl}

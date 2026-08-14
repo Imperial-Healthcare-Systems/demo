@@ -64,6 +64,8 @@
   --font-display: var(--font-inter-tight), "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-sans: var(--font-inter-tight), "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+  /* Editorial only — pulled quotes. Never body copy. */
+  --font-serif: var(--font-source-serif), "Iowan Old Style", Georgia, serif;
 
   /* ---- Radius ---- */
   /* Softened from 0.875/0.625rem. At the old values every panel on the site
@@ -545,16 +547,6 @@
     transform: scale(1.03);
   }
 }
-@keyframes om-marker-in {
-  from {
-    opacity: 0;
-    transform: translate3d(0, 8px, 0) scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
 @keyframes om-art-in {
   from {
     opacity: 0;
@@ -605,6 +597,35 @@
   100% {
     opacity: 0;
     transform: translateY(70%);
+  }
+}
+/* Indeterminate progress for the Lab's coming-soon panel. It travels and
+   turns rather than filling, because a filled bar states a percentage and
+   there is no percentage to state. */
+@keyframes om-lab-scan {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(60%);
+  }
+  100% {
+    transform: translateX(250%);
+  }
+}
+/* A band of light crossing a panel, fired on hover.
+
+   New to the partner tiers on purpose. Everything else on this site answers a
+   pointer by lifting and glowing, which says "this is above the page"; a sheen
+   says "this is a surface", and the tier cards are the one place where the
+   artwork is the subject rather than the copy. Skewed, so it reads as light
+   raking across rather than a bar sliding past. */
+@keyframes om-sheen {
+  from {
+    transform: translateX(-140%) skewX(-18deg);
+  }
+  to {
+    transform: translateX(360%) skewX(-18deg);
   }
 }
 @keyframes om-orbit {
@@ -665,12 +686,18 @@
 .anim-breathe {
   animation: om-breathe 7s var(--ease-in-out-soft) infinite;
 }
-.anim-marker-in {
-  animation: om-marker-in 0.6s var(--ease-out-quint) both;
-}
 .anim-art-in {
   animation: om-art-in 1.1s var(--ease-out-quint) both;
 }
+
+/* A four-edge feather utility lived here while the hero artwork was a framed
+   plate floating inside the section. It is gone along with that layout — the
+   plate now runs off the top, bottom and right, so the only boundary left to
+   hide is the left one, and a single-direction gradient in the component does
+   that. Recorded rather than silently dropped, because the reason a mask was
+   needed at all still holds: these diagrams carry their own near-black ground,
+   rgb(0,2,18), against a section of rgb(3,13,34), so any edge of one that does
+   not land on a section boundary reads as a rectangle drawn on the page. */
 
 /* Respect the user's system preference — no exceptions. */
 @media (prefers-reduced-motion: reduce) {

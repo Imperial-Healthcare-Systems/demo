@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 
 /** Both faces share a shell, so the card keeps its shape through the turn. */
 const FACE =
-  "rounded-[--radius-card] bg-white p-7 ring-1 ring-line shadow-[0_1px_2px_rgba(10,21,51,.04)] " +
+  "rounded-[var(--radius-card)] bg-white p-7 ring-1 ring-line shadow-[0_1px_2px_rgba(10,21,51,.04)] " +
   "transition-shadow duration-300 group-hover/flip:shadow-[var(--shadow-card)]";
 
 export const metadata: Metadata = {
@@ -150,7 +150,7 @@ export default function SolutionsPage() {
                 key={platform.id}
                 id={platform.id}
                 delay={i * 90}
-                className="group/plat flex h-full flex-col gap-5 rounded-[--radius-card] bg-white/[0.04] p-8 ring-1 ring-white/10 transition-[background-color,transform] duration-300 hover:-translate-y-0.5 hover:bg-white/[0.07] md:p-10"
+                className="group/plat flex h-full flex-col gap-5 rounded-[var(--radius-card)] bg-white/[0.04] p-8 ring-1 ring-white/10 transition-[background-color,transform] duration-300 hover:-translate-y-0.5 hover:bg-white/[0.07] md:p-10"
               >
                 <span className="flex h-14 w-14 items-center justify-center rounded-xl bg-white/10 text-sky-400 transition-colors group-hover/plat:bg-sky-500 group-hover/plat:text-white">
                   <Icon name={platform.icon as never} className="h-7 w-7" strokeWidth={1.5} />
@@ -176,7 +176,7 @@ export default function SolutionsPage() {
             platforms — but anyone reading this section is looking for exactly
             that kind of thing, so it gets a pointer rather than being invisible.
           */}
-          <Reveal className="mt-6 rounded-[--radius-card] bg-white/[0.04] p-7 ring-1 ring-white/10 md:p-8">
+          <Reveal className="mt-6 rounded-[var(--radius-card)] bg-white/[0.04] p-7 ring-1 ring-white/10 md:p-8">
             <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <div className="flex flex-col gap-1.5">
                 <p className="font-mono text-[0.625rem] uppercase tracking-[0.18em] text-sky-400">
@@ -222,7 +222,7 @@ export default function SolutionsPage() {
             </div>
 
             <div className="lg:col-span-7">
-              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[--radius-card] ring-1 ring-white/10">
+              <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[var(--radius-card)] ring-1 ring-white/10">
                 <Image
                   src={platformsPage.architecture.image}
                   alt={platformsPage.architecture.alt}
@@ -242,8 +242,8 @@ export default function SolutionsPage() {
         <div className="shell flex flex-col items-start gap-6 md:items-center md:text-center">
           <Eyebrow>Next step</Eyebrow>
           <h2 className="max-w-3xl h-display-2">
-            Tell us what you are building,{" "}
-            <span className="text-brand-gradient">modernizing or trying to solve</span>.
+            Want to see our product{" "}
+            <span className="text-brand-gradient">in action</span>?
           </h2>
           <ButtonLink href="/contact" size="lg" icon="arrowRight" className="mt-2">
             Contact Us

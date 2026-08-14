@@ -39,7 +39,7 @@ export default function InsightsPage() {
       <section className="bg-canvas pt-12 md:pt-16">
         <div className="shell">
           <Reveal>
-            <article className="group/card relative grid overflow-hidden rounded-[--radius-card] bg-white ring-1 ring-line transition-shadow duration-300 hover:shadow-[var(--shadow-lift)] lg:grid-cols-12">
+            <article className="group/card relative grid overflow-hidden rounded-[var(--radius-card)] bg-white ring-1 ring-line transition-shadow duration-300 hover:shadow-[var(--shadow-lift)] lg:grid-cols-12">
               <InsightCover
                 insight={featured}
                 priority

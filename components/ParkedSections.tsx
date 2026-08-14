@@ -53,7 +53,7 @@ export function ServicesIndex() {
           className="mb-12"
         />
 
-        <ul className="grid gap-px overflow-hidden rounded-[--radius-card] bg-line ring-1 ring-line md:grid-cols-2 lg:grid-cols-3">
+        <ul className="grid gap-px overflow-hidden rounded-[var(--radius-card)] bg-line ring-1 ring-line md:grid-cols-2 lg:grid-cols-3">
           {services.map((service, i) => (
             <Reveal
               as="li"

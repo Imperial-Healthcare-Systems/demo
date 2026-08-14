@@ -47,7 +47,7 @@ export const site = {
   // No public telephone number is published. OrbisMoneta serves institutions
   // across multiple time zones, so every route is a written enquiry that gets
   // directed to the right desk — see contactRoutes.
-  email: "hello@orbismoneta.com",
+  email: "info@orbismoneta.com",
   social: [
     { label: "LinkedIn", href: "https://www.linkedin.com/company/orbismoneta" },
     { label: "X / Twitter", href: "https://x.com/orbismoneta" },

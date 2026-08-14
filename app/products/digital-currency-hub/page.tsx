@@ -59,7 +59,7 @@ export default function DigitalCurrencyHubPage() {
           </>
         }
         aside={
-          <div className="flex flex-col gap-4 rounded-[--radius-card] bg-white p-7 ring-1 ring-line shadow-[var(--shadow-card)]">
+          <div className="flex flex-col gap-4 rounded-[var(--radius-card)] bg-white p-7 ring-1 ring-line shadow-[var(--shadow-card)]">
             <p className="font-mono text-[0.625rem] uppercase tracking-[0.18em] text-navy-600">
               Designed for
             </p>
@@ -285,7 +285,7 @@ export default function DigitalCurrencyHubPage() {
               <Reveal
                 key={edition.name}
                 delay={i * 90}
-                className="flex h-full flex-col gap-4 rounded-[--radius-card] bg-white p-8 ring-1 ring-line transition-shadow duration-300 hover:shadow-[var(--shadow-card)]"
+                className="flex h-full flex-col gap-4 rounded-[var(--radius-card)] bg-white p-8 ring-1 ring-line transition-shadow duration-300 hover:shadow-[var(--shadow-card)]"
               >
                 <div className="flex items-baseline gap-3">
                   <h3 className="text-[1.25rem]">{edition.name}</h3>
@@ -310,7 +310,7 @@ export default function DigitalCurrencyHubPage() {
             ))}
           </div>
 
-          <Reveal className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-3 rounded-[--radius-card] bg-white px-7 py-5 ring-1 ring-line">
+          <Reveal className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-3 rounded-[var(--radius-card)] bg-white px-7 py-5 ring-1 ring-line">
             <p className="font-mono text-[0.625rem] uppercase tracking-[0.18em] text-ink-3">
               Delivery models
             </p>
@@ -361,7 +361,7 @@ export default function DigitalCurrencyHubPage() {
               {dch.closing.body}
             </p>
           </div>
-          <div className="flex flex-col gap-4 rounded-[--radius-card] bg-surface p-8 ring-1 ring-line lg:col-span-5">
+          <div className="flex flex-col gap-4 rounded-[var(--radius-card)] bg-surface p-8 ring-1 ring-line lg:col-span-5">
             <p className="text-[0.9375rem] leading-relaxed text-ink-2">{dch.cta.body}</p>
             <DemoCta size="lg" className="w-full" />
           </div>
@@ -392,8 +392,8 @@ function Panel({
     <div
       className={
         tone === "primary"
-          ? "flex h-full flex-col gap-4 rounded-[--radius-card] bg-navy-50/60 p-7 ring-1 ring-navy-100"
-          : "flex h-full flex-col gap-4 rounded-[--radius-card] bg-surface p-7 ring-1 ring-line"
+          ? "flex h-full flex-col gap-4 rounded-[var(--radius-card)] bg-navy-50/60 p-7 ring-1 ring-navy-100"
+          : "flex h-full flex-col gap-4 rounded-[var(--radius-card)] bg-surface p-7 ring-1 ring-line"
       }
     >
       <h3 className="font-mono text-[0.625rem] uppercase tracking-[0.18em] text-navy-600">

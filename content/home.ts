@@ -24,17 +24,14 @@ export const hero = {
     "Regulators",
     "Financial Market Infrastructure",
   ],
-  /**
-   * Corridor markers over the globe. Percentages are relative to the marker
-   * layer (the right-hand region of the hero artwork), not the viewport.
-   */
-  nodes: [
-    { city: "New York", country: "USA", x: 13, y: 37, delay: 0 },
-    { city: "London", country: "UK", x: 39, y: 22, delay: 140 },
-    { city: "Mumbai", country: "India", x: 62, y: 52, delay: 280 },
-    { city: "Singapore", country: "Singapore", x: 75, y: 67, delay: 420 },
-    { city: "Tokyo", country: "Japan", x: 87, y: 34, delay: 560 },
-  ],
+  /*
+    The corridor markers that used to be pinned over the globe — New York,
+    London, Mumbai, Singapore, Tokyo — were removed at the client's request.
+    Naming cities on a hero map reads as a statement about where the firm
+    operates, and nothing in the client's material supports that reading, so
+    the data is gone rather than commented out with coordinates waiting to be
+    switched back on.
+  */
 } as const;
 
 /* ---------------------------------------------------------------------------
@@ -68,23 +65,16 @@ export type AudienceCard = {
 export const audienceMarquee = {
   eyebrow: "Industries we serve",
   heading: "Built for every institution shaping the future of money.",
+  /*
+    "Banks & Financial Institutions" was the first card here and came off at the
+    client's request. Home-page marquee only: the audience keeps its full
+    section and its `#banks-financial-institutions` anchor on /industries, which
+    nothing else linked to, so no route was broken by removing the card. The
+    photograph, `audiences/banks.webp`, is left in place for the same reason.
+    The marquee sizes itself from `cards.length`, so one card fewer needs no
+    other change.
+  */
   cards: [
-    {
-      id: "banks",
-      icon: "bank",
-      title: "Banks & Financial Institutions",
-      tone: "navy",
-      items: [
-        { label: "Enterprise Payments", icon: "transfer" },
-        { label: "ISO 20022", icon: "document" },
-        { label: "Digital Money", icon: "coin" },
-        { label: "Fraud AI", icon: "shield" },
-        { label: "API Banking", icon: "code" },
-      ],
-      image: "/images/audiences/banks.webp",
-      alt: "Customers and staff crossing the lit atrium of a modern bank at night",
-      href: "/industries#banks-financial-institutions",
-    },
     {
       id: "fintechs",
       icon: "bolt",
@@ -321,14 +311,98 @@ export const industryContext = {
     { label: "Tokenized", icon: "chip" },
     { label: "Embedded", icon: "spark" },
   ],
-  image: "/images/industry-globe.webp",
-  alt: "Connected globe ringed by the four shifts reshaping financial infrastructure — digital currencies, real-time payments, tokenized assets and embedded intelligence",
+  /**
+   * The gallery beside the copy. The globe leads and the rest follow it.
+   *
+   * All seven are referenced straight from `public/images/` rather than built
+   * by `scripts/prepare-assets.mjs` — they were supplied finished. next/image
+   * still derives the WebP that actually gets served, so the two 2.1MB PNGs are
+   * repo weight only, never delivered.
+   *
+   * Every image covers — none contain. down3 was contained at first, because
+   * its drawing reaches all four edges and cropping it risked clipping a label.
+   * That was the wrong trade: contain fits the image inside the frame, so a
+   * square plate in a 9:8 frame left a 41px bar down each side, and the bar was
+   * visible because no single card colour can match seven plates with grounds
+   * from rgb(240,244,253) to rgb(1,5,21). A visible margin on the card is worse
+   * than a few pixels off a drawing, so the frame is always filled.
+   *
+   * `object-position` is per image and not guesswork — each file was scanned for
+   * the bounding box of its drawing, and a square plate loses 11.1% of its
+   * height to this frame:
+   *
+   *   globe   6.9% blank above, 7.5% below — biased up, nothing drawn is lost
+   *   down3   labels inset from every edge; centred, the 5.5% taken off each end
+   *           is bare grid floor and every label survives
+   *   down4   12.1% blank above, none below — crop taken off the top
+   *   down6   14.4% above, 13.5% below — comfortably covers
+   *   1, 2, 5 photographic scenes, edge to edge, nothing to protect
+   *
+   * Written out as literal class strings because Tailwind only generates class
+   * names it can find as text in the source.
+   */
+  gallery: [
+    {
+      src: "/images/globe.png",
+      label: "Connected globe",
+      alt: "Connected globe on a lit platform, ringed by five cards — real-time payments, digital currencies, tokenized assets, decentralized infrastructure and AI-powered intelligence",
+      fit: "object-cover object-[center_46%]",
+    },
+    {
+      src: "/images/page1-carousal-down3.png",
+      label: "Integration hub",
+      alt: "Isometric integration hub routing banking systems, banking and payment APIs, financial applications, smart contracts and secure transaction pathways",
+      fit: "object-cover object-center",
+    },
+    {
+      src: "/images/page1-carousal-down4.png",
+      label: "Digital money network",
+      alt: "Isometric network linking banks, wallets, mobile apps, cloud infrastructure and secure ledgers around a central digital currency token",
+      fit: "object-cover object-top",
+    },
+    {
+      src: "/images/page1-carousal-down6.jpg",
+      label: "Wallet network",
+      alt: "Isometric wallet platform connected to cards, banking, retail, cloud, identity and digital currency nodes",
+      fit: "object-cover object-center",
+    },
+    {
+      src: "/images/page1-carousal-down5.jpg",
+      label: "Tokenized assets",
+      alt: "Real-world assets — property, vehicles, commodities and documents — linked to a blockchain and a secure mobile wallet",
+      fit: "object-cover object-center",
+    },
+    {
+      src: "/images/page1-carousal-down2.jpg",
+      label: "Financial district",
+      alt: "Isometric financial district with a central bank building, market charts and connected service blocks",
+      fit: "object-cover object-center",
+    },
+    {
+      src: "/images/page1-carousal-down1.jpg",
+      label: "API infrastructure",
+      alt: "API layer over a city skyline, linking mobile, database, cloud, analytics and security services",
+      fit: "object-cover object-center",
+    },
+  ],
   opening:
     "Money is becoming digital. Payments are becoming programmable. Assets are becoming tokenized. Intelligence is becoming embedded into financial infrastructure.",
   body: [
     "The financial system is entering a new era where digital currencies, programmable money, tokenized finance, real-time payment rails, AI and interoperable financial networks are converging.",
     "This is more than a technology transformation. It is changing how value is created, represented, moved, exchanged and settled across the global economy.",
   ],
+  /*
+    `body[1]` is not rendered. It was briefly, as a closing band with the five
+    stages of value it names — created, represented, moved, exchanged, settled —
+    and the client asked for that band to come off again. The sentence stays
+    here because it is the client's copy, not because anything reads it.
+
+    Worth recording for whoever picks this up: the layout this section is built
+    to has a row of figures in that same position — institutions served,
+    countries reached, projects delivered, uptime percentage. None of those
+    numbers appear anywhere in the client's material and none of them were
+    written. If real, verified figures ever arrive, the band is the place.
+  */
   closing:
     "OrbisMoneta helps banks, payment providers, fintechs and enterprises navigate this transformation by designing and delivering the next generation of financial infrastructure.",
 };
@@ -433,8 +507,23 @@ export const whyOrbisMoneta = {
       body: "Everything we design and build meets the compliance, governance and explainability standards that banks, regulators and supervisory bodies require.",
     },
   ],
-  image: "/images/why-orbismoneta-people.webp",
-  alt: "OrbisMoneta team reviewing a global business dashboard together in a boardroom",
+  /**
+   * Supplied finished, so referenced straight from `public/images/` rather than
+   * built by `scripts/prepare-assets.mjs`. next/image derives the WebP that is
+   * actually served; the 2.1MB PNG is repo weight only.
+   *
+   * It replaces `why-orbismoneta-people.webp`, which is still in the tree and
+   * still generated by the asset script — nothing else pointed at it.
+   */
+  image: "/images/group-image.png",
+  alt: "Team reviewing a global business overview dashboard together in a boardroom, with national flags along the table and a city skyline beyond",
+  /*
+    Not rendered. This three-card row closed the "Why OrbisMoneta" section and
+    came off at the client's request, replaced by the four-phase engagement
+    model. The copy is the client's own, so it is parked here rather than
+    deleted — the same convention as components/ParkedSections.tsx. Re-mounting
+    it is one map() in the section it came from.
+  */
   highlights: [
     {
       label: "Delivery model",

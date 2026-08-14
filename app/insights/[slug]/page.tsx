@@ -150,7 +150,7 @@ export default async function InsightPage({ params }: Params) {
                   insight={insight}
                   priority
                   sizes="(max-width: 1024px) 100vw, 42vw"
-                  className="aspect-[16/10] w-full overflow-hidden rounded-[--radius-card] shadow-[var(--shadow-card)]"
+                  className="aspect-[16/10] w-full overflow-hidden rounded-[var(--radius-card)] shadow-[var(--shadow-card)]"
                 />
               </div>
             </div>
@@ -169,7 +169,7 @@ export default async function InsightPage({ params }: Params) {
 
                   <div className="flex flex-col gap-5">
                     <h2 className="h-display-4">What this piece covers</h2>
-                    <ol className="flex flex-col gap-px overflow-hidden rounded-[--radius-card] bg-line ring-1 ring-line">
+                    <ol className="flex flex-col gap-px overflow-hidden rounded-[var(--radius-card)] bg-line ring-1 ring-line">
                       {insight.outline.map((item, i) => (
                         <li
                           key={item}
@@ -184,7 +184,7 @@ export default async function InsightPage({ params }: Params) {
                     </ol>
                   </div>
 
-                  <aside className="flex gap-4 rounded-[--radius-card] border border-dashed border-line-strong bg-surface/60 p-6">
+                  <aside className="flex gap-4 rounded-[var(--radius-card)] border border-dashed border-line-strong bg-surface/60 p-6">
                     <Icon
                       name="document"
                       className="h-5 w-5 shrink-0 text-navy-600"
@@ -219,7 +219,7 @@ export default async function InsightPage({ params }: Params) {
             <aside className="lg:col-span-4">
               <div className="sticky top-28 flex flex-col gap-5">
                 {insight.relatedService && (
-                  <div className="surface-deep on-dark flex flex-col gap-4 rounded-[--radius-card] p-7">
+                  <div className="surface-deep on-dark flex flex-col gap-4 rounded-[var(--radius-card)] p-7">
                     <Eyebrow onDark>Related capability</Eyebrow>
                     <h2 className="text-[1.125rem] text-white">
                       {insight.relatedService.label}
@@ -244,7 +244,7 @@ export default async function InsightPage({ params }: Params) {
                   </div>
                 )}
 
-                <div className="flex flex-col gap-3 rounded-[--radius-card] bg-surface p-6 ring-1 ring-line">
+                <div className="flex flex-col gap-3 rounded-[var(--radius-card)] bg-surface p-6 ring-1 ring-line">
                   <Eyebrow>Details</Eyebrow>
                   <dl className="flex flex-col gap-3 text-[0.8125rem]">
                     <div className="flex items-baseline justify-between gap-4 border-b border-line pb-3">

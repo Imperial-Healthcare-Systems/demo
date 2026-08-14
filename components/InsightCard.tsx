@@ -122,7 +122,7 @@ export function InsightCard({
   return (
     <article
       className={cn(
-        "group/card relative flex overflow-hidden rounded-[--radius-card] bg-white ring-1 ring-line transition-[box-shadow,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:shadow-[var(--shadow-card)]",
+        "group/card relative flex overflow-hidden rounded-[var(--radius-card)] bg-white ring-1 ring-line transition-[box-shadow,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-0.5 hover:shadow-[var(--shadow-card)]",
         layout === "stacked" ? "h-full flex-col" : "flex-col sm:flex-row",
       )}
     >

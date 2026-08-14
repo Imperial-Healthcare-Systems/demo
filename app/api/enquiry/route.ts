@@ -42,7 +42,9 @@ export async function POST(request: Request) {
     "organisation",
     "organisationType",
     "interest",
-    "message",
+    // `message` is deliberately absent: the form makes it optional, and a
+    // server that still demanded it would reject exactly the submissions the
+    // form told people were fine to send.
   ];
   const missing = required.filter((key) => !String(body[key] ?? "").trim());
   if (missing.length > 0) {

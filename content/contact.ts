@@ -34,7 +34,7 @@ export const contactRoutes = [
     id: "general",
     title: "General Enquiries",
     body: "For all other enquiries, information requests or introductions.",
-    email: "hello@orbismoneta.com",
+    email: "info@orbismoneta.com",
   },
 ];
 

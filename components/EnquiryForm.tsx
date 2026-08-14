@@ -1,11 +1,33 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { contactRoutes, interestAreas, organisationTypes } from "@/content/contact";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/Button";
 import { Icon } from "@/components/Icon";
 import type { RfqMode } from "./ConversionProvider";
+
+/**
+ * The enquiry form, on one page.
+ *
+ * It used to be a two-step wizard — "What you need", then "About you" — which
+ * was a reasonable way to lower the cost of starting. The client's own markup
+ * asks for something else: a single form, every field visible, in this order —
+ * first name, last name, work email, organisation, organisation type, primary
+ * area of interest, and the message. That is what this is now, with two
+ * additions they asked for on top of it: a phone number, and the routing
+ * dropdown that an earlier brief moved into the form.
+ *
+ * A wizard also has a real cost that a single page does not: two states to keep
+ * valid, a back button that can lose work, and validation that fires in halves,
+ * so a visitor can clear step one and still be told something is wrong once
+ * they reach step two. Everything is checked at once here, and submitting with
+ * errors moves focus to the first field that has one.
+ *
+ * Fields are grouped rather than stepped. Two `fieldset`s with real `legend`s,
+ * so the grouping is in the markup a screen reader reads, not only in the
+ * spacing a sighted reader sees.
+ */
 
 type Values = {
   route: string;
@@ -34,13 +56,14 @@ const EMPTY: Values = {
 const MODE_COPY: Record<RfqMode, { heading: string; blurb: string; submit: string }> = {
   call: {
     heading: "Request a call",
-    blurb: "Two short steps. A senior practitioner responds within one business day.",
+    blurb: "One form. A senior practitioner responds within one business day.",
     submit: "Request the call",
   },
   requirements: {
     heading: "Tell us your requirements",
-    blurb: "Share the programme and we will route it to the right specialist.",
-    submit: "Send requirements",
+    // Client wording, verbatim.
+    blurb: "Share your request, and we’ll connect you with the right specialist.",
+    submit: "Send Enquiry",
   },
   demo: {
     heading: "Request a demo",
@@ -61,7 +84,7 @@ export function EnquiryForm({
   className?: string;
 }) {
   const uid = useId();
-  const [step, setStep] = useState(0);
+  const formRef = useRef<HTMLFormElement>(null);
   const [values, setValues] = useState<Values>(EMPTY);
   const [errors, setErrors] = useState<Partial<Record<keyof Values, string>>>({});
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
@@ -72,29 +95,39 @@ export function EnquiryForm({
     setErrors((e) => (e[key] ? { ...e, [key]: undefined } : e));
   };
 
-  function validateStep(index: number) {
+  function validate() {
     const next: Partial<Record<keyof Values, string>> = {};
-    if (index === 0) {
-      if (!values.interest) next.interest = "Select the area closest to your need.";
-      if (values.message.trim().length < 12)
-        next.message = "A sentence or two is enough to route this correctly.";
-    } else {
-      if (!values.firstName.trim()) next.firstName = "Required.";
-      if (!values.lastName.trim()) next.lastName = "Required.";
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(values.email))
-        next.email = "Enter a valid work email address.";
-      if (!values.organisation.trim()) next.organisation = "Required.";
-      if (!values.organisationType) next.organisationType = "Select the closest match.";
-      if (mode === "call" && values.phone.trim().length < 6)
-        next.phone = "We need a number to call you on.";
-    }
+    if (!values.firstName.trim()) next.firstName = "Required.";
+    if (!values.lastName.trim()) next.lastName = "Required.";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(values.email))
+      next.email = "Enter a valid work email address.";
+    if (!values.organisation.trim()) next.organisation = "Required.";
+    if (!values.organisationType) next.organisationType = "Select the closest match.";
+    if (!values.interest) next.interest = "Select the area closest to your need.";
+    // The message is optional. It was required, and a required free-text box is
+    // the field people abandon a form on — the selects above already carry
+    // enough to route and answer an enquiry.
+    // A number is only insisted on where the whole point is that we ring you.
+    if (mode === "call" && values.phone.trim().length < 6)
+      next.phone = "We need a number to call you on.";
     setErrors(next);
-    return Object.keys(next).length === 0;
+    return next;
   }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (!validateStep(1)) return;
+    const found = validate();
+    if (Object.keys(found).length > 0) {
+      // Send focus to the first thing that needs fixing. Without this the
+      // errors appear somewhere up the page and a keyboard or screen reader
+      // user is left where they were, with no idea anything happened.
+      requestAnimationFrame(() => {
+        const first = formRef.current?.querySelector<HTMLElement>('[aria-invalid="true"]');
+        first?.focus();
+        first?.scrollIntoView({ block: "center", behavior: "smooth" });
+      });
+      return;
+    }
     setStatus("sending");
     try {
       const res = await fetch("/api/enquiry", {
@@ -113,7 +146,7 @@ export function EnquiryForm({
     return (
       <div
         className={cn(
-          "flex flex-col items-start gap-4 rounded-[--radius-card] p-8 text-left",
+          "flex flex-col items-start gap-4 rounded-[var(--radius-card)] p-8 text-left",
           onDark ? "bg-white/6 ring-1 ring-white/12" : "bg-surface ring-1 ring-line",
           className,
         )}
@@ -140,7 +173,6 @@ export function EnquiryForm({
           type="button"
           onClick={() => {
             setValues(EMPTY);
-            setStep(0);
             setStatus("idle");
           }}
           className={cn(
@@ -154,59 +186,134 @@ export function EnquiryForm({
     );
   }
 
+  const invalidCount = Object.keys(errors).length;
+
   return (
-    <form onSubmit={handleSubmit} noValidate className={cn("flex flex-col gap-6", className)}>
+    <form
+      ref={formRef}
+      onSubmit={handleSubmit}
+      noValidate
+      className={cn("flex flex-col gap-8", className)}
+    >
       {!compact && (
-        <div className="flex flex-col gap-1.5">
-          <h2 className={cn("text-2xl", onDark && "text-white")}>{copy.heading}</h2>
-          <p className={cn("text-sm", onDark ? "text-ink-inv-2" : "text-ink-2")}>{copy.blurb}</p>
+        <div className="flex flex-col gap-2">
+          <span
+            aria-hidden="true"
+            className="h-1 w-14 rounded-full bg-[linear-gradient(90deg,var(--color-navy-600),var(--color-sky-500),var(--color-green-500))]"
+          />
+          <h2 className={cn("mt-1 text-2xl", onDark && "text-white")}>{copy.heading}</h2>
+          <p className={cn("text-sm leading-relaxed", onDark ? "text-ink-inv-2" : "text-ink-2")}>
+            {copy.blurb}
+          </p>
         </div>
       )}
 
-      {/* Step indicator */}
-      <ol className="flex items-center gap-3" aria-label="Progress">
-        {["What you need", "About you"].map((label, i) => (
-          <li key={label} className="flex flex-1 items-center gap-2.5">
-            <span
-              className={cn(
-                "flex h-6 w-6 shrink-0 items-center justify-center rounded-full font-mono text-[0.625rem] font-semibold transition-colors",
-                i <= step
-                  ? "bg-navy-600 text-white"
-                  : onDark
-                    ? "bg-white/10 text-ink-inv-3"
-                    : "bg-surface-2 text-ink-3",
-              )}
-              aria-current={i === step ? "step" : undefined}
-            >
-              {i + 1}
-            </span>
-            <span
-              className={cn(
-                "hidden text-[0.75rem] font-medium xs:block",
-                i === step ? (onDark ? "text-white" : "text-ink") : onDark ? "text-ink-inv-3" : "text-ink-3",
-              )}
-            >
-              {label}
-            </span>
-            {i === 0 && (
-              <span
-                aria-hidden="true"
-                className={cn(
-                  "h-px flex-1 origin-left transition-transform duration-500",
-                  step > 0 ? "scale-x-100 bg-navy-600" : onDark ? "bg-white/15" : "bg-line",
-                )}
-              />
-            )}
-          </li>
-        ))}
-      </ol>
+      <Group legend="About you" onDark={onDark}>
+        <div className="grid gap-5 sm:grid-cols-2">
+          <Field id={`${uid}-first`} label="First name" error={errors.firstName} onDark={onDark} required>
+            <input
+              id={`${uid}-first`}
+              value={values.firstName}
+              autoComplete="given-name"
+              placeholder="First name"
+              onChange={(e) => set("firstName")(e.target.value)}
+              aria-invalid={!!errors.firstName}
+              className={inputClass(onDark, !!errors.firstName)}
+            />
+          </Field>
+          <Field id={`${uid}-last`} label="Last name" error={errors.lastName} onDark={onDark} required>
+            <input
+              id={`${uid}-last`}
+              value={values.lastName}
+              autoComplete="family-name"
+              placeholder="Last name"
+              onChange={(e) => set("lastName")(e.target.value)}
+              aria-invalid={!!errors.lastName}
+              className={inputClass(onDark, !!errors.lastName)}
+            />
+          </Field>
+        </div>
 
-      {step === 0 ? (
-        <div className="flex flex-col gap-5">
+        <div className="grid gap-5 sm:grid-cols-2">
+          <Field id={`${uid}-email`} label="Work email" error={errors.email} onDark={onDark} required>
+            <input
+              id={`${uid}-email`}
+              type="email"
+              inputMode="email"
+              autoComplete="email"
+              value={values.email}
+              placeholder="you@organisation.com"
+              onChange={(e) => set("email")(e.target.value)}
+              aria-invalid={!!errors.email}
+              className={inputClass(onDark, !!errors.email)}
+            />
+          </Field>
+          <Field
+            id={`${uid}-phone`}
+            label="Phone number"
+            hint={mode === "call" ? "Include the country code." : "Optional — include the country code."}
+            error={errors.phone}
+            onDark={onDark}
+            required={mode === "call"}
+          >
+            <input
+              id={`${uid}-phone`}
+              type="tel"
+              inputMode="tel"
+              autoComplete="tel"
+              value={values.phone}
+              placeholder="+91 99301 82331"
+              onChange={(e) => set("phone")(e.target.value)}
+              aria-invalid={!!errors.phone}
+              className={inputClass(onDark, !!errors.phone)}
+            />
+          </Field>
+        </div>
+
+        <div className="grid gap-5 sm:grid-cols-2">
+          <Field
+            id={`${uid}-org`}
+            label="Organisation"
+            error={errors.organisation}
+            onDark={onDark}
+            required
+          >
+            <input
+              id={`${uid}-org`}
+              value={values.organisation}
+              autoComplete="organization"
+              placeholder="Your organisation"
+              onChange={(e) => set("organisation")(e.target.value)}
+              aria-invalid={!!errors.organisation}
+              className={inputClass(onDark, !!errors.organisation)}
+            />
+          </Field>
+          <Field
+            id={`${uid}-orgtype`}
+            label="I represent a…"
+            error={errors.organisationType}
+            onDark={onDark}
+            required
+          >
+            <Select
+              id={`${uid}-orgtype`}
+              value={values.organisationType}
+              onChange={set("organisationType")}
+              placeholder="Select organisation type"
+              invalid={!!errors.organisationType}
+              onDark={onDark}
+              options={organisationTypes.map((o) => ({ value: o, label: o }))}
+            />
+          </Field>
+        </div>
+      </Group>
+
+      <Group legend="About your enquiry" onDark={onDark}>
+        <div className="grid gap-5 sm:grid-cols-2">
           <Field
             id={`${uid}-route`}
             label="Which team should see this?"
-            hint="Routes your enquiry to the right desk."
+            hint="Sends your enquiry to the right desk."
             onDark={onDark}
           >
             <Select
@@ -217,7 +324,6 @@ export function EnquiryForm({
               options={contactRoutes.map((r) => ({ value: r.id, label: r.title }))}
             />
           </Field>
-
           <Field
             id={`${uid}-interest`}
             label="Primary area of interest"
@@ -229,189 +335,93 @@ export function EnquiryForm({
               id={`${uid}-interest`}
               value={values.interest}
               onChange={set("interest")}
-              placeholder="Select an area"
+              placeholder="Select primary area"
               invalid={!!errors.interest}
               onDark={onDark}
               options={interestAreas.map((a) => ({ value: a, label: a }))}
             />
           </Field>
+        </div>
 
-          <Field
+        <Field
+          id={`${uid}-message`}
+          label="Tell us about your challenge or programme"
+          hint="Optional — a sentence or two helps us answer properly."
+          error={errors.message}
+          onDark={onDark}
+        >
+          <textarea
             id={`${uid}-message`}
-            label="Tell us about your challenge or programme"
-            error={errors.message}
-            onDark={onDark}
-            required
-          >
-            <textarea
-              id={`${uid}-message`}
-              rows={4}
-              value={values.message}
-              onChange={(e) => set("message")(e.target.value)}
-              aria-invalid={!!errors.message}
-              placeholder="Briefly describe your situation, the challenge you are facing and what you are hoping to achieve…"
-              className={inputClass(onDark, !!errors.message, "resize-y min-h-28 py-3")}
-            />
-          </Field>
+            rows={5}
+            value={values.message}
+            onChange={(e) => set("message")(e.target.value)}
+            aria-invalid={!!errors.message}
+            placeholder="Tell us about your requirement…"
+            className={inputClass(onDark, !!errors.message, "min-h-36 resize-y py-3.5")}
+          />
+        </Field>
+      </Group>
 
-          <div className="flex items-center justify-between gap-4 pt-1">
-            <p className={cn("text-[0.75rem]", onDark ? "text-ink-inv-3" : "text-ink-3")}>
-              Step 1 of 2 · no obligation
-            </p>
-            <Button
-              type="button"
-              tone={onDark ? "onDark" : "primary"}
-              icon="arrowRight"
-              onClick={() => validateStep(0) && setStep(1)}
-            >
-              Continue
-            </Button>
-          </div>
-        </div>
-      ) : (
-        <div className="flex flex-col gap-5">
-          <div className="grid gap-5 sm:grid-cols-2">
-            <Field id={`${uid}-first`} label="First name" error={errors.firstName} onDark={onDark} required>
-              <input
-                id={`${uid}-first`}
-                value={values.firstName}
-                autoComplete="given-name"
-                onChange={(e) => set("firstName")(e.target.value)}
-                aria-invalid={!!errors.firstName}
-                className={inputClass(onDark, !!errors.firstName)}
-              />
-            </Field>
-            <Field id={`${uid}-last`} label="Last name" error={errors.lastName} onDark={onDark} required>
-              <input
-                id={`${uid}-last`}
-                value={values.lastName}
-                autoComplete="family-name"
-                onChange={(e) => set("lastName")(e.target.value)}
-                aria-invalid={!!errors.lastName}
-                className={inputClass(onDark, !!errors.lastName)}
-              />
-            </Field>
-          </div>
-
-          <Field id={`${uid}-email`} label="Work email" error={errors.email} onDark={onDark} required>
-            <input
-              id={`${uid}-email`}
-              type="email"
-              inputMode="email"
-              autoComplete="email"
-              value={values.email}
-              onChange={(e) => set("email")(e.target.value)}
-              aria-invalid={!!errors.email}
-              className={inputClass(onDark, !!errors.email)}
-            />
-          </Field>
-
-          {mode === "call" && (
-            <Field
-              id={`${uid}-phone`}
-              label="Direct line"
-              hint="Include the country code."
-              error={errors.phone}
-              onDark={onDark}
-              required
-            >
-              <input
-                id={`${uid}-phone`}
-                type="tel"
-                inputMode="tel"
-                autoComplete="tel"
-                value={values.phone}
-                onChange={(e) => set("phone")(e.target.value)}
-                aria-invalid={!!errors.phone}
-                className={inputClass(onDark, !!errors.phone)}
-              />
-            </Field>
+      {invalidCount > 0 && (
+        <p
+          role="alert"
+          className={cn(
+            "flex items-start gap-2 rounded-xl px-3.5 py-3 text-[0.8125rem]",
+            onDark
+              ? "bg-white/8 text-ink-inv-2 ring-1 ring-white/12"
+              : "bg-red-50 text-[color:var(--color-critical)] ring-1 ring-red-100",
           )}
-
-          <div className="grid gap-5 sm:grid-cols-2">
-            <Field
-              id={`${uid}-org`}
-              label="Organisation"
-              error={errors.organisation}
-              onDark={onDark}
-              required
-            >
-              <input
-                id={`${uid}-org`}
-                value={values.organisation}
-                autoComplete="organization"
-                onChange={(e) => set("organisation")(e.target.value)}
-                aria-invalid={!!errors.organisation}
-                className={inputClass(onDark, !!errors.organisation)}
-              />
-            </Field>
-            <Field
-              id={`${uid}-orgtype`}
-              label="I represent a…"
-              error={errors.organisationType}
-              onDark={onDark}
-              required
-            >
-              <Select
-                id={`${uid}-orgtype`}
-                value={values.organisationType}
-                onChange={set("organisationType")}
-                placeholder="Select type"
-                invalid={!!errors.organisationType}
-                onDark={onDark}
-                options={organisationTypes.map((o) => ({ value: o, label: o }))}
-              />
-            </Field>
-          </div>
-
-          {status === "error" && (
-            <p
-              role="alert"
-              className="flex items-start gap-2 rounded-lg bg-red-50 px-3.5 py-3 text-[0.8125rem] text-[color:var(--color-critical)] ring-1 ring-red-100"
-            >
-              <Icon name="close" className="mt-0.5 h-4 w-4" strokeWidth={2} />
-              We could not send that. Please try again, or email {" "}
-              <a href="mailto:hello@orbismoneta.com" className="underline">
-                hello@orbismoneta.com
-              </a>
-              .
-            </p>
-          )}
-
-          <div className="flex flex-wrap items-center justify-between gap-4 pt-1">
-            <button
-              type="button"
-              onClick={() => setStep(0)}
-              className={cn(
-                "inline-flex cursor-pointer items-center gap-1.5 text-sm font-medium transition-colors",
-                onDark ? "text-ink-inv-2 hover:text-white" : "text-ink-2 hover:text-navy-600",
-              )}
-            >
-              <Icon name="arrowLeft" className="h-4 w-4" strokeWidth={2} />
-              Back
-            </button>
-            <Button
-              type="submit"
-              tone={onDark ? "onDark" : "primary"}
-              icon={status === "sending" ? undefined : "arrowRight"}
-              disabled={status === "sending"}
-            >
-              {status === "sending" ? "Sending…" : copy.submit}
-            </Button>
-          </div>
-
-          <p
-            className={cn(
-              "flex items-start gap-2 text-[0.75rem] leading-relaxed",
-              onDark ? "text-ink-inv-3" : "text-ink-3",
-            )}
-          >
-            <Icon name="lock" className="mt-px h-3.5 w-3.5 shrink-0" />
-            We respond to all enquiries within one business day. Your information is treated in
-            strict confidence.
-          </p>
-        </div>
+        >
+          <Icon name="close" className="mt-0.5 h-4 w-4 shrink-0" strokeWidth={2} />
+          {invalidCount === 1
+            ? "One field needs attention before this can be sent."
+            : `${invalidCount} fields need attention before this can be sent.`}
+        </p>
       )}
+
+      {status === "error" && (
+        <p
+          role="alert"
+          className="flex items-start gap-2 rounded-xl bg-red-50 px-3.5 py-3 text-[0.8125rem] text-[color:var(--color-critical)] ring-1 ring-red-100"
+        >
+          <Icon name="close" className="mt-0.5 h-4 w-4 shrink-0" strokeWidth={2} />
+          <span>
+            We could not send that. Please try again, or email{" "}
+            <a href="mailto:info@orbismoneta.com" className="underline">
+              info@orbismoneta.com
+            </a>
+            .
+          </span>
+        </p>
+      )}
+
+      <div className="flex flex-col gap-5">
+        {/* Full width and on the brand gradient. It is the only action on the
+            form, and a lone button floated left in a wide card reads as one
+            option among several rather than the thing to do. */}
+        <Button
+          type="submit"
+          tone={onDark ? "onDark" : "brand"}
+          size="lg"
+          shape="soft"
+          icon={status === "sending" ? undefined : "arrowRight"}
+          disabled={status === "sending"}
+          className="w-full"
+        >
+          {status === "sending" ? "Sending…" : copy.submit}
+        </Button>
+
+        <p
+          className={cn(
+            "flex items-start gap-2 text-[0.75rem] leading-relaxed",
+            onDark ? "text-ink-inv-3" : "text-ink-3",
+          )}
+        >
+          <Icon name="lock" className="mt-px h-3.5 w-3.5 shrink-0" />
+          We respond to all enquiries within one business day. Your information is treated in strict
+          confidence.
+        </p>
+      </div>
     </form>
   );
 }
@@ -420,14 +430,43 @@ export function EnquiryForm({
 
 function inputClass(onDark: boolean, invalid: boolean, extra = "") {
   return cn(
-    "w-full rounded-lg border px-3.5 text-[0.9375rem] transition-[border-color,box-shadow] duration-150 outline-none",
-    extra || "h-12",
+    // 3.25rem tall, not 3: a 52px control clears the 44px touch minimum with
+    // room for the focus ring to sit outside the border rather than on it.
+    "w-full rounded-xl border px-4 text-[0.9375rem] outline-none",
+    "transition-[border-color,box-shadow,background-color] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
+    extra ? "" : "h-[3.25rem]",
     onDark
-      ? "border-white/15 bg-white/5 text-white placeholder:text-ink-inv-3 focus:border-sky-400 focus:bg-white/8"
-      : "border-line-strong bg-white text-ink placeholder:text-ink-3 focus:border-navy-600",
-    "focus:ring-2 focus:ring-navy-600/15",
-    invalid && "border-[color:var(--color-critical)] focus:border-[color:var(--color-critical)]",
+      ? "border-white/15 bg-white/5 text-white placeholder:text-ink-inv-3 hover:border-white/28 focus:border-sky-400 focus:bg-white/[0.09] focus:ring-4 focus:ring-sky-400/20"
+      : "border-line-strong bg-white text-ink placeholder:text-ink-3 hover:border-navy-600/40 focus:border-navy-600 focus:ring-4 focus:ring-navy-600/12",
+    invalid &&
+      "border-[color:var(--color-critical)] focus:border-[color:var(--color-critical)] focus:ring-[color:var(--color-critical)]/15",
     extra,
+  );
+}
+
+/** A titled block of fields — a real fieldset, so the grouping reaches AT. */
+function Group({
+  legend,
+  onDark,
+  children,
+}: {
+  legend: string;
+  onDark: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <fieldset className="flex flex-col gap-5">
+      <legend
+        className={cn(
+          "mb-1 flex items-center gap-3 font-mono text-[0.6875rem] font-medium uppercase tracking-[0.16em]",
+          onDark ? "text-sky-400" : "text-navy-600",
+        )}
+      >
+        <span aria-hidden="true" className={cn("h-px w-5", onDark ? "bg-sky-400/60" : "bg-navy-600/40")} />
+        {legend}
+      </legend>
+      {children}
+    </fieldset>
   );
 }
 
@@ -498,7 +537,7 @@ function Select({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         aria-invalid={invalid}
-        className={cn(inputClass(onDark, !!invalid), "cursor-pointer appearance-none pr-10")}
+        className={cn(inputClass(onDark, !!invalid), "cursor-pointer appearance-none pr-11")}
       >
         {placeholder && (
           <option value="" disabled>
@@ -514,7 +553,7 @@ function Select({
       <Icon
         name="chevronDown"
         className={cn(
-          "pointer-events-none absolute top-1/2 right-3.5 h-4 w-4 -translate-y-1/2",
+          "pointer-events-none absolute top-1/2 right-4 h-4 w-4 -translate-y-1/2",
           onDark ? "text-ink-inv-3" : "text-ink-3",
         )}
         strokeWidth={2}

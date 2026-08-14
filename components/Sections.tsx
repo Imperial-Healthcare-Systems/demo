@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import {
   closingCta,
   futureOfMoney,
@@ -7,8 +6,11 @@ import {
   proposition,
   whyOrbisMoneta,
 } from "@/content/home";
+import { engagementModel } from "@/content/industries";
+import { cn } from "@/lib/utils";
 import { ButtonLink } from "@/components/Button";
 import { Icon, type IconName } from "@/components/Icon";
+import { IndustryCarousel } from "@/components/IndustryCarousel";
 import { Reveal } from "@/components/Reveal";
 import { DarkSection, Eyebrow, SectionHeading } from "@/components/Section";
 
@@ -18,7 +20,13 @@ export function IndustryContext() {
   const [lead, accent] = industryContext.headline.split(industryContext.headlineAccent);
 
   return (
-    <section className="section relative isolate overflow-hidden bg-[linear-gradient(180deg,#ffffff_0%,#f4f6fc_55%,#eef1f9_100%)]">
+    /*
+      `section-tight` rather than `section`: 88px of vertical padding at 1440
+      instead of 128. The full measure is right for a band of stacked text; this
+      one is a two-column split whose height is set by the artwork, and the extra
+      40px at each end only pushed a 1057px section further past the fold.
+    */
+    <section className="section-tight relative isolate overflow-hidden bg-[linear-gradient(180deg,#ffffff_0%,#f4f6fc_55%,#eef1f9_100%)]">
       {/* Same aurora and contour language as the sub-page heroes, so the home
           page and the rest of the site read as one system rather than two. */}
       <div
@@ -35,91 +43,117 @@ export function IndustryContext() {
           <circle key={r} cx="300" cy="300" r={r} stroke="currentColor" strokeWidth="1" />
         ))}
       </svg>
-      <div className="shell grid items-center gap-12 lg:grid-cols-12 lg:gap-10">
-        {/* Copy */}
-        <div className="flex flex-col lg:col-span-6 xl:col-span-5">
-          <Reveal kind="fade">
-            <Eyebrow>{industryContext.eyebrow}</Eyebrow>
-          </Reveal>
+      <div className="shell">
+        <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-8 xl:gap-4">
+          {/* Copy */}
+          <div className="flex flex-col lg:col-span-6 xl:col-span-5">
+            <Reveal kind="fade">
+              <Eyebrow>{industryContext.eyebrow}</Eyebrow>
+            </Reveal>
 
-          <Reveal delay={60}>
-            <h2 className="mt-4 text-[2rem] leading-[1.02] font-semibold tracking-[-0.038em] text-ink md:text-[2.5rem]">
-              {lead}
-              <span className="text-brand-gradient">{industryContext.headlineAccent}</span>
-              {accent}
-            </h2>
-          </Reveal>
+            <Reveal delay={60}>
+              <h2 className="mt-5 text-[2rem] leading-[1.04] font-semibold tracking-[-0.038em] text-ink md:text-[2.5rem] xl:text-[2.875rem]">
+                {lead}
+                <span className="text-brand-gradient">{industryContext.headlineAccent}</span>
+                {accent}
+              </h2>
+            </Reveal>
 
-          <Reveal delay={100}>
-            <span
-              aria-hidden="true"
-              className="mt-5 block h-[3px] w-16 rounded-full bg-[linear-gradient(90deg,#01a4ff,#01ac32)]"
-            />
-          </Reveal>
+            <Reveal delay={100}>
+              <span
+                aria-hidden="true"
+                className="mt-6 block h-1 w-[5.5rem] rounded-full bg-[linear-gradient(90deg,#01a4ff,#01ac32)]"
+              />
+            </Reveal>
 
-          {/*
-            The four shifts as live text. They are also lettered into the globe
-            artwork alongside, but baked pixels are not selectable, do not
-            reflow and are invisible to a screen reader — so the words exist
-            here, and the artwork reinforces them.
-          */}
-          <Reveal delay={140}>
-            <ul className="mt-7 grid grid-cols-2 gap-x-4 gap-y-3 sm:flex sm:flex-wrap sm:gap-x-5">
-              {industryContext.shifts.map((shift) => (
-                <li key={shift.label} className="group/shift flex items-center gap-2">
-                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-navy-50 text-navy-600 ring-1 ring-navy-100 transition-colors duration-200 group-hover/shift:bg-navy-600 group-hover/shift:text-white group-hover/shift:ring-navy-600">
-                    <Icon name={shift.icon as IconName} className="h-3.5 w-3.5" strokeWidth={1.7} />
-                  </span>
-                  <span className="text-[0.8125rem] font-medium whitespace-nowrap text-ink">
-                    {shift.label}
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </Reveal>
-
-          <Reveal delay={200}>
-            <p className="mt-7 max-w-lg text-[0.9375rem] leading-relaxed text-ink-2 md:text-[1rem]">
-              {industryContext.body[0]}
-            </p>
-          </Reveal>
-
-          {/* Closing statement, given the weight of a card because it is the
-              only line in the section that says what OrbisMoneta does. */}
-          <Reveal delay={260}>
-            <div className="mt-7 flex items-start gap-5 rounded-[--radius-card] bg-white/80 p-6 shadow-[0_18px_44px_-28px_rgba(10,21,51,.4)] ring-1 ring-line backdrop-blur-sm">
-              <Link
-                href="/advisory"
-                aria-label="Explore our advisory and engineering services"
-                className="mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-navy-600 text-white transition-colors hover:bg-navy-700"
-              >
-                <Icon name="arrowRight" className="h-4 w-4" strokeWidth={2.2} />
-              </Link>
-              <p className="text-[0.9375rem] leading-relaxed font-medium text-ink">
-                {industryContext.closing}
+            <Reveal delay={160}>
+              <p className="mt-7 max-w-lg text-[0.9375rem] leading-relaxed text-ink-2 md:text-[1.0625rem]">
+                {industryContext.body[0]}
               </p>
-            </div>
+            </Reveal>
+
+            {/*
+              The four shifts as live text. They are also lettered into the globe
+              artwork alongside, but baked pixels are not selectable, do not
+              reflow and are invisible to a screen reader — so the words exist
+              here, and the artwork reinforces them.
+
+              Hairline rules between them rather than plain spacing: at this size
+              four icon-and-label pairs in a row read as one run-on strip, and the
+              rules are what separate them into four things.
+            */}
+            <Reveal delay={220}>
+              {/*
+                Four across with rules between them from xl, a 2×2 grid below it.
+
+                The single row needs about 484px and the copy column is 491px at
+                1280 and 517px from 1440 — so it fits from xl and does not at lg,
+                where the column drops to 464px. Letting it wrap instead would put
+                a divider at the start of the second line, a rule with nothing to
+                its left, which is worse than a grid. The breakpoint is measured
+                rather than guessed: this is the width at which the fourth item
+                stops fitting.
+              */}
+              <ul className="mt-8 grid grid-cols-2 gap-x-3 gap-y-4 xl:flex xl:items-center xl:gap-0">
+                {industryContext.shifts.map((shift, i) => (
+                  <li key={shift.label} className="flex items-center">
+                    {i > 0 && (
+                      <span aria-hidden="true" className="mx-2.5 hidden h-7 w-px bg-line xl:block" />
+                    )}
+                    <span className="group/shift flex items-center gap-2.5">
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-navy-50 text-navy-600 ring-1 ring-navy-100 transition-colors duration-200 group-hover/shift:bg-navy-600 group-hover/shift:text-white group-hover/shift:ring-navy-600">
+                        <Icon name={shift.icon as IconName} className="h-4 w-4" strokeWidth={1.7} />
+                      </span>
+                      <span className="text-[0.8125rem] font-medium whitespace-nowrap text-ink">
+                        {shift.label}
+                      </span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </Reveal>
+
+            {/* Closing statement, given the weight of a card because it is the
+                only line in the section that says what OrbisMoneta does. The
+                brand bar down its left edge is what marks it as the conclusion
+                rather than a fourth paragraph. */}
+            <Reveal delay={280}>
+              <div className="mt-9 flex items-start gap-5 rounded-[var(--radius-card)] border-l-[3px] border-navy-600 bg-white/85 p-6 shadow-[0_18px_44px_-28px_rgba(10,21,51,.4)] ring-1 ring-line backdrop-blur-sm">
+                {/*
+                  An icon, not the mark. The logo sat here for one message and
+                  was wrong for a reason worth recording: the sentence beside it
+                  already opens with the word "OrbisMoneta", so the mark was the
+                  brand name printed twice in a row, once as a picture. A tile in
+                  the logo's own three colours carries the same brand weight
+                  without repeating anything.
+
+                  `nodes` because the line is about connecting institutions to
+                  infrastructure, and it is the icon this site already uses for
+                  that everywhere else.
+
+                  Decorative, and the slot is not a link: an arrow lived here
+                  before the logo and was also wrong — an arrow promises
+                  somewhere to go, and this card is a statement, not a call to
+                  action.
+                */}
+                <span
+                  aria-hidden="true"
+                  className="mt-0.5 flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[linear-gradient(135deg,var(--color-navy-600),var(--color-sky-500)_58%,var(--color-green-500))] text-white shadow-[0_10px_20px_-10px_rgba(0,46,166,.55)]"
+                >
+                  <Icon name="nodes" className="h-5 w-5" strokeWidth={1.7} />
+                </span>
+                <p className="text-[0.9375rem] leading-relaxed font-medium text-ink">
+                  {industryContext.closing}
+                </p>
+              </div>
+            </Reveal>
+          </div>
+
+          {/* Gallery */}
+          <Reveal kind="right" delay={120} className="lg:col-span-6 xl:col-span-7">
+            <IndustryCarousel />
           </Reveal>
         </div>
-
-        {/* Globe */}
-        <Reveal kind="right" delay={120} className="lg:col-span-6 xl:col-span-7">
-          <div className="relative aspect-[3/2] w-full">
-            <Image
-              src={industryContext.image}
-              alt={industryContext.alt}
-              fill
-              sizes="(max-width: 1024px) 100vw, 58vw"
-              quality={82}
-              /* The artwork's own ground is a pale lavender wash, not white, so
-                 its edges would show as a rectangle against the section. Two
-                 crossed linear masks feather all four sides; a radial mask does
-                 not work here because the artwork is exactly 3:2 and fills the
-                 frame, leaving the box edges fully opaque. */
-              className="object-contain [mask-composite:intersect] [mask-image:linear-gradient(to_right,transparent,#000_6%,#000_94%,transparent),linear-gradient(to_bottom,transparent,#000_6%,#000_94%,transparent)]"
-            />
-          </div>
-        </Reveal>
       </div>
     </section>
   );
@@ -278,7 +312,7 @@ export function Proposition() {
         </div>
 
         <Reveal kind="right" delay={120} className="lg:col-span-6 xl:col-span-7">
-          <div className="relative aspect-[16/11] overflow-hidden rounded-[--radius-card] shadow-[var(--shadow-lift)]">
+          <div className="relative aspect-[16/11] overflow-hidden rounded-[var(--radius-card)] shadow-[var(--shadow-lift)]">
             <Image
               src={proposition.image}
               alt={proposition.alt}
@@ -295,6 +329,61 @@ export function Proposition() {
 }
 
 /* ------------------------------------------------------------ why orbismoneta */
+
+/**
+ * One tone per reason card, cycling in the order the bars run in the logo:
+ * navy, sky, green — #002ea6, #01a4ff, #01ac32, sampled from
+ * brand/OrMo Logo V PNG.png and already the brand tokens in globals.css. Four
+ * cards against three colours, so the fourth restarts on navy, which is also
+ * the right colour for it: 04 is the regulator-and-institution card, and navy
+ * is the anchor of this palette.
+ *
+ * Sky and green have no 50/100 tints in the theme — only 400/500/600 — so the
+ * rests are alpha of the 500, not a tint token. That keeps all three at the
+ * same visual weight without inventing six new scale steps for one component.
+ *
+ * The shadows are written out per tone rather than driven by a CSS variable:
+ * `Reveal` sets `style` itself to carry the stagger delay, and a `style` passed
+ * through its rest props would overwrite it and kill the stagger.
+ */
+/*
+  A note on the 3D, because the obvious place to put it does not work.
+
+  Tilting the whole card was tried first and silently did nothing: `Reveal`
+  animates its root with `om-rise`, and that animation is `fill: both`, so its
+  final `transform` value keeps overriding any `transform` a hover rule sets.
+  The lift survives only because it uses `translate`, which Tailwind v4 emits as
+  a standalone property the animation never touches.
+
+  The icon tiles have no animation on them, so they own their `transform`
+  outright — which is why the turn lives there.
+*/
+const REASON_TONES = [
+  {
+    tile: "bg-navy-600/10 text-navy-600 ring-navy-600/15 group-hover/reason:bg-navy-600 group-hover/reason:text-white group-hover/reason:ring-navy-600 group-hover/reason:shadow-[0_10px_20px_-10px_rgba(0,46,166,.55)]",
+    numeral: "text-navy-600/30 group-hover/reason:text-navy-600",
+    bar: "bg-[linear-gradient(180deg,var(--color-navy-600),var(--color-navy-400))]",
+    lift: "hover:ring-navy-600/25 hover:shadow-[0_2px_6px_rgba(10,21,51,.06),0_22px_44px_-20px_rgba(10,21,51,.28),0_40px_66px_-40px_rgba(0,46,166,.5)]",
+  },
+  {
+    tile: "bg-sky-500/12 text-sky-600 ring-sky-500/20 group-hover/reason:bg-sky-500 group-hover/reason:text-white group-hover/reason:ring-sky-500 group-hover/reason:shadow-[0_10px_20px_-10px_rgba(1,164,255,.55)]",
+    numeral: "text-sky-500/40 group-hover/reason:text-sky-600",
+    bar: "bg-[linear-gradient(180deg,var(--color-sky-500),var(--color-sky-400))]",
+    lift: "hover:ring-sky-500/30 hover:shadow-[0_2px_6px_rgba(10,21,51,.06),0_22px_44px_-20px_rgba(10,21,51,.28),0_40px_66px_-40px_rgba(1,164,255,.5)]",
+  },
+  {
+    tile: "bg-green-500/12 text-green-600 ring-green-500/20 group-hover/reason:bg-green-500 group-hover/reason:text-white group-hover/reason:ring-green-500 group-hover/reason:shadow-[0_10px_20px_-10px_rgba(1,172,50,.55)]",
+    numeral: "text-green-500/40 group-hover/reason:text-green-600",
+    bar: "bg-[linear-gradient(180deg,var(--color-green-500),var(--color-green-400))]",
+    lift: "hover:ring-green-500/30 hover:shadow-[0_2px_6px_rgba(10,21,51,.06),0_22px_44px_-20px_rgba(10,21,51,.28),0_40px_66px_-40px_rgba(1,172,50,.5)]",
+  },
+  {
+    tile: "bg-navy-600/10 text-navy-600 ring-navy-600/15 group-hover/reason:bg-navy-600 group-hover/reason:text-white group-hover/reason:ring-navy-600 group-hover/reason:shadow-[0_10px_20px_-10px_rgba(0,46,166,.55)]",
+    numeral: "text-navy-600/30 group-hover/reason:text-navy-600",
+    bar: "bg-[linear-gradient(180deg,var(--color-navy-600),var(--color-sky-500))]",
+    lift: "hover:ring-navy-600/25 hover:shadow-[0_2px_6px_rgba(10,21,51,.06),0_22px_44px_-20px_rgba(10,21,51,.28),0_40px_66px_-40px_rgba(0,46,166,.5)]",
+  },
+] as const;
 
 export function WhyOrbisMoneta() {
   return (
@@ -324,74 +413,185 @@ export function WhyOrbisMoneta() {
           </Reveal>
         </div>
 
-        <div className="mt-14 grid gap-8 lg:grid-cols-12 lg:items-start lg:gap-10">
+        {/*
+          `lg:items-center`, not `lg:items-start`. The photograph is 6:5 and the
+          four cards stack taller than it, so aligned to the top it hung off the
+          start of the list with all the empty space pooled underneath it.
+          Centred, the shorter column sits against the middle of the taller one.
+
+          The sticky wrapper that used to be here went with it: sticky needs
+          room to travel inside its grid area, and a centred item's area is
+          exactly its own height, so it had nothing left to do.
+        */}
+        <div className="mt-14 grid gap-8 lg:grid-cols-12 lg:items-center lg:gap-10">
           <Reveal kind="left" delay={80} className="lg:col-span-5">
-            {/*
-              Two elements, not one. `lg:sticky` and `relative` cannot share an
-              element that parents a `fill` image: from lg the sticky wins the
-              cascade, and `next/image` warns because it only recognises
-              absolute/fixed/relative as a containing block. Sticky does in fact
-              establish one, so this rendered correctly — but the warning is
-              real in the sense that the guarantee was accidental. Sticking the
-              outer element and positioning the inner one makes it explicit.
-            */}
-            <div className="lg:sticky lg:top-28">
-              <div className="relative aspect-[4/3] overflow-hidden rounded-[--radius-card] shadow-[var(--shadow-card)] lg:aspect-[5/6]">
+            <div>
+              {/*
+                6:5, matching the photograph's own 1.212 so the crop is about
+                one percent.
+
+                This frame used to be `lg:aspect-[5/6]` — portrait, to stand
+                beside the four reason cards. The photograph that replaced the
+                old one is landscape and its subject spans the full width: six
+                people, shoulder to shoulder, with the table in front of them.
+                Forcing it portrait means cropping a third of the width, which
+                takes the person at each end out of the picture. A shorter image
+                next to a taller list is the smaller cost, and the column is
+                sticky, so the height difference is not read as a gap.
+              */}
+              <div className="relative aspect-[6/5] overflow-hidden rounded-[var(--radius-card)] shadow-[var(--shadow-card)]">
                 <Image
                   src={whyOrbisMoneta.image}
                   alt={whyOrbisMoneta.alt}
                   fill
-                  sizes="(max-width: 1024px) 100vw, 40vw"
+                  /* Fixed, not a vw fraction: the shell caps at 84rem, so this
+                     column tops out at ~503px however wide the screen gets. */
+                  sizes="(max-width: 1024px) 100vw, 520px"
                   quality={80}
-                  className="object-cover"
+                  className="object-cover object-center"
                 />
               </div>
             </div>
           </Reveal>
 
           <ol className="flex flex-col gap-4 lg:col-span-7">
-            {whyOrbisMoneta.reasons.map((reason, i) => (
-              <Reveal
-                as="li"
-                key={reason.title}
-                delay={140 + i * 80}
-                className="group/reason flex items-start gap-5 rounded-[--radius-card] bg-white p-6 ring-1 ring-line transition-shadow duration-300 hover:shadow-[var(--shadow-card)]"
-              >
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-navy-50 text-navy-600 ring-1 ring-navy-100 transition-colors group-hover/reason:bg-navy-600 group-hover/reason:text-white">
-                  <Icon name={reason.icon as IconName} className="h-5 w-5" strokeWidth={1.6} />
-                </span>
+            {whyOrbisMoneta.reasons.map((reason, i) => {
+              const tone = REASON_TONES[i % REASON_TONES.length];
+              return (
+                <Reveal
+                  as="li"
+                  key={reason.title}
+                  delay={140 + i * 80}
+                  /*
+                    Depth at rest, lift on hover.
 
-                <span
-                  aria-hidden="true"
-                  className="font-display text-[1.375rem] leading-none font-bold tabular text-navy-200 transition-colors group-hover/reason:text-navy-600"
+                    The resting shadow is two layers — a 1px contact edge and a
+                    wide soft one — because a single blur reads as a blurry card
+                    rather than a card above a surface. Hover raises it 8px and
+                    swaps in a third layer tinted with the card's own colour, so
+                    what comes forward is lit rather than just bigger.
+
+                    `transition-[transform,box-shadow]` and not `transition-all`:
+                    `all` would also animate the ring and the tile's background
+                    on the same curve, and those want to snap.
+
+                    The translate is dropped under `prefers-reduced-motion` — the
+                    stylesheet neutralises the duration there, which would make
+                    this jump 8px instantly on every hover.
+                  */
+                  className={cn(
+                    "group/reason relative flex items-start gap-5 overflow-hidden rounded-[var(--radius-card)] bg-white p-6 ring-1 ring-line",
+                    "shadow-[0_1px_2px_rgba(10,21,51,.04),0_12px_28px_-20px_rgba(10,21,51,.26)]",
+                    "transition-[transform,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
+                    "hover:-translate-y-2 motion-reduce:hover:translate-y-0",
+                    tone.lift,
+                  )}
                 >
-                  0{i + 1}
-                </span>
+                  {/* Brand edge, drawn down the card on hover. */}
+                  <span
+                    aria-hidden="true"
+                    className={cn(
+                      "absolute inset-y-0 left-0 w-[3px] origin-top scale-y-0 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/reason:scale-y-100",
+                      tone.bar,
+                    )}
+                  />
 
-                <div className="flex flex-col gap-1.5">
-                  <h3 className="text-[1.0625rem] leading-snug text-ink">{reason.title}</h3>
-                  <p className="text-[0.875rem] leading-relaxed text-ink-2">{reason.body}</p>
-                </div>
-              </Reveal>
-            ))}
+                  <span
+                    className={cn(
+                      "flex h-11 w-11 shrink-0 items-center justify-center rounded-xl shadow-[0_0_0_rgba(0,0,0,0)] ring-1 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/reason:scale-110 group-hover/reason:[transform:perspective(520px)_rotateY(-12deg)]",
+                      tone.tile,
+                    )}
+                  >
+                    <Icon name={reason.icon as IconName} className="h-5 w-5" strokeWidth={1.6} />
+                  </span>
+
+                  <span
+                    aria-hidden="true"
+                    className={cn(
+                      "font-display text-[1.375rem] leading-none font-bold tabular transition-colors duration-300",
+                      tone.numeral,
+                    )}
+                  >
+                    0{i + 1}
+                  </span>
+
+                  <div className="flex flex-col gap-1.5">
+                    <h3 className="text-[1.0625rem] leading-snug text-ink">{reason.title}</h3>
+                    <p className="text-[0.875rem] leading-relaxed text-ink-2">{reason.body}</p>
+                  </div>
+                </Reveal>
+              );
+            })}
           </ol>
         </div>
 
-        <div className="mt-14 grid gap-5 md:grid-cols-3">
-          {whyOrbisMoneta.highlights.map((highlight, i) => (
+        {/*
+          The three-card row that closed this section — Delivery model, Coverage,
+          Principle — came off at the client's request. `whyOrbisMoneta.highlights`
+          still holds that copy; see the note there. What took its place is the
+          engagement model, as its own section below rather than a fourth block
+          inside this one: it carries an eyebrow, a headline and an intro of its
+          own, and burying all three inside "Why OrbisMoneta" would have read as
+          a heading inside a heading.
+        */}
+      </div>
+    </section>
+  );
+}
+
+/* ---------------------------------------------------------- engagement model */
+
+/**
+ * The client's four-phase engagement model on the home page.
+ *
+ * The copy is `engagementModel` from content/industries.ts, unchanged and not
+ * re-typed — it was already extracted verbatim from the client's own HTML for
+ * the Industries page, and re-keying it into a second file is how two copies of
+ * one paragraph start drifting apart.
+ *
+ * This is a light treatment of the same content the Industries page shows on
+ * dark. Same phases, same order, same numerals; the grid is four across on a
+ * white ground so it sits with "Why OrbisMoneta" directly above it rather than
+ * dropping the page into a dark band two sections before the footer already
+ * does.
+ */
+export function EngagementModel() {
+  return (
+    <section className="section-tight bg-surface" id="engagement-model">
+      <div className="shell">
+        <SectionHeading
+          eyebrow={engagementModel.eyebrow}
+          title={engagementModel.headline}
+          intro={engagementModel.intro}
+          className="mb-12 md:mb-14"
+        />
+
+        <ol className="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+          {engagementModel.phases.map((phase, i) => (
             <Reveal
-              key={highlight.label}
-              delay={i * 90}
-              className="flex h-full flex-col gap-3 rounded-[--radius-card] bg-surface p-7 ring-1 ring-line transition-shadow duration-300 hover:shadow-[var(--shadow-card)]"
+              as="li"
+              key={phase.step}
+              delay={i * 80}
+              className="group/phase relative flex h-full flex-col gap-3 overflow-hidden rounded-[var(--radius-card)] bg-white p-7 ring-1 ring-line transition-shadow duration-300 hover:shadow-[var(--shadow-card)]"
             >
-              <p className="font-mono text-[0.625rem] uppercase tracking-[0.18em] text-navy-600">
-                {highlight.label}
-              </p>
-              <h3 className="text-[1.0625rem] leading-snug">{highlight.title}</h3>
-              <p className="text-[0.875rem] leading-relaxed text-ink-2">{highlight.body}</p>
+              {/* Brand rule that draws itself in on hover — the same gesture the
+                  dark version on /industries uses, so the two read as one thing
+                  seen twice rather than as two different components. */}
+              <span
+                aria-hidden="true"
+                className="absolute inset-x-0 top-0 h-[3px] origin-left scale-x-0 bg-[linear-gradient(90deg,var(--color-sky-500),var(--color-green-500))] transition-transform duration-500 group-hover/phase:scale-x-100"
+              />
+              <span
+                aria-hidden="true"
+                className="font-display text-[1.75rem] leading-none font-bold tabular text-navy-200 transition-colors group-hover/phase:text-navy-600"
+              >
+                {phase.step}
+              </span>
+              <h3 className="text-[1.0625rem] leading-snug text-ink">{phase.title}</h3>
+              <p className="text-[0.875rem] leading-relaxed text-ink-2">{phase.body}</p>
             </Reveal>
           ))}
-        </div>
+        </ol>
       </div>
     </section>
   );

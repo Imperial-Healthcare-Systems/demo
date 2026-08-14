@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import { site } from "@/content/site";
 import { HeroCarousel } from "@/components/HeroCarousel";
 import { AudienceMarquee } from "@/components/AudienceMarquee";
-import { IndustryContext, WhyOrbisMoneta } from "@/components/Sections";
-import { CapabilityTicker } from "@/components/ParkedSections";
+import { EngagementModel, IndustryContext, WhyOrbisMoneta } from "@/components/Sections";
 
 export const metadata: Metadata = {
   title: site.title,
@@ -37,14 +36,19 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <>
+      {/* The capability ticker used to run here, between the industries band
+          and the editorial sections. It is now the closing strip of the hero
+          itself, where it reads as part of the opening statement rather than as
+          a divider between two other blocks. `CapabilityTicker` stays in
+          ParkedSections, unchanged, for wherever it is wanted next. */}
       <HeroCarousel />
       <AudienceMarquee />
-      {/* Capability ticker — the twelve-token marquee, back at the client's
-          request. It also gives the eye a beat between the dark industries
-          band and the light editorial sections below. */}
-      <CapabilityTicker />
       <IndustryContext />
       <WhyOrbisMoneta />
+      {/* The client's four-phase engagement model, closing the page on how a
+          project actually runs. It is the same content the Industries page
+          carries on dark, rendered light here — one source, two treatments. */}
+      <EngagementModel />
     </>
   );
 }

@@ -29,10 +29,10 @@ export default function LeadershipPage() {
           {leadershipPage.people.map((person) => (
             <Reveal
               key={person.name}
-              className="grid gap-8 rounded-[--radius-card] bg-white p-8 ring-1 ring-line md:p-10 lg:grid-cols-12 lg:gap-12"
+              className="grid gap-8 rounded-[var(--radius-card)] bg-white p-8 ring-1 ring-line md:p-10 lg:grid-cols-12 lg:gap-12"
             >
               <div className="flex flex-col gap-5 lg:col-span-4">
-                <div className="surface-deep relative flex aspect-[4/5] w-full max-w-[16rem] items-center justify-center overflow-hidden rounded-[--radius-card] ring-1 ring-navy-900/10">
+                <div className="surface-deep relative flex aspect-[4/5] w-full max-w-[16rem] items-center justify-center overflow-hidden rounded-[var(--radius-card)] ring-1 ring-navy-900/10">
                   {person.photo ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img
@@ -78,7 +78,7 @@ export default function LeadershipPage() {
                 as="li"
                 key={i}
                 delay={i * 80}
-                className="flex items-center gap-5 rounded-[--radius-card] border border-dashed border-line-strong bg-surface/60 p-7"
+                className="flex items-center gap-5 rounded-[var(--radius-card)] border border-dashed border-line-strong bg-surface/60 p-7"
               >
                 <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-white text-ink-3 ring-1 ring-line">
                   <Icon name="plus" className="h-5 w-5" strokeWidth={1.8} />

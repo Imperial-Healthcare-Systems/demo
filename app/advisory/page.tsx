@@ -18,6 +18,33 @@ export const metadata: Metadata = {
   alternates: { canonical: "/advisory" },
 };
 
+/**
+ * One tone per service line, cycling navy · sky · green — the logo's order, and
+ * the same rotation the home page's reason cards, the Lab themes, the partner
+ * tiers and the About capability deck use. Literal class strings, because
+ * Tailwind only generates names it can find as text.
+ */
+const SERVICE_TONES = [
+  {
+    tile: "bg-navy-600/10 text-navy-600 ring-navy-600/15 group-hover/svc:bg-[linear-gradient(140deg,var(--color-navy-600),var(--color-navy-400))] group-hover/svc:text-white group-hover/svc:ring-navy-600 group-hover/svc:shadow-[0_10px_22px_-10px_rgba(0,46,166,.6)]",
+    index: "text-ink-3 group-hover/svc:text-navy-600",
+    bar: "bg-[linear-gradient(90deg,var(--color-navy-600),var(--color-navy-400))]",
+    lift: "hover:ring-navy-600/25 hover:shadow-[0_2px_6px_rgba(10,21,51,.06),0_24px_46px_-20px_rgba(10,21,51,.26),0_44px_72px_-44px_rgba(0,46,166,.5)]",
+  },
+  {
+    tile: "bg-sky-500/12 text-sky-600 ring-sky-500/20 group-hover/svc:bg-[linear-gradient(140deg,var(--color-sky-500),var(--color-sky-400))] group-hover/svc:text-white group-hover/svc:ring-sky-500 group-hover/svc:shadow-[0_10px_22px_-10px_rgba(1,164,255,.6)]",
+    index: "text-ink-3 group-hover/svc:text-sky-600",
+    bar: "bg-[linear-gradient(90deg,var(--color-sky-500),var(--color-sky-400))]",
+    lift: "hover:ring-sky-500/30 hover:shadow-[0_2px_6px_rgba(10,21,51,.06),0_24px_46px_-20px_rgba(10,21,51,.26),0_44px_72px_-44px_rgba(1,164,255,.5)]",
+  },
+  {
+    tile: "bg-green-500/12 text-green-600 ring-green-500/20 group-hover/svc:bg-[linear-gradient(140deg,var(--color-green-500),var(--color-green-400))] group-hover/svc:text-white group-hover/svc:ring-green-500 group-hover/svc:shadow-[0_10px_22px_-10px_rgba(1,172,50,.6)]",
+    index: "text-ink-3 group-hover/svc:text-green-600",
+    bar: "bg-[linear-gradient(90deg,var(--color-green-500),var(--color-green-400))]",
+    lift: "hover:ring-green-500/30 hover:shadow-[0_2px_6px_rgba(10,21,51,.06),0_24px_46px_-20px_rgba(10,21,51,.26),0_44px_72px_-44px_rgba(1,172,50,.5)]",
+  },
+];
+
 export default function AdvisoryPage() {
   return (
     <>
@@ -73,20 +100,40 @@ export default function AdvisoryPage() {
           />
 
           <div className="flex flex-col gap-4">
-            {services.map((service, i) => (
+            {services.map((service, i) => {
+              const tone = SERVICE_TONES[i % SERVICE_TONES.length];
+              return (
               <Reveal
                 key={service.id}
                 id={service.id}
                 delay={i * 50}
-                className="group/svc rounded-[--radius-card] bg-white p-7 ring-1 ring-line transition-[box-shadow,border-color] duration-300 hover:shadow-[var(--shadow-card)] md:p-9"
+                /*
+                  Lift, a brand rule drawn across the top, a tone-filled tile
+                  and a sheen raking over as the pointer arrives — the same
+                  vocabulary the partner tiers and capability deck use, so the
+                  pages read as one system rather than six treatments.
+                  `transition-[transform,box-shadow]` and not `all`: `all` drags
+                  the ring and the tile background onto the same curve, and both
+                  of those want to snap.
+                */
+                className={`group/svc relative overflow-hidden rounded-[var(--radius-card)] bg-white p-7 ring-1 ring-line shadow-[0_1px_2px_rgba(10,21,51,.04),0_12px_28px_-20px_rgba(10,21,51,.22)] transition-[transform,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-2 motion-reduce:hover:translate-y-0 md:p-9 ${tone.lift}`}
               >
-                <div className="grid gap-7 lg:grid-cols-12 lg:gap-10">
+                <span
+                  aria-hidden="true"
+                  className={`absolute inset-x-0 top-0 h-[3px] origin-left scale-x-0 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/svc:scale-x-100 ${tone.bar}`}
+                />
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-y-0 -left-1/4 w-1/4 bg-[linear-gradient(90deg,transparent,rgba(1,164,255,.10),transparent)] opacity-0 group-hover/svc:animate-[om-sheen_1.15s_ease-out] group-hover/svc:opacity-100 motion-reduce:hidden"
+                />
+
+                <div className="relative grid gap-7 lg:grid-cols-12 lg:gap-10">
                   <div className="flex items-start gap-5 lg:col-span-5">
-                    <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-navy-50 text-navy-600 transition-colors group-hover/svc:bg-navy-600 group-hover/svc:text-white">
+                    <span className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ring-1 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/svc:scale-110 group-hover/svc:[transform:perspective(520px)_rotateY(-12deg)] ${tone.tile}`}>
                       <Icon name={service.icon as never} className="h-6 w-6" strokeWidth={1.5} />
                     </span>
                     <div className="flex flex-col gap-2">
-                      <span className="font-mono text-[0.6875rem] tabular text-ink-3">
+                      <span className={`font-mono text-[0.6875rem] tabular transition-colors duration-300 ${tone.index}`}>
                         {service.index}
                       </span>
                       <h3 className="text-[1.25rem] leading-snug md:text-[1.375rem]">
@@ -123,7 +170,8 @@ export default function AdvisoryPage() {
                   </div>
                 </div>
               </Reveal>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>

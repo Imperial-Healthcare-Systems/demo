@@ -183,7 +183,7 @@ export function InsightsExplorer({ insights }: { insights: Insight[] }) {
           )}
         </>
       ) : (
-        <div className="flex flex-col items-center gap-4 rounded-[--radius-card] border border-dashed border-line-strong bg-surface/60 px-6 py-16 text-center">
+        <div className="flex flex-col items-center gap-4 rounded-[var(--radius-card)] border border-dashed border-line-strong bg-surface/60 px-6 py-16 text-center">
           <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-ink-3 ring-1 ring-line">
             <Icon name="search" className="h-5 w-5" strokeWidth={1.6} />
           </span>

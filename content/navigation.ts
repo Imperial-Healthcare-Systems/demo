@@ -35,6 +35,12 @@ export type MenuLink = {
 export type NavItem = {
   label: string;
   href: string;
+  /**
+   * Extra path prefixes that should mark this item as the current section.
+   * Needed where a page lives outside the item's own href — Products folded
+   * into Solutions, so /products/* has to light Solutions rather than nothing.
+   */
+  matches?: string[];
   /** Rendered as a mega-menu panel when present. */
   panel?: {
     eyebrow: string;
@@ -55,6 +61,7 @@ export const primaryNav: NavItem[] = [
   {
     label: "Solutions",
     href: "/solutions",
+    matches: ["/products"],
     panel: {
       eyebrow: "Solutions & Platforms",
       heading: "Infrastructure for every dimension of modern finance.",
@@ -128,14 +135,51 @@ export const primaryNav: NavItem[] = [
             },
           ],
         },
+        {
+          /*
+            Products was a top-level nav item of its own and is now a column in
+            here, at the client's request — it is one product, and a whole
+            heading in the primary navigation for a single page overstated it
+            beside eight other sections.
+            Nothing was dropped in the move: the page, its route, its four
+            capability anchors and the deployment link all survive, and
+            /products/digital-currency-hub still lights this item as active.
+          */
+          title: "Products",
+          links: [
+            {
+              label: "Digital Currency Hub™",
+              href: "/products/digital-currency-hub",
+              icon: "coin",
+              description: "Retail CBDC platform for commercial banks",
+            },
+            {
+              label: "Retail CBDC Banking",
+              href: "/products/digital-currency-hub#capabilities",
+              icon: "bank",
+              description: "Issue, hold and move digital currency",
+            },
+            {
+              label: "Customer & Merchant Wallets",
+              href: "/products/digital-currency-hub#capabilities",
+              icon: "store",
+              description: "Consumer and acceptance side, one platform",
+            },
+            {
+              label: "Deployment models",
+              href: "/products/digital-currency-hub#deployment",
+              icon: "cloud",
+              description: "Licensed in your estate, or hosted by us",
+            },
+          ],
+        },
       ],
-      feature: {
-        eyebrow: "Platform ecosystem",
-        title: "Enterprise platforms for the future of finance.",
-        body: "Purpose-built infrastructure for institutions operating across traditional and digital financial ecosystems.",
-        href: "/solutions#platforms",
-        cta: "View platform ecosystem",
-      },
+      /*
+        No feature card. It pointed at /solutions#platforms with the label
+        "View platform ecosystem", which is the same destination as the first
+        link in the Platforms column — the panel offered one thing twice. Its
+        space goes to the third column instead.
+      */
     },
   },
   {
@@ -203,46 +247,18 @@ export const primaryNav: NavItem[] = [
       },
     },
   },
-  {
-    label: "Products",
-    href: "/products/digital-currency-hub",
-    panel: {
-      eyebrow: "Products & Platforms",
-      heading: "Software we build, own and operate.",
-      blurb:
-        "Proprietary platforms for institutions entering the digital money era.",
-      columns: [
-        {
-          title: "Platforms",
-          links: [
-            {
-              label: "Digital Currency Hub™",
-              href: "/products/digital-currency-hub",
-              icon: "coin",
-              description: "Retail CBDC platform for commercial banks",
-            },
-          ],
-        },
-        {
-          title: "Platform capabilities",
-          links: [
-            { label: "Retail CBDC Banking", href: "/products/digital-currency-hub#capabilities", icon: "bank" },
-            { label: "Customer & Merchant Wallets", href: "/products/digital-currency-hub#capabilities", icon: "store" },
-            { label: "Government Payment Programs", href: "/products/digital-currency-hub#capabilities", icon: "building" },
-            { label: "API-Driven Integration", href: "/products/digital-currency-hub#capabilities", icon: "code" },
-          ],
-        },
-      ],
-      feature: {
-        eyebrow: "Deployment",
-        title: "Licensed or hosted — your call.",
-        body: "Run the Hub inside your own estate, or let us operate it as a managed cloud platform.",
-        href: "/products/digital-currency-hub#deployment",
-        cta: "Compare deployment models",
-      },
-    },
-  },
-  { label: "Industries", href: "/industries" },
+  /*
+    Products used to sit here as the third top-level item, with a panel of its
+    own. It is now the third column of the Solutions panel above. The page it
+    pointed at is untouched and still routable.
+  */
+  /*
+    Industries is off the primary navigation at the client's request. The page
+    is untouched and still routable — it keeps its footer link under Explore,
+    and every card in the home page's "Industries we serve" marquee still deep
+    links into its sections. Nothing here claims `/industries` as a `matches`
+    prefix, because with no item to light there is nothing to mark current.
+  */
   { label: "Lab", href: "/lab" },
   { label: "Partners", href: "/partners" },
   { label: "Insights", href: "/insights" },

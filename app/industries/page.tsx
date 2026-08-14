@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils";
 
 /** Both faces share a shell, so the card keeps its shape through the turn. */
 const FACE =
-  "rounded-[--radius-card] bg-white p-7 ring-1 ring-line shadow-[0_1px_2px_rgba(10,21,51,.04)] " +
+  "rounded-[var(--radius-card)] bg-white p-7 ring-1 ring-line shadow-[0_1px_2px_rgba(10,21,51,.04)] " +
   "transition-shadow duration-300 group-hover/flip:shadow-[var(--shadow-card)]";
 
 export const metadata: Metadata = {
@@ -86,7 +86,7 @@ export default function IndustriesPage() {
             <Reveal
               as="li"
               delay={350}
-              className="surface-deep on-dark flex h-full flex-col justify-between gap-6 rounded-[--radius-card] p-7 ring-1 ring-navy-900/10"
+              className="surface-deep on-dark flex h-full flex-col justify-between gap-6 rounded-[var(--radius-card)] p-7 ring-1 ring-navy-900/10"
             >
               <div className="flex flex-col gap-3">
                 <Eyebrow onDark>Not listed?</Eyebrow>

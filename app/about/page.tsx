@@ -2,8 +2,9 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { aboutPage, leadershipPage } from "@/content/about";
-import { PageHero } from "@/components/PageHero";
-import { ExperienceSlider } from "@/components/ExperienceSlider";
+import { Breadcrumbs } from "@/components/PageHero";
+import { BrandMark } from "@/components/BrandMark";
+import { CapabilityDeck } from "@/components/CapabilityDeck";
 import { ButtonLink, TextLink } from "@/components/Button";
 import { Icon } from "@/components/Icon";
 import { Marquee } from "@/components/Marquee";
@@ -30,26 +31,144 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <>
-      <PageHero
-        eyebrow={aboutPage.eyebrow}
-        title={
-          <>
-            Engineering the <span className="text-brand-gradient">Future of Finance</span>
-          </>
-        }
-        intro={aboutPage.intro}
-        crumbs={[{ label: "About" }]}
-        actions={
-          <>
-            <ButtonLink href="/about/leadership" icon="arrowRight">
-              Meet the leadership
-            </ButtonLink>
-            <ButtonLink href="/about/careers" tone="secondary">
-              Careers
-            </ButtonLink>
-          </>
-        }
-      />
+      {/*
+        The opening statement and the innovation philosophy, as one section.
+
+        They were two: a `PageHero` at the top and a centred pull-quote three
+        sections further down, with the capability panel between them. Reading
+        top to bottom you met the company, then a dark panel, then — with no
+        connection to either — a quote. Set side by side they read as a claim
+        and the thinking behind it, which is what they are.
+
+        Built here rather than through `PageHero`, because this is the one page
+        whose opening is a two-column editorial spread; bending the shared hero
+        to take a pull-quote would push that shape onto seven other pages that
+        do not want it. `Breadcrumbs` is imported from the same module, so the
+        crumb markup and its `aria-label` stay identical across the site.
+      */}
+      <section className="relative isolate overflow-hidden rounded-b-[2rem] border-b border-line bg-canvas pt-28 pb-20 md:rounded-b-[3rem] md:pt-36 md:pb-28">
+        {/*
+          Light through the page rather than a coloured background: a pale blue
+          wash upper-right, a paler green lower-left, white through the middle,
+          all at single-digit alpha so no edge is ever visible.
+        */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(58%_62%_at_86%_6%,rgba(1,164,255,.10),transparent_62%),radial-gradient(46%_54%_at_4%_96%,rgba(1,172,50,.08),transparent_66%)]"
+        />
+
+        {/* Concentric rings, upper right. Hairline, and drifting slowly enough
+            that it registers as depth rather than as movement. */}
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 600 600"
+          fill="none"
+          className="anim-breathe pointer-events-none absolute -top-40 -right-40 -z-10 hidden h-[46rem] w-[46rem] text-navy-600/[0.055] motion-reduce:animate-none lg:block"
+        >
+          {[150, 210, 270, 330].map((r) => (
+            <circle key={r} cx="300" cy="300" r={r} stroke="currentColor" strokeWidth="1" />
+          ))}
+        </svg>
+
+        {/* The mark, oversized and cropped by the section's own overflow. */}
+        <BrandMark
+          variant="symbol"
+          decorative
+          className="pointer-events-none absolute -top-16 -right-24 -z-10 hidden h-[26rem] opacity-[0.045] select-none lg:block xl:-right-16 xl:h-[32rem]"
+        />
+
+        <div className="shell">
+          <div className="grid items-center gap-14 lg:grid-cols-12 lg:gap-0">
+            {/* ── Left: the company ─────────────────────────────────────── */}
+            <div className="flex flex-col items-start gap-6 lg:col-span-6 lg:pr-14 xl:pr-16">
+              <Reveal kind="fade">
+                <Breadcrumbs items={[{ label: "About" }]} />
+              </Reveal>
+
+              <Reveal delay={60}>
+                <Eyebrow>{aboutPage.eyebrow}</Eyebrow>
+              </Reveal>
+
+              <Reveal delay={110}>
+                <h1 className="h-display-1 max-w-[16ch] text-ink">
+                  Engineering the{" "}
+                  <span className="text-brand-gradient">Future of Finance</span>
+                </h1>
+              </Reveal>
+
+              <Reveal delay={170}>
+                <p className="max-w-[46ch] text-[1.0625rem] leading-[1.7] text-ink-2 md:text-[1.1875rem]">
+                  {aboutPage.intro}
+                </p>
+              </Reveal>
+
+              <Reveal delay={230} className="mt-2 flex flex-wrap items-center gap-3">
+                <ButtonLink href="/about/leadership" icon="arrowRight" size="lg" shape="soft">
+                  Meet the leadership
+                </ButtonLink>
+                <ButtonLink href="/about/careers" tone="secondary" size="lg" shape="soft">
+                  Careers
+                </ButtonLink>
+              </Reveal>
+            </div>
+
+            {/* ── The divider ───────────────────────────────────────────── */}
+            {/*
+              A hairline that fades out at both ends, with a blue point at the
+              top and a green one at the bottom — the two ends of the brand
+              gradient, used as punctuation rather than decoration. It is a
+              `div` in the flow rather than a border on a column, so it can be
+              shorter than the columns and centred against them.
+            */}
+            <div
+              aria-hidden="true"
+              className="relative hidden justify-center self-stretch lg:col-span-1 lg:flex"
+            >
+              <span className="absolute inset-y-2 w-px bg-[linear-gradient(180deg,transparent,var(--color-line-strong)_14%,var(--color-line-strong)_86%,transparent)]" />
+              <span className="absolute top-1 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-sky-500" />
+              <span className="absolute bottom-1 h-1.5 w-1.5 translate-y-1/2 rounded-full bg-green-500" />
+            </div>
+
+            {/* ── Right: the philosophy ─────────────────────────────────── */}
+            <Reveal
+              kind="fade"
+              delay={300}
+              className="relative flex flex-col items-start gap-7 lg:col-span-5 lg:pl-12 xl:pl-14"
+            >
+              {/*
+                The quotation marks are type, not icons — the character itself,
+                set large and pale, so it sits in the same optical world as the
+                sentence it opens. `select-none` and `aria-hidden` because a
+                screen reader already gets the `blockquote`.
+              */}
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute -top-8 -left-2 font-serif text-[7rem] leading-none text-navy-600/12 select-none lg:left-8 lg:text-[8.5rem]"
+              >
+                &ldquo;
+              </span>
+
+              <blockquote className="relative font-serif text-[1.4375rem] leading-[1.44] font-light text-ink italic md:text-[1.625rem] xl:text-[1.8125rem]">
+                {aboutPage.philosophy.quote}
+              </blockquote>
+
+              <span
+                aria-hidden="true"
+                className="pointer-events-none -mt-6 self-end font-serif text-[6rem] leading-none text-navy-600/10 select-none lg:text-[7rem]"
+              >
+                &rdquo;
+              </span>
+
+              <div className="-mt-8 flex flex-col gap-3">
+                <span aria-hidden="true" className="h-px w-10 bg-navy-600" />
+                <p className="font-mono text-[0.6875rem] uppercase tracking-[0.2em] text-navy-600">
+                  {aboutPage.philosophy.label}
+                </p>
+              </div>
+            </Reveal>
+          </div>
+        </div>
+      </section>
 
       {/* Brand panel + experience */}
       <DarkSection>
@@ -78,7 +197,7 @@ export default function AboutPage() {
         />
 
         <div className="shell section grid gap-10 lg:grid-cols-12 lg:gap-14">
-          <div className="flex flex-col gap-6 lg:col-span-7">
+          <div className="flex flex-col gap-6 lg:col-span-4">
             <Eyebrow onDark>Positioning</Eyebrow>
             <div className="flex flex-col gap-3">
               {/*
@@ -100,29 +219,16 @@ export default function AboutPage() {
               {aboutPage.brandPanel.statement}
             </p>
 
-            <div className="mt-4 flex flex-col gap-3">
-              <p className="font-mono text-[0.625rem] uppercase tracking-[0.18em] text-sky-400">
-                Core capabilities
-              </p>
-              <ul className="flex flex-wrap gap-2">
-                {aboutPage.coreCapabilities.map((capability) => (
-                  <li
-                    key={capability}
-                    className="group/cap flex items-center gap-2 rounded-full bg-white/[0.04] px-3.5 py-1.5 text-[0.75rem] text-ink-inv-2 ring-1 ring-white/15 backdrop-blur-sm transition-colors duration-200 hover:bg-white/[0.09] hover:text-white hover:ring-white/40"
-                  >
-                    <span
-                      aria-hidden="true"
-                      className="h-1.5 w-1.5 shrink-0 rounded-full bg-sky-400/70 transition-colors duration-200 group-hover/cap:bg-sky-400"
-                    />
-                    {capability}
-                  </li>
-                ))}
-              </ul>
-            </div>
+            {/*
+              The capability chips that used to close this column are gone. The
+              deck alongside now names the same nine things, and printing them
+              twice inside one section made the panel read as a list repeated
+              rather than a statement supported.
+            */}
           </div>
 
-          <div className="lg:col-span-5">
-            <ExperienceSlider />
+          <div className="lg:col-span-8">
+            <CapabilityDeck />
           </div>
         </div>
       </DarkSection>
@@ -149,24 +255,9 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Philosophy */}
-      <section className="section-tight ground-soft bg-surface">
-        <div className="shell-narrow flex flex-col items-center gap-6 text-center">
-          <Reveal kind="fade">
-            <Icon name="quote" className="h-8 w-8 text-navy-200" />
-          </Reveal>
-          <Reveal delay={80}>
-            <blockquote className="font-display text-[1.25rem] leading-[1.24] font-semibold tracking-[-0.03em] text-ink md:text-[1.625rem]">
-              {aboutPage.philosophy.quote}
-            </blockquote>
-          </Reveal>
-          <Reveal delay={160}>
-            <p className="font-mono text-[0.625rem] uppercase tracking-[0.18em] text-navy-600">
-              {aboutPage.philosophy.label}
-            </p>
-          </Reveal>
-        </div>
-      </section>
+      {/* The philosophy quote moved into the opening section above, beside
+          the introduction it explains. It stood here on its own, centred
+          between a dark panel and a leadership block, attached to neither. */}
 
       {/* Leadership summary + credentials */}
       <section className="section ground-soft bg-canvas">
@@ -191,7 +282,7 @@ export default function AboutPage() {
           <Reveal delay={80} className="lg:col-span-6">
             <Link
               href="/about/leadership"
-              className="group/card flex h-full flex-col justify-center gap-6 rounded-[--radius-card] bg-surface p-8 ring-1 ring-line transition-[box-shadow,transform] duration-300 hover:-translate-y-0.5 hover:shadow-[var(--shadow-card)]"
+              className="group/card flex h-full flex-col justify-center gap-6 rounded-[var(--radius-card)] bg-surface p-8 ring-1 ring-line transition-[box-shadow,transform] duration-300 hover:-translate-y-0.5 hover:shadow-[var(--shadow-card)]"
             >
               <span className="flex items-center gap-4">
                 <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-navy-600 font-display text-base font-bold text-white">

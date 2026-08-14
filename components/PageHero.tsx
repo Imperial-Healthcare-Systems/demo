@@ -104,7 +104,15 @@ export function PageHero({
   return (
     <section
       className={cn(
-        "relative isolate overflow-hidden border-b border-line bg-surface pt-28 pb-14 md:pt-36 md:pb-20",
+        /*
+          Curved foot. Every sub-page used to open with a full-bleed rectangle
+          butted flat against the section under it — the single hardest edge on
+          any of these pages, and the one that made them read as stacked boxes.
+          Rounding the bottom two corners and pulling the next section up under
+          them turns that seam into a shoulder. The border only runs along the
+          bottom, so it follows the curve rather than crossing it.
+        */
+        "relative isolate overflow-hidden rounded-b-[2rem] border-b border-line bg-surface pt-28 pb-14 md:rounded-b-[3rem] md:pt-36 md:pb-20",
         className,
       )}
     >

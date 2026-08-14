@@ -6,6 +6,15 @@ import { Icon } from "@/components/Icon";
 import { FooterSentinel } from "@/components/FooterSentinel";
 
 export function SiteFooter() {
+  /*
+    "OrbisMoneta is a brand of Monetanova Technologies Pvt. Ltd." with the mark
+    standing in for the first two words. Split on the brand name so the sentence
+    lives in one place; the fallback keeps the line intact if it is ever
+    reworded such that the name no longer appears.
+  */
+  const brandTail =
+    site.legal.brandLine.split(site.name)[1]?.trim() || site.legal.brandLine;
+
   return (
     <footer className="on-dark surface-deep relative isolate overflow-hidden">
       {/*
@@ -100,8 +109,25 @@ export function SiteFooter() {
 
         {/* Legal bar */}
         <div className="flex flex-col gap-4 border-t border-white/10 py-7 md:flex-row md:items-center md:justify-between">
-          <div className="flex flex-col gap-1 text-[0.75rem] text-ink-inv-3">
-            <p>{site.legal.brandLine}</p>
+          <div className="flex flex-col gap-1.5 text-[0.75rem] text-ink-inv-3">
+            {/*
+              The mark stands in for the brand name in this sentence, so the
+              line is split on the name itself rather than on a second copy of
+              it kept in the content file — one string stays the source of
+              truth, and if it is ever reworded the split follows.
+
+              `decorative` is deliberately off. The mark's alt text is the brand
+              name, which is exactly the word it replaced, so the sentence still
+              reads "OrbisMoneta is a brand of Monetanova Technologies Pvt. Ltd."
+              to a screen reader and to anything that fails to load the image.
+
+              `tone="dark"` is the ground it sits on, not the colour of the mark
+              — this bar is navy, so it takes the inverse artwork.
+            */}
+            <p className="flex flex-wrap items-center gap-x-1.5 gap-y-1">
+              <BrandMark tone="dark" className="h-[1.15rem]" />
+              <span>{brandTail}</span>
+            </p>
             <p>{site.legal.copyright}</p>
           </div>
           <ul className="flex flex-wrap items-center gap-x-6 gap-y-2">

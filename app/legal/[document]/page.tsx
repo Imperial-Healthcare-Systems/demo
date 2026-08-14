@@ -95,7 +95,7 @@ export default async function LegalPage({ params }: Params) {
       <section className="section bg-canvas">
         <div className="shell grid gap-12 lg:grid-cols-12 lg:gap-16">
           <div className="flex flex-col gap-8 lg:col-span-8">
-            <Reveal className="flex gap-4 rounded-[--radius-card] border border-dashed border-line-strong bg-surface/60 p-6">
+            <Reveal className="flex gap-4 rounded-[var(--radius-card)] border border-dashed border-line-strong bg-surface/60 p-6">
               <Icon name="document" className="h-5 w-5 shrink-0 text-navy-600" strokeWidth={1.6} />
               <div className="flex flex-col gap-1.5">
                 <h2 className="text-[1rem]">Approved copy pending</h2>
@@ -109,7 +109,7 @@ export default async function LegalPage({ params }: Params) {
 
             <div className="flex flex-col gap-4">
               <Eyebrow>Sections</Eyebrow>
-              <ol className="flex flex-col gap-px overflow-hidden rounded-[--radius-card] bg-line ring-1 ring-line">
+              <ol className="flex flex-col gap-px overflow-hidden rounded-[var(--radius-card)] bg-line ring-1 ring-line">
                 {doc.sections.map((section, i) => (
                   <li
                     key={section}
@@ -126,7 +126,7 @@ export default async function LegalPage({ params }: Params) {
           </div>
 
           <aside className="lg:col-span-4">
-            <div className="sticky top-28 flex flex-col gap-4 rounded-[--radius-card] bg-surface p-7 ring-1 ring-line">
+            <div className="sticky top-28 flex flex-col gap-4 rounded-[var(--radius-card)] bg-surface p-7 ring-1 ring-line">
               <Eyebrow>Questions?</Eyebrow>
               <p className="text-[0.9375rem] leading-relaxed text-ink-2">
                 For any question about how we handle your information, contact us directly and we

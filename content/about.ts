@@ -9,16 +9,24 @@ export const aboutPage = {
     statement:
       "Building secure, intelligent and interoperable financial platforms for the next generation of global finance.",
   },
+  /**
+   * The nine capability labels are the client's, unchanged to the character.
+   * `icon` and `tone` are presentation only — they carry nothing the label does
+   * not already say, which is why they live beside the copy rather than in it.
+   *
+   * Tones cycle navy · sky · green, the logo's own order, the same rotation the
+   * home page's reason cards and the partner tiers use.
+   */
   coreCapabilities: [
-    "Enterprise Payment Platforms",
-    "Cross-Border Infrastructure",
-    "CBDC & Digital Currency",
-    "Tokenization",
-    "Digital Assets",
-    "AI for Financial Services",
-    "Payment Modernization",
-    "Financial Crime & Risk",
-    "ISO 20022 Transformation",
+    { label: "Enterprise Payment Platforms", icon: "transfer", tone: 0 },
+    { label: "Cross-Border Infrastructure", icon: "globe", tone: 1 },
+    { label: "CBDC & Digital Currency", icon: "coin", tone: 2 },
+    { label: "Tokenization", icon: "layers", tone: 0 },
+    { label: "Digital Assets", icon: "chip", tone: 1 },
+    { label: "AI for Financial Services", icon: "spark", tone: 2 },
+    { label: "Payment Modernization", icon: "refresh", tone: 0 },
+    { label: "Financial Crime & Risk", icon: "shield", tone: 1 },
+    { label: "ISO 20022 Transformation", icon: "document", tone: 2 },
   ],
   leadershipSummary:
     "Founded and led by a payments and financial technology executive with nearly three decades of experience delivering mission-critical payment infrastructure, enterprise products and modernization programs across global financial institutions, technology companies and regulated banks.",
@@ -131,7 +139,7 @@ export const careersPage = {
   cta: {
     heading: "Introduce yourself.",
     body: "Send your profile and the kind of work you want to do next. The right person at OrbisMoneta will respond directly.",
-    email: "hello@orbismoneta.com",
+    email: "info@orbismoneta.com",
   },
 };
 
@@ -161,7 +169,9 @@ export const partnersPage = {
   cta: {
     headline: "Become an OrbisMoneta partner.",
     body: "Join a network co-building enterprise payments, digital money and AI infrastructure for financial institutions worldwide.",
-    label: "Explore Partnership",
+    // "Explore Partnership" named a topic; this names the action, which is what
+    // a button label is for. It also matches the heading directly above it.
+    label: "Become a Partner",
     email: "partners@orbismoneta.com",
   },
 };
@@ -172,6 +182,29 @@ export const labPage = {
   headlineAccent: "the next generation",
   intro:
     "Our innovation lab explores emerging technology — from AI-native payment rails to tokenized settlement — before it reaches production.",
+  /**
+   * The closing panel.
+   *
+   * `body` is the client's own last line from their Lab section, verbatim —
+   * their HTML reads "…before it reaches production. Details coming soon." The
+   * first sentence is `intro` above; this is the second.
+   *
+   * `headline` and `status` are the two lines from the design the client
+   * supplied for this page. They are slogans, not claims — no date, no figure,
+   * nothing anyone could be held to. The rest of that design's copy ("building
+   * in stealth", "updates on our breakthroughs") is deliberately not here: it
+   * asserts activity and results that appear nowhere in the client's material,
+   * and "Details coming soon" says the same thing without asserting either.
+   */
+  comingSoon: {
+    eyebrow: "Coming soon",
+    headline: "Building today. Delivering tomorrow.",
+    body: "Details coming soon.",
+    status: "Innovation in progress",
+  },
+  /* Was rendered in a dashed "In preparation" block, now replaced by the panel
+     above. Kept rather than deleted — it is still the accurate description of
+     where the Lab's detail stands. */
   note: "Detailed prototype themes and lab imagery are being prepared with the client team.",
   themes: [
     {

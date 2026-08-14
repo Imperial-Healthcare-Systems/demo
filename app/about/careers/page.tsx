@@ -42,7 +42,7 @@ export default function CareersPage() {
                 as="li"
                 key={principle.title}
                 delay={i * 80}
-                className="flex h-full flex-col gap-3 rounded-[--radius-card] bg-surface p-7 ring-1 ring-line"
+                className="flex h-full flex-col gap-3 rounded-[var(--radius-card)] bg-surface p-7 ring-1 ring-line"
               >
                 <span className="font-mono text-[0.6875rem] tabular text-navy-600">
                   0{i + 1}
@@ -54,7 +54,7 @@ export default function CareersPage() {
           </ul>
 
           {/* Open roles — awaiting the client's list */}
-          <Reveal className="mt-10 flex flex-col gap-6 rounded-[--radius-card] border border-dashed border-line-strong bg-white p-8 md:p-10">
+          <Reveal className="mt-10 flex flex-col gap-6 rounded-[var(--radius-card)] border border-dashed border-line-strong bg-white p-8 md:p-10">
             <div className="flex items-start gap-4">
               <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-surface text-navy-600">
                 <Icon name="document" className="h-5 w-5" strokeWidth={1.5} />

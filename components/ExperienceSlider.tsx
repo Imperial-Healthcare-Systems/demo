@@ -44,7 +44,7 @@ export function ExperienceSlider() {
       onBlurCapture={(e) => {
         if (!e.currentTarget.contains(e.relatedTarget as Node)) setPaused(false);
       }}
-      className="flex flex-col gap-6 rounded-[--radius-card] bg-white/[0.045] p-8 ring-1 ring-white/12 backdrop-blur-sm"
+      className="flex flex-col gap-6 rounded-[var(--radius-card)] bg-white/[0.045] p-8 ring-1 ring-white/12 backdrop-blur-sm"
       aria-roledescription="carousel"
       aria-label="Leadership and payment experience"
     >

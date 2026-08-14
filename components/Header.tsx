@@ -13,6 +13,39 @@ import { useConversion } from "@/components/ConversionProvider";
 
 /** Routes whose hero sits behind the header, so it starts transparent. */
 const OVERLAY_ROUTES = ["/"];
+/**
+ * Below this the bar always shows. That band covers the hero, where the header
+ * is transparent over the artwork and retracting it reads as a rendering fault
+ * rather than a feature.
+ */
+const REVEAL_ABOVE = 120;
+
+/**
+ * Is the keyboard in the header?
+ *
+ * `contains(document.activeElement)` was the first answer and it was wrong: a
+ * mouse click sets `activeElement` too, so clicking any nav link left focus
+ * parked on it and the bar locked open for the rest of that page — which is
+ * every visitor who navigates from the nav, i.e. the normal case. It looked
+ * exactly like the feature not working.
+ *
+ * `:focus-visible` is the distinction that was actually wanted. The browser
+ * matches it only when it decides a focus ring should be drawn, which is the
+ * keyboard case and not the click case — so tabbing into the header still holds
+ * the bar, and clicking through it no longer does.
+ *
+ * Guarded: this runs inside the scroll handler, and an unsupported selector
+ * throwing there would take the whole listener down with it.
+ */
+function hasKeyboardFocus(root: HTMLElement | null) {
+  if (!root) return false;
+  try {
+    return !!root.querySelector(":focus-visible");
+  } catch {
+    return false;
+  }
+}
+
 
 export function SiteHeader() {
   const pathname = usePathname();
@@ -27,15 +60,62 @@ export function SiteHeader() {
   const overlay =
     OVERLAY_ROUTES.includes(pathname) && !scrolled && !openPanel && !mobileOpen;
 
+  /**
+   * Retracted = slid up out of view. The bar leaves on the way down and comes
+   * back on the way up, so reading long pages gets the full viewport but the
+   * navigation is never more than a flick away.
+   *
+   * Three things hold it open regardless of direction, because a bar that
+   * slides away mid-interaction is worse than one that simply stays:
+   *   · an open mega-menu — the panel is a child of the header and would leave
+   *     with it
+   *   · the mobile drawer — a sibling pinned to `top-16`, which would be left
+   *     hanging under nothing
+   *   · focus inside the header — tabbing into a control that then slides off
+   *     screen strands a keyboard user
+   *
+   * The locks are read through a ref rather than listed as effect deps: this
+   * listener is bound once for the life of the component, and re-binding a
+   * scroll handler on every menu open would be a lot of churn for a value the
+   * handler only ever reads.
+   */
+  const [retracted, setRetracted] = useState(false);
+  const lockRef = useRef(false);
+
+  useEffect(() => {
+    lockRef.current = Boolean(openPanel) || mobileOpen;
+    // Anything that locks the bar also brings it back — opening a menu while
+    // the bar is away should not open it off screen.
+    if (lockRef.current) setRetracted(false);
+  }, [openPanel, mobileOpen]);
+
   useEffect(() => {
     let frame = 0;
+    let last = Math.max(0, window.scrollY);
+
     const onScroll = () => {
       if (frame) return;
       frame = requestAnimationFrame(() => {
-        setScrolled(window.scrollY > 24);
+        // Clamped: iOS rubber-banding reports negative values at the top and
+        // over-scrolled ones at the bottom, and both read as a direction change.
+        const y = Math.max(0, window.scrollY);
+        setScrolled(y > 24);
+
+        const delta = y - last;
+        // Ignore anything under 6px so a trackpad's idle jitter cannot flutter
+        // the bar. `last` only advances when a move clears the threshold, so
+        // slow scrolling accumulates rather than being discarded.
+        if (Math.abs(delta) >= 6) {
+          const locked = lockRef.current || hasKeyboardFocus(headerRef.current);
+          // Near the top the bar always shows — that is where the overlay
+          // treatment lives, and retracting over the hero looks like a glitch.
+          setRetracted(!locked && y > REVEAL_ABOVE && delta > 0);
+          last = y;
+        }
         frame = 0;
       });
     };
+
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
@@ -82,21 +162,36 @@ export function SiteHeader() {
     if (closeTimer.current) clearTimeout(closeTimer.current);
   }, []);
 
-  const isActive = (item: NavItem) =>
-    item.href === "/" ? pathname === "/" : pathname.startsWith(item.href.split("#")[0]);
+  const isActive = (item: NavItem) => {
+    if (item.href === "/") return pathname === "/";
+    if (pathname.startsWith(item.href.split("#")[0])) return true;
+    // A section can own pages that do not sit under its own href.
+    return (item.matches ?? []).some((prefix) => pathname.startsWith(prefix));
+  };
 
   return (
     <>
       <header
         ref={headerRef}
         onMouseLeave={scheduleClose}
+        /*
+          Focus arriving from a keyboard brings the bar straight back, whatever
+          the scroll direction was. Without this, tabbing from page content into
+          the navigation would move the focus ring onto something off screen.
+        */
+        onFocusCapture={() => setRetracted(false)}
         className={cn(
-          "fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow,backdrop-filter] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
+          // `translate`, not `transform`: Tailwind v4 compiles `-translate-y-*`
+          // to the standalone `translate` property, and a transition list
+          // naming `transform` would leave this jumping rather than sliding.
+          "fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow,backdrop-filter,translate] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
+          retracted && "-translate-y-full",
           overlay
             ? "bg-transparent"
             : "border-b border-line bg-white/92 shadow-[0_1px_0_rgba(10,21,51,.04)] backdrop-blur-xl",
         )}
         data-overlay={overlay || undefined}
+        data-retracted={retracted || undefined}
       >
       {/*
         No utility strip. The tagline, a mail link and a second Contact entry
@@ -412,7 +507,10 @@ function MegaPanel({
           <div
             className={cn(
               "grid gap-x-6",
-              panel.feature ? "col-span-6 grid-cols-2" : "col-span-9 grid-cols-2",
+              panel.feature ? "col-span-6" : "col-span-9",
+              // Written out, not interpolated — Tailwind only generates class
+              // names it can find as literal text.
+              panel.columns.length >= 3 ? "grid-cols-3" : "grid-cols-2",
             )}
           >
             {panel.columns.map((col) => (
