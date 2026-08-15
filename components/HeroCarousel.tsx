@@ -39,8 +39,12 @@ import { Marquee } from "@/components/Marquee";
  * rest because it carried the most reading; with the copy fixed there is no
  * frame that asks more of the reader than any other, so an even cadence is the
  * honest one — an uneven one would imply a difference that no longer exists.
+ *
+ * Matches the galleries' dwell. Nothing on a frame has to be read before it
+ * turns — the headline and the ticker are fixed, and only the artwork changes —
+ * so this paces the picture, not the copy.
  */
-const SLIDE_MS = 5_000;
+const SLIDE_MS = 4_000;
 
 type Frame = {
   id: string;

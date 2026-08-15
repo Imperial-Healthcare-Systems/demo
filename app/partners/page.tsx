@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { partnersPage } from "@/content/about";
 import { site } from "@/content/site";
+import { ArtCarousel } from "@/components/ArtCarousel";
 import { PageHero } from "@/components/PageHero";
 import { ButtonLink } from "@/components/Button";
 import { Icon, type IconName } from "@/components/Icon";
@@ -15,63 +17,132 @@ export const metadata: Metadata = {
 };
 
 /**
- * One tone per tier, cycling the logo's own order — navy, green, sky. The same
- * system as the reason cards on the home page and the Lab's themes, so a reader
- * crossing those pages meets one idea rather than three.
+ * One tone per tier, taken from each render's own light — the technology card
+ * is lit blue, the implementation card green, the alliances card a deeper
+ * blue — so the panel under each image continues the picture rather than
+ * sitting beside it.
+ *
+ * `panel` starts at very close to the bottom edge of the matching render,
+ * sampled rather than guessed: #000215 / #000000 / #01081e across the three.
+ * That is what lets the seam read as one surface darkening downward instead of
+ * as a photograph pasted onto a card.
  */
-const SAT_POSITIONS = [
-  "top-[14%] left-[13%]",
-  "top-[19%] right-[11%]",
-  "bottom-[13%] right-[24%]",
-];
-
 const TIER_TONES = [
   {
-    ring: "ring-navy-600/20",
-    art: "bg-[linear-gradient(155deg,rgba(0,46,166,.10),rgba(1,164,255,.05)_58%,rgba(255,255,255,0))]",
-    dashed: "border-navy-600/20",
-    core: "bg-[linear-gradient(140deg,var(--color-navy-600),var(--color-sky-500))]",
-    coreIcon: "cloud" as IconName,
-    badge: "text-navy-600 ring-navy-600/15",
-    badgeIcon: "chip" as IconName,
-    sats: ["chip", "shield", "bars"] as IconName[],
-    chip: "text-navy-600 ring-navy-600/12",
-    label: "text-navy-600",
-    rule: "bg-[linear-gradient(90deg,var(--color-navy-600),var(--color-sky-500))]",
-    ghost: "text-navy-600/10 group-hover/tier:text-navy-600/20",
-    lift: "hover:ring-navy-600/40 hover:shadow-[0_2px_6px_rgba(10,21,51,.06),0_24px_46px_-20px_rgba(10,21,51,.28),0_44px_70px_-42px_rgba(0,46,166,.5)]",
+    ring: "ring-sky-400/18",
+    panel: "bg-[linear-gradient(180deg,#020a1c,#071a3d_58%,#0a2350)]",
+    badge: "bg-[linear-gradient(145deg,var(--color-sky-500),var(--color-navy-600))] shadow-[0_16px_34px_-14px_rgba(1,164,255,.85)]",
+    label: "text-sky-400",
+    link: "text-sky-400",
+    ghost: "text-sky-400/15 group-hover/tier:text-sky-400/30",
+    glow: "bg-[radial-gradient(circle,rgba(1,164,255,.5),transparent_70%)]",
+    lift: "hover:ring-sky-400/45 hover:shadow-[0_28px_54px_-24px_rgba(3,13,34,.75),0_46px_78px_-46px_rgba(1,164,255,.6)]",
   },
   {
-    ring: "ring-green-500/25",
-    art: "bg-[linear-gradient(155deg,rgba(1,172,50,.10),rgba(62,203,106,.05)_58%,rgba(255,255,255,0))]",
-    dashed: "border-green-500/22",
-    core: "bg-[linear-gradient(140deg,var(--color-green-600),var(--color-green-400))]",
-    coreIcon: "globe" as IconName,
-    badge: "text-green-600 ring-green-500/20",
-    badgeIcon: "user" as IconName,
-    sats: ["nodes", "building", "layers"] as IconName[],
-    chip: "text-green-600 ring-green-500/15",
-    label: "text-green-600",
-    rule: "bg-[linear-gradient(90deg,var(--color-green-600),var(--color-green-400))]",
-    ghost: "text-green-500/12 group-hover/tier:text-green-500/25",
-    lift: "hover:ring-green-500/45 hover:shadow-[0_2px_6px_rgba(10,21,51,.06),0_24px_46px_-20px_rgba(10,21,51,.28),0_44px_70px_-42px_rgba(1,172,50,.5)]",
+    ring: "ring-green-400/20",
+    panel: "bg-[linear-gradient(180deg,#010d05,#06240f_58%,#0a3317)]",
+    badge: "bg-[linear-gradient(145deg,var(--color-green-400),var(--color-green-600))] shadow-[0_16px_34px_-14px_rgba(1,172,50,.85)]",
+    label: "text-green-400",
+    link: "text-green-400",
+    ghost: "text-green-400/15 group-hover/tier:text-green-400/30",
+    glow: "bg-[radial-gradient(circle,rgba(1,172,50,.5),transparent_70%)]",
+    lift: "hover:ring-green-400/45 hover:shadow-[0_28px_54px_-24px_rgba(3,13,34,.75),0_46px_78px_-46px_rgba(1,172,50,.6)]",
   },
   {
-    ring: "ring-sky-500/25",
-    art: "bg-[linear-gradient(155deg,rgba(1,164,255,.10),rgba(0,46,166,.05)_58%,rgba(255,255,255,0))]",
-    dashed: "border-sky-500/22",
-    core: "bg-[linear-gradient(140deg,var(--color-sky-600),var(--color-navy-600))]",
-    coreIcon: "bank" as IconName,
-    badge: "text-sky-600 ring-sky-500/20",
-    badgeIcon: "nodes" as IconName,
-    sats: ["shield", "document", "refresh"] as IconName[],
-    chip: "text-sky-600 ring-sky-500/15",
-    label: "text-sky-600",
-    rule: "bg-[linear-gradient(90deg,var(--color-sky-600),var(--color-navy-600))]",
-    ghost: "text-sky-500/12 group-hover/tier:text-sky-500/25",
-    lift: "hover:ring-sky-500/45 hover:shadow-[0_2px_6px_rgba(10,21,51,.06),0_24px_46px_-20px_rgba(10,21,51,.28),0_44px_70px_-42px_rgba(1,164,255,.5)]",
+    ring: "ring-sky-500/20",
+    panel: "bg-[linear-gradient(180deg,#02102e,#0a2560_58%,#0d2f77)]",
+    /* Brighter than the tone alone would suggest. This is the one tile that is
+       drawn rather than baked, and it sits over the lit face of the bank —
+       at sky-600/navy-700 it read as a flat patch beside the glowing tiles on
+       the other two cards. */
+    badge: "bg-[linear-gradient(145deg,var(--color-sky-400),var(--color-navy-600))] shadow-[0_16px_36px_-12px_rgba(1,164,255,.95)]",
+    label: "text-sky-400",
+    link: "text-sky-400",
+    ghost: "text-sky-300/15 group-hover/tier:text-sky-300/30",
+    glow: "bg-[radial-gradient(circle,rgba(0,46,166,.6),transparent_70%)]",
+    lift: "hover:ring-sky-500/45 hover:shadow-[0_28px_54px_-24px_rgba(3,13,34,.75),0_46px_78px_-46px_rgba(0,46,166,.65)]",
   },
 ];
+
+/**
+ * The hero gallery.
+ *
+ * This was a single feathered diagram, floating frameless on the section. Two
+ * more images arrived and that treatment stopped working: the diagram is
+ * near-white and the two new scenes are near-black, and a feather blends by
+ * taking an image's edges to zero, which only reads as a blend when image and
+ * page are close in tone. Feathering a near-black scene onto #f7f9fc gives a
+ * dark blob with soft edges. Worse, the feather that suited the diagram was a
+ * radial — it would have cropped the new scenes to a circle and taken the bank
+ * and the tower off their corners, which is most of what they depict.
+ *
+ * So: a framed card, the same answer the industry gallery reached for the same
+ * reason, and the same component.
+ *
+ * 16/15, and that number is derived rather than picked — see the note on
+ * `partnersPage.hero.gallery`, which records the measured subject bounds each
+ * slide has to keep and the window they leave. The short version: it is the one
+ * band of ratios where all three fill the frame without losing anything drawn.
+ * Wider frames were tried first and both failed the same way — 5:4 and 9:8 each
+ * left the square diagram letterboxed inside a much larger box, which reads as
+ * a small picture in a big hole.
+ *
+ * The drift is `om-float`, the slow rise-and-fall the advisory hero uses, so
+ * the two openings move at one tempo.
+ */
+function EcosystemGallery() {
+  return (
+    /* Bleeds past the shell between lg and xl, where the column is narrow
+       enough that the card would otherwise read as an afterthought beside the
+       copy. None from xl up: the card is what sets the hero's height there, so
+       every pixel of bleed is a pixel of section. */
+    <div className="mx-auto w-full max-w-[30rem] lg:w-[calc(100%+2rem)] lg:max-w-none xl:w-full">
+      <div className="animate-[om-float_11s_var(--ease-in-out-soft)_infinite] motion-reduce:animate-none">
+        <ArtCarousel
+          slides={partnersPage.hero.gallery}
+          label="Partner ecosystem imagery"
+          aspect="aspect-[16/15]"
+          ground="bg-[#eef1f8]"
+          priority
+          sizes="(min-width: 1280px) 34vw, (min-width: 1024px) 40vw, 92vw"
+        />
+      </div>
+    </div>
+  );
+}
+
+/** Alternating navy / green, the logo's order — same as the solution cards. */
+const PROOF_TONES = [
+  "bg-navy-600/8 text-navy-600 ring-navy-600/14 group-hover/proof:bg-navy-600 group-hover/proof:text-white group-hover/proof:ring-navy-600",
+  "bg-green-500/10 text-green-600 ring-green-500/18 group-hover/proof:bg-green-500 group-hover/proof:text-white group-hover/proof:ring-green-500",
+];
+
+function ProofStrip() {
+  return (
+    <ul className="grid grid-cols-2 gap-x-5 gap-y-6 sm:grid-cols-4 sm:gap-x-0">
+      {partnersPage.hero.proof.map((point, i) => (
+        <li
+          key={point.label}
+          className={`group/proof flex items-start gap-3 sm:px-5 sm:first:pl-0 sm:last:pr-0 ${
+            i > 0 ? "sm:border-l sm:border-line" : ""
+          }`}
+        >
+          <span
+            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ring-1 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/proof:scale-110 group-hover/proof:[transform:perspective(520px)_rotateY(-14deg)] ${
+              PROOF_TONES[i % PROOF_TONES.length]
+            }`}
+          >
+            <Icon name={point.icon as IconName} className="h-[1.1rem] w-[1.1rem]" strokeWidth={1.7} />
+          </span>
+          <span className="flex min-w-0 flex-col gap-0.5">
+            <span className="text-[0.875rem] leading-snug font-semibold">{point.label}</span>
+            <span className="text-[0.8125rem] leading-snug text-ink-3">{point.body}</span>
+          </span>
+        </li>
+      ))}
+    </ul>
+  );
+}
 
 export default function PartnersPage() {
   /* "Become an OrbisMoneta partner." with the brand name painted. Split on the
@@ -86,11 +157,14 @@ export default function PartnersPage() {
         accent={partnersPage.headlineAccent}
         intro={partnersPage.intro}
         crumbs={[{ label: "Partners" }]}
+        split="showcase"
         actions={
           <ButtonLink href={`mailto:${partnersPage.cta.email}`} icon="arrowRight">
             {partnersPage.cta.label}
           </ButtonLink>
         }
+        aside={<EcosystemGallery />}
+        footer={<ProofStrip />}
       />
 
       <section className="section ground-soft bg-canvas">
@@ -99,7 +173,7 @@ export default function PartnersPage() {
             <Eyebrow>Our partner ecosystem</Eyebrow>
           </Reveal>
 
-          <ol className="grid gap-6 lg:grid-cols-3">
+          <ol className="grid auto-rows-fr gap-6 lg:grid-cols-3">
             {partnersPage.tiers.map((tier, i) => {
               const tone = TIER_TONES[i % TIER_TONES.length];
               return (
@@ -107,91 +181,101 @@ export default function PartnersPage() {
                   as="li"
                   key={tier.title}
                   delay={i * 90}
-                  className={`group/tier relative flex h-full flex-col overflow-hidden rounded-[1.75rem] bg-white shadow-[0_1px_2px_rgba(10,21,51,.04),0_14px_32px_-22px_rgba(10,21,51,.26)] ring-1 transition-[transform,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-2 motion-reduce:hover:translate-y-0 ${tone.ring} ${tone.lift}`}
+                  className={`group/tier on-dark relative flex h-full flex-col overflow-hidden rounded-[1.75rem] ring-1 transition-[transform,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-2 motion-reduce:hover:translate-y-0 ${tone.panel} ${tone.ring} ${tone.lift}`}
                 >
                   {/*
-                    The illustration.
+                    The render, whole and uncropped.
 
-                    The design this follows uses 3D isometric renders. There are
-                    none in the project and inventing them is not on the table,
-                    so each tier is composed instead — a core tile and three
-                    satellites on a turning ring, drawn from the icon set the
-                    site already uses. Vector: sharp at any size, weighs nothing,
-                    and carries no ground of its own to clash with the card,
-                    which is what every raster plate on this site has had to be
-                    masked around. Real artwork later replaces only this block.
+                    Each one already carries its own label chips, and those
+                    chips run down to 90% of the frame — past where the badge
+                    below sits. So there is no band to crop and no bottom fade
+                    to apply: either would take a chip's label with it. The
+                    seam is handled from the other side instead, by starting
+                    `tone.panel` at the render's own bottom colour.
                   */}
-                  <div className={`relative aspect-[16/10] overflow-hidden ${tone.art}`}>
-                    <span
+                  <div className="relative">
+                    <Image
+                      src={tier.image}
+                      alt=""
                       aria-hidden="true"
-                      className="absolute inset-0 bg-[linear-gradient(to_right,rgba(10,21,51,.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(10,21,51,.05)_1px,transparent_1px)] bg-[size:32px_32px] [mask-image:radial-gradient(72%_72%_at_50%_46%,#000,transparent)]"
+                      width={1402}
+                      height={1122}
+                      quality={78}
+                      sizes="(min-width: 1024px) 30vw, (min-width: 768px) 46vw, 92vw"
+                      className="h-auto w-full select-none transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/tier:scale-[1.05] motion-reduce:transition-none"
                     />
 
+                    {/* Light raking across as the pointer arrives. */}
                     <span
                       aria-hidden="true"
-                      className={`absolute top-1/2 left-1/2 aspect-square w-[58%] -translate-x-1/2 -translate-y-1/2 animate-[om-orbit_38s_linear_infinite] rounded-full border border-dashed motion-reduce:animate-none ${tone.dashed}`}
+                      className="pointer-events-none absolute inset-y-0 -left-1/3 w-1/3 bg-[linear-gradient(90deg,transparent,rgba(255,255,255,.16),transparent)] opacity-0 group-hover/tier:animate-[om-sheen_1.15s_ease-out] group-hover/tier:opacity-100 motion-reduce:hidden"
                     />
 
-                    {/* The satellites spread a little as the card lifts. */}
-                    <span
-                      aria-hidden="true"
-                      className="absolute inset-0 transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/tier:scale-[1.08] motion-reduce:transition-none"
-                    >
-                      {tone.sats.map((icon, s) => (
+                    {/*
+                      The tier's mark — drawn only where the render lacks one.
+
+                      Two of the three carry their own centre tile, and drawing
+                      over them is not an option: the baked tiles run from 76%
+                      to 97% of the frame and overlap the label chips above, so
+                      nothing can be cropped or faded away to make room. An
+                      overlay just sits beneath a second, visible tile, which is
+                      what the first pass shipped. So the drawn one matches the
+                      baked ones instead — same width, same footing — and only
+                      appears on the card that needs it.
+                    */}
+                    {!tier.markInImage && (
+                      <>
                         <span
-                          key={icon}
-                          style={{ animationDelay: `${s * 900}ms` }}
-                          className={`absolute flex h-10 w-10 animate-[om-satellite_6.5s_var(--ease-in-out-soft)_infinite] items-center justify-center rounded-xl bg-white/90 shadow-[0_6px_16px_-8px_rgba(10,21,51,.4)] ring-1 backdrop-blur-sm motion-reduce:animate-none ${SAT_POSITIONS[s]} ${tone.chip}`}
+                          aria-hidden="true"
+                          className={`pointer-events-none absolute bottom-[1%] left-1/2 h-24 w-24 -translate-x-1/2 rounded-full blur-2xl ${tone.glow}`}
+                        />
+                        <span
+                          aria-hidden="true"
+                          className={`absolute bottom-[3%] left-1/2 flex h-16 w-16 -translate-x-1/2 items-center justify-center rounded-2xl text-white ring-1 ring-white/20 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/tier:scale-110 group-hover/tier:rotate-[-8deg] motion-reduce:transition-none ${tone.badge}`}
                         >
-                          <Icon name={icon} className="h-[1.15rem] w-[1.15rem]" strokeWidth={1.7} />
+                          <Icon name={tier.icon as IconName} className="h-7 w-7" strokeWidth={1.6} />
                         </span>
-                      ))}
-                    </span>
-
-                    <span
-                      aria-hidden="true"
-                      className={`absolute top-1/2 left-1/2 flex h-[4.5rem] w-[4.5rem] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-2xl text-white shadow-[0_14px_30px_-12px_rgba(10,21,51,.55)] transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/tier:scale-110 group-hover/tier:[transform:perspective(520px)_rotateY(-12deg)] motion-reduce:transition-none ${tone.core}`}
-                    >
-                      <Icon name={tone.coreIcon} className="h-7 w-7" strokeWidth={1.6} />
-                    </span>
-
-                    {/* Light raking across the panel as the pointer arrives. */}
-                    <span
-                      aria-hidden="true"
-                      className="pointer-events-none absolute inset-y-0 -left-1/4 w-1/4 bg-[linear-gradient(90deg,transparent,rgba(255,255,255,.8),transparent)] opacity-0 group-hover/tier:animate-[om-sheen_1.1s_ease-out] group-hover/tier:opacity-100 motion-reduce:hidden"
-                    />
+                      </>
+                    )}
                   </div>
 
-                  <div className="relative flex flex-1 flex-col gap-3 px-7 pt-11 pb-24">
-                    {/* Badge, straddling the seam between artwork and copy. */}
-                    <span
-                      aria-hidden="true"
-                      className={`absolute -top-7 left-0 flex h-14 w-14 items-center justify-center rounded-full bg-white shadow-[0_10px_24px_-12px_rgba(10,21,51,.45)] ring-1 transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/tier:scale-110 group-hover/tier:[transform:perspective(520px)_rotateY(-12deg)] ${tone.badge}`}
-                    >
-                      <Icon name={tone.badgeIcon} className="h-6 w-6" strokeWidth={1.6} />
-                    </span>
-
+                  <div className="relative flex flex-1 flex-col gap-3 px-7 pt-12 pb-7">
                     {/* Oversized numeral, sunk into the corner. */}
                     <span
                       aria-hidden="true"
-                      className={`pointer-events-none absolute right-6 bottom-4 font-display text-[4.5rem] leading-none font-bold tabular transition-colors duration-300 ${tone.ghost}`}
+                      className={`pointer-events-none absolute right-5 bottom-3 font-display text-[3.75rem] leading-none font-bold tabular transition-colors duration-300 ${tone.ghost}`}
                     >
                       {tier.tier.replace("Tier ", "")}
                     </span>
 
                     <span
-                      className={`font-mono text-[0.6875rem] uppercase tracking-[0.18em] ${tone.label}`}
+                      className={`font-mono text-[0.6875rem] tracking-[0.18em] uppercase ${tone.label}`}
                     >
                       {tier.tier}
                     </span>
-                    <h2 className="text-[1.25rem] leading-snug">{tier.title}</h2>
-                    <span
-                      aria-hidden="true"
-                      className={`h-[3px] w-10 rounded-full transition-[width] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/tier:w-20 ${tone.rule}`}
-                    />
-                    <p className="relative mt-1 text-[0.9375rem] leading-relaxed text-ink-2">
+                    <h2 className="text-[1.25rem] leading-snug text-white">{tier.title}</h2>
+                    <p className="relative text-[0.9375rem] leading-relaxed text-ink-inv-2">
                       {tier.body}
                     </p>
+
+                    {/*
+                      A real destination, not the reference's decorative "Learn
+                      more". These tiers have no pages of their own, and a link
+                      that looks live but goes nowhere is worse than no link —
+                      so it points at the address the rest of the page already
+                      uses for partner enquiries.
+                    */}
+                    <a
+                      href={`mailto:${partnersPage.cta.email}?subject=${encodeURIComponent(tier.title)}`}
+                      className={`relative mt-auto inline-flex w-fit items-center gap-2 pt-5 font-mono text-[0.6875rem] tracking-[0.14em] uppercase transition-colors duration-200 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-current ${tone.link}`}
+                    >
+                      Become a partner
+                      <Icon
+                        name="arrowRight"
+                        className="h-3.5 w-3.5 transition-transform duration-300 group-hover/tier:translate-x-1"
+                        strokeWidth={2}
+                      />
+                    </a>
                   </div>
                 </Reveal>
               );

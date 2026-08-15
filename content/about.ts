@@ -149,21 +149,114 @@ export const partnersPage = {
   headlineAccent: "the best",
   intro:
     "No institution modernizes in isolation. We integrate, certify and co-engineer alongside the cloud providers, fintech platforms, core banking vendors and specialist technology partners our clients already depend on.",
+  /**
+   * The opening, as the client designed it: the ecosystem diagram beside the
+   * headline, and a four-up strip beneath it.
+   *
+   * The four labels are the client's own, from the design supplied for this
+   * page, and three of them are the intro's verbs read back as adjectives — we
+   * *integrate*, *certify* and *co-engineer*. None is a figure, a named
+   * certification, a client or a regulatory position; they describe the
+   * approach, which is what the rest of this page already describes at length.
+   */
+  /**
+   * The hero gallery.
+   *
+   * Every slide fills the frame. Containing the square diagram to spare the
+   * other two any crop was tried and looked exactly like what it was — a small
+   * picture in a large box.
+   *
+   * The frame ratio is what makes filling possible, and it was derived from the
+   * files rather than chosen. Each was scanned for the bounding box of its
+   * subject, against a per-row ground for the diagram (its own ground is a
+   * gradient, so one global colour misreads it) and a luminance gate for the
+   * scenes (their floor circuitry glints at the very edges and is not subject):
+   *
+   *   diagram        6.06% blank above, 1.20% below → tolerates 7.26% of height
+   *   scene-network  9.56% left, 10.49% right
+   *   scene-security 8.70% left, 7.92% right → the tightest, 15.84% of width
+   *
+   * A 1:1 slide in a frame of ratio R loses (R−1)/R of its height; a 5:4 slide
+   * loses (1.25−R)/1.25 of its width. Those two budgets leave R between 1.052
+   * and 1.078, and the frame sits in the middle of that window at 16/15.
+   *
+   * `object-position` on the diagram splits its crop in proportion to the blank
+   * it actually has — 83% from the top, where the room is. `ground` is now only
+   * a backstop while an image decodes, since nothing letterboxes.
+   */
+  hero: {
+    gallery: [
+      {
+        src: "/images/partner-hero-image.png",
+        label: "Partner ecosystem",
+        alt: "OrbisMoneta at the centre of its partner ecosystem, linked to cloud providers, core banking vendors, fintech platforms, security and compliance, infrastructure partners and implementation partners",
+        fit: "object-cover object-[center_83%]",
+        ground: "bg-[#eef1f8]",
+      },
+      {
+        src: "/images/partners-carousal/8f35f0b0-6c97-4b8b-9f95-ae7263f909d2.png",
+        label: "Connected institutions",
+        alt: "A lit network core linking a bank, an office tower, data terminals, laptops and a mobile device across an isometric grid",
+        fit: "object-cover",
+        ground: "bg-[#000811]",
+      },
+      {
+        src: "/images/partners-carousal/d9b17b0f-f52b-49ff-bab5-29a0f1849f38.png",
+        label: "Security and compliance",
+        alt: "A shield on a lit platform surrounded by server racks, a padlock, certified documents, an identity card and a globe",
+        fit: "object-cover",
+        ground: "bg-[#04101f]",
+      },
+    ],
+    proof: [
+      { icon: "cloud", label: "Integrated", body: "End-to-end ecosystem" },
+      { icon: "shield", label: "Certified", body: "Trusted & compliant" },
+      { icon: "nodes", label: "Collaborative", body: "Co-engineer for impact" },
+      { icon: "bars", label: "Scalable", body: "Future-ready technologies" },
+    ],
+  },
+  /**
+   * `image` and `icon` are presentation, not copy. The three renders carry
+   * their own label chips — Security / APIs / Analytics, Consulting /
+   * Expertise / Delivery / Integration, Compliance / Regulatory / Standards /
+   * Frameworks — which is why they render `aria-hidden` with an empty alt: the
+   * title and body beside them already say what the tier is, and a screen
+   * reader should not have to sit through a second, looser list of the same
+   * idea. Filenames are the client's, typos included, so the repo matches what
+   * was handed over.
+   *
+   * `markInImage` records whether a render already carries the centre tile the
+   * design puts at the foot of each card. Two do; the alliances render does
+   * not, so that one is drawn in markup instead. It cannot be drawn on all
+   * three: the baked tiles occupy 76–97% of their frame, overlapping the label
+   * chips above them, so there is no band that can be cropped or faded to
+   * remove them — an overlay would simply sit under a second, visible tile.
+   * `icon` is the glyph to use when one has to be drawn.
+   */
   tiers: [
     {
       tier: "Tier 01",
       title: "Technology Partners",
       body: "Cloud platforms, core banking vendors and infrastructure providers whose stacks we work with regularly — enabling faster integration, reduced technical risk and pre-validated reference architectures.",
+      image: "/images/technology-partner.png",
+      icon: "cloud",
+      markInImage: true,
     },
     {
       tier: "Tier 02",
       title: "Implementation Partners",
       body: "Systems integrators, boutique consultancies and specialist engineering firms accredited to deploy and extend OrbisMoneta platforms — extending our delivery capacity across geographies and verticals.",
+      image: "/images/implementation-partners.png",
+      icon: "globe",
+      markInImage: true,
     },
     {
       tier: "Tier 03",
       title: "Strategic Alliances",
       body: "Payment networks, standards bodies, regulatory sandboxes and industry consortia we co-innovate with — helping shape the interoperability standards and policy frameworks that next-generation financial infrastructure will require.",
+      image: "/images/stratagic-allaiance.png",
+      icon: "bank",
+      markInImage: false,
     },
   ],
   cta: {

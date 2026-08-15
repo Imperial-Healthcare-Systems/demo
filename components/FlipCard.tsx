@@ -20,6 +20,15 @@ import { Icon } from "@/components/Icon";
  * Under reduced motion there is no rotation — the faces cross-fade in place.
  * A card turning over in 3D is exactly the kind of movement that setting exists
  * to suppress.
+ *
+ * On the back face's inline `position`: `cn` concatenates, it does not merge, so
+ * a `faceClassName` carrying its own `relative` lands in the same class list as
+ * this component's `absolute` — and the cascade resolves that by stylesheet
+ * order, where Tailwind emits `.relative` after `.absolute`. The back then falls
+ * into normal flow and renders *below* the front instead of behind it, which
+ * also doubles the card's height. That is not a hypothetical; it shipped. An
+ * inline style outranks any class a caller can pass, so the geometry that makes
+ * a flip a flip is no longer something a consumer can accidentally override.
  */
 
 function useMedia(query: string) {
@@ -96,7 +105,7 @@ export function FlipCard({
           aria-hidden={flipped}
           inert={flipped}
           className={cn(
-            "flex h-full w-full flex-col [backface-visibility:hidden]",
+            "relative flex h-full w-full flex-col [backface-visibility:hidden]",
             reduced && "transition-opacity duration-200",
             reduced && flipped && "pointer-events-none opacity-0",
             faceClassName,
@@ -109,8 +118,9 @@ export function FlipCard({
         <span
           aria-hidden={!flipped}
           inert={!flipped}
+          style={{ position: "absolute", inset: 0 }}
           className={cn(
-            "absolute inset-0 flex h-full w-full flex-col [backface-visibility:hidden]",
+            "flex h-full w-full flex-col [backface-visibility:hidden]",
             reduced ? "transition-opacity duration-200" : "[transform:rotateY(180deg)]",
             reduced && !flipped && "pointer-events-none opacity-0",
             backClassName,
@@ -136,7 +146,7 @@ export function FlipHint({ onDark = false }: { onDark?: boolean }) {
         "mt-auto inline-flex items-center gap-1.5 pt-4 font-mono text-[0.625rem] tracking-[0.14em] uppercase transition-colors duration-200",
         onDark
           ? "text-ink-inv-3 group-hover/flip:text-sky-400"
-          : "text-ink-3 group-hover/flip:text-navy-600",
+          : "text-navy-600 group-hover/flip:text-sky-600",
       )}
     >
       Details

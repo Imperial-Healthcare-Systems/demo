@@ -1,5 +1,6 @@
 import { site } from "@/content/site";
 import { advisoryPage } from "@/content/advisory";
+import { BrandMark } from "@/components/BrandMark";
 import { Icon, type IconName } from "@/components/Icon";
 
 /**
@@ -95,13 +96,19 @@ export function CapabilityOrbit() {
           aria-hidden="true"
           className="absolute inset-0 -z-10 rounded-full bg-sky-500/45 blur-2xl animate-[om-core-halo_6s_var(--ease-in-out-soft)_infinite] motion-reduce:animate-none"
         />
-        <span className="flex h-[8.5rem] w-[8.5rem] flex-col items-center justify-center gap-1 rounded-full bg-[linear-gradient(155deg,#1f5cf0,#00279c)] text-center shadow-[0_18px_50px_-14px_rgba(0,46,166,.7)] ring-1 ring-white/25">
-          <span className="font-display text-[0.8125rem] leading-tight font-bold tracking-[0.08em] text-white uppercase">
-            Orbis
-            <br />
-            Moneta
-          </span>
-          <span aria-hidden="true" className="mt-0.5 h-px w-6 bg-white/50" />
+        {/*
+          The mark itself, not the name set as type.
+
+          The inverse lockup is the right variant here and not merely the light
+          one recoloured: its wordmark is white and its glyph keeps the green
+          and cyan bars, all of which hold against this disc's #1f5cf0 → #00279c.
+
+          `decorative`, because the diagram's own `role="img"` label already
+          opens with the brand name — without it a screen reader hears
+          "OrbisMoneta" twice before reaching the first satellite.
+        */}
+        <span className="flex h-[8.5rem] w-[8.5rem] items-center justify-center rounded-full bg-[linear-gradient(155deg,#1f5cf0,#00279c)] px-3.5 shadow-[0_18px_50px_-14px_rgba(0,46,166,.7)] ring-1 ring-white/25">
+          <BrandMark variant="lockup" tone="dark" decorative className="w-full select-none" />
         </span>
       </div>
     </div>

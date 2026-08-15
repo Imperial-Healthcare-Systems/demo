@@ -87,6 +87,7 @@ export function PageHero({
   aside,
   actions,
   footer,
+  split = "default",
   className,
 }: {
   eyebrow: string;
@@ -97,10 +98,37 @@ export function PageHero({
   crumbs: Crumb[];
   aside?: React.ReactNode;
   actions?: React.ReactNode;
-  /** Full-width row below the columns — proof points, stats, a capability strip. */
+  /** Proof points, stats, a capability strip. Where it lands depends on `split`. */
   footer?: React.ReactNode;
+  /**
+   * How the two columns divide, and where `footer` goes with them.
+   *
+   * `default` — bottom-aligned, `footer` a full-width row under both columns
+   * above a rule. The aside is a supporting mark, not a subject.
+   *
+   * `showcase` — centred, tighter gutter, `footer` tucked under the copy with
+   * no rule. For a hero whose artwork carries as much weight as the headline:
+   * a full-width footer would otherwise run underneath the artwork rather than
+   * reading as part of the copy. The columns stay 7/5 — an even split starves
+   * a four-up proof strip, which needs about 180px an item before the labels
+   * start breaking mid-word. The artwork makes its size up by bleeding past
+   * the shell instead, which is the caller's business, not this component's.
+   */
+  split?: "default" | "showcase";
   className?: string;
 }) {
+  const showcase = split === "showcase";
+  const footerBlock = footer && (
+    <Reveal
+      delay={240}
+      className={cn(
+        showcase ? "mt-9" : "mt-12 border-t border-line pt-8 md:mt-14",
+      )}
+    >
+      {footer}
+    </Reveal>
+  );
+
   return (
     <section
       className={cn(
@@ -112,7 +140,18 @@ export function PageHero({
           them turns that seam into a shoulder. The border only runs along the
           bottom, so it follows the curve rather than crossing it.
         */
-        "relative isolate overflow-hidden rounded-b-[2rem] border-b border-line bg-surface pt-28 pb-14 md:rounded-b-[3rem] md:pt-36 md:pb-20",
+        "relative isolate overflow-hidden rounded-b-[2rem] border-b border-line bg-surface md:rounded-b-[3rem]",
+        /*
+          `showcase` runs tighter top and bottom. It is the one variant whose
+          height is set by an illustration rather than by copy, and on the
+          default padding that put the section at 856px — over the fold at
+          1366×768 and 1440×800, so the block a reader lands on was never whole
+          on screen. Trimmed here and paired with a smaller bleed on the
+          artwork, it lands near 750px and clears every common desktop height.
+        */
+        showcase
+          ? "pt-24 pb-10 md:pt-28 md:pb-14"
+          : "pt-28 pb-14 md:pt-36 md:pb-20",
         className,
       )}
     >
@@ -167,7 +206,8 @@ export function PageHero({
         <div
           className={cn(
             "mt-8 grid gap-10",
-            aside ? "lg:grid-cols-12 lg:items-end lg:gap-16" : "",
+            aside && "lg:grid-cols-12",
+            aside && (showcase ? "lg:items-center lg:gap-10" : "lg:items-end lg:gap-16"),
           )}
         >
           <div className={cn("flex flex-col gap-5", aside && "lg:col-span-7")}>
@@ -191,6 +231,7 @@ export function PageHero({
                 {actions}
               </Reveal>
             )}
+            {showcase && footerBlock}
           </div>
           {aside && (
             <Reveal delay={200} kind="right" className="lg:col-span-5">
@@ -199,11 +240,7 @@ export function PageHero({
           )}
         </div>
 
-        {footer && (
-          <Reveal delay={240} className="mt-12 border-t border-line pt-8 md:mt-14">
-            {footer}
-          </Reveal>
-        )}
+        {!showcase && footerBlock}
       </div>
     </section>
   );
