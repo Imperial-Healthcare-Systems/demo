@@ -3,6 +3,7 @@ import {
   closingCta,
   futureOfMoney,
   industryContext,
+  platformPoster,
   proposition,
   whyOrbisMoneta,
 } from "@/content/home";
@@ -384,6 +385,89 @@ const REASON_TONES = [
     lift: "hover:ring-navy-600/25 hover:shadow-[0_2px_6px_rgba(10,21,51,.06),0_22px_44px_-20px_rgba(10,21,51,.28),0_40px_66px_-40px_rgba(0,46,166,.5)]",
   },
 ] as const;
+
+/* ----------------------------------------------------------- platform poster */
+
+/**
+ * The client's platform poster, shown whole.
+ *
+ * It is a picture of words, which decides almost everything here. Measured at
+ * the file, its smallest type is a 14px glyph run across 1254px — so it stays
+ * above 11px only while it paints wider than about 985px. The shell gives it
+ * 1264px at 1424 and up, which is where it is fully legible; the band asks for
+ * the shell and nothing narrower, and never scales it up past its own size,
+ * because there is nothing above 1254px to show.
+ *
+ * Below that the type falls away — 704px on a tablet puts the footer strip near
+ * 8px and a phone puts it near 4px. Nothing can be done about that inside the
+ * image, so the words come out of it: `commitments` renders as live text under
+ * the poster wherever the baked strip is too small to read, and turns `sr-only`
+ * at `lg` where it isn't. Either way the words are on the page and reach a
+ * screen reader; only their form changes.
+ */
+export function PlatformPoster() {
+  return (
+    <DarkSection className="section" id="intelligent-platform">
+      <div className="shell">
+        <Reveal kind="fade">
+          <Eyebrow onDark>{platformPoster.eyebrow}</Eyebrow>
+        </Reveal>
+
+        {/* The poster sets this headline on screen in type nothing here can
+            match. It is repeated as a real heading so the section has one in the
+            document outline, and so it reaches anyone the picture does not. */}
+        <h2 className="sr-only">{platformPoster.title}</h2>
+
+        <Reveal delay={120} className="mt-7">
+          <figure className="m-0">
+            <Image
+              src={platformPoster.image}
+              alt={platformPoster.alt}
+              width={1254}
+              height={1254}
+              quality={82}
+              /* Below the fold on every viewport, so it waits its turn. */
+              loading="lazy"
+              sizes="(min-width: 1424px) 1264px, (min-width: 768px) calc(100vw - 4rem), calc(100vw - 2.5rem)"
+              /* Its ground is the same near-black navy as the band, so it needs
+                 softening at the edges rather than a frame. The hold is 1.5% —
+                 the poster keeps roughly 2.5% of dark margin on every side, so
+                 the feather runs out before it reaches anything drawn. */
+              className="mx-auto block h-auto w-full max-w-[78.375rem] [mask-composite:intersect] [mask-image:linear-gradient(180deg,transparent_0%,#000_1.5%,#000_98.5%,transparent_100%),linear-gradient(90deg,transparent_0%,#000_1.5%,#000_98.5%,transparent_100%)]"
+            />
+
+            {/*
+              1050, not `lg`. The shell hands the poster the viewport less 64px
+              of padding through this range, so 1050 is the width at which it
+              first paints 986px and its 14px glyph run clears 11px. At `lg`
+              (1024) it is still only 960px and 10.7px — the caption would go
+              silent one breakpoint before the picture could carry the words.
+            */}
+            <figcaption className="mt-10 min-[1050px]:sr-only">
+              <ul className="grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-5">
+                {platformPoster.commitments.map((c) => (
+                  <li key={c.title} className="flex gap-3">
+                    <Icon
+                      name={c.icon as IconName}
+                      aria-hidden="true"
+                      className="mt-0.5 h-5 w-5 shrink-0 text-sky-400"
+                    />
+                    <div>
+                      <p className="text-[0.9375rem] leading-snug font-semibold text-white">
+                        {c.title}
+                      </p>
+                      <p className="mt-1 text-[0.875rem] leading-relaxed text-ink-inv-2">{c.body}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </figcaption>
+          </figure>
+        </Reveal>
+      </div>
+    </DarkSection>
+  );
+}
 
 export function WhyOrbisMoneta() {
   return (

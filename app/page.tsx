@@ -2,7 +2,12 @@ import type { Metadata } from "next";
 import { site } from "@/content/site";
 import { HeroCarousel } from "@/components/HeroCarousel";
 import { AudienceMarquee } from "@/components/AudienceMarquee";
-import { EngagementModel, IndustryContext, WhyOrbisMoneta } from "@/components/Sections";
+import {
+  EngagementModel,
+  IndustryContext,
+  PlatformPoster,
+  WhyOrbisMoneta,
+} from "@/components/Sections";
 
 export const metadata: Metadata = {
   title: site.title,
@@ -44,6 +49,11 @@ export default function HomePage() {
       <HeroCarousel />
       <AudienceMarquee />
       <IndustryContext />
+      {/* The client's platform poster, whole. It sits here because the section
+          above says what the market is doing and the one below says why us —
+          this is the what, in between, and it is the only place on the page
+          where the poster's own headline is not competing with a live one. */}
+      <PlatformPoster />
       <WhyOrbisMoneta />
       {/* The client's four-phase engagement model, closing the page on how a
           project actually runs. It is the same content the Industries page

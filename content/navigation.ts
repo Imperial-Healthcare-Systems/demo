@@ -63,75 +63,74 @@ export const primaryNav: NavItem[] = [
     href: "/solutions",
     matches: ["/products"],
     panel: {
-      eyebrow: "Solutions & Platforms",
-      heading: "Infrastructure for every dimension of modern finance.",
+      eyebrow: "Solutions & Services",
+      heading: "Solutions for modern financial institutions.",
       blurb:
-        "Six solution areas, delivered on purpose-built enterprise platforms.",
+        "Advisory, architecture and engineering across five functional domains.",
       columns: [
         {
-          title: "Solution areas",
+          title: "Functional domains",
           links: [
             {
-              label: "Payments Infrastructure",
-              href: "/solutions#payments-infrastructure",
+              label: "Payment & Rail Infrastructure",
+              href: "/solutions#payment-rail-infrastructure",
               icon: "transfer",
-              description: "Real-time, high-value, enterprise & cross-border",
+              description: "RTGS, payment hubs, ISO 20022, instant rails",
             },
             {
-              label: "Digital Currency & CBDC",
-              href: "/solutions#digital-currency-cbdc",
+              label: "Digital Banking & Channels",
+              href: "/solutions#digital-banking-channels",
+              icon: "phone",
+              description: "Corporate cash, mobile, onboarding, API banking",
+            },
+            {
+              label: "Digital Money & CBDC",
+              href: "/solutions#digital-money-cbdc",
               icon: "coin",
-              description: "Issue, distribute, manage and operate",
+              description: "CBDC engine, wallets, token lifecycle",
             },
             {
-              label: "Digital Assets & Tokenization",
-              href: "/solutions#digital-assets-tokenization",
-              icon: "layers",
-              description: "Programmable, interoperable instruments",
-            },
-            {
-              label: "Cross-Border & Interoperability",
-              href: "/solutions#cross-border-interoperability",
+              label: "Open Banking & Open Finance",
+              href: "/solutions#open-banking-open-finance",
               icon: "nodes",
-              description: "Connected domestic & international rails",
+              description: "Open APIs, consent, account aggregation",
             },
             {
-              label: "AI & Financial Intelligence",
-              href: "/solutions#ai-financial-intelligence",
-              icon: "spark",
-              description: "Operational intelligence & automation",
-            },
-            {
-              label: "Risk, Regulatory & Compliance",
-              href: "/solutions#risk-regulatory-compliance",
-              icon: "shield",
-              description: "Security, governance & institutional control",
+              label: "Digital Value Interoperability",
+              href: "/solutions#digital-value-interoperability",
+              icon: "globe",
+              description: "Rail adapters, settlement flow, reconciliation",
             },
           ],
         },
         {
-          // The client's own prototype puts Platforms beside Solutions in the
-          // menu and on its own page; here it is a group inside Solutions and a
-          // section of that one page, so each link scrolls to its row.
+          /*
+            Platforms is a page again. It was a section of /solutions, reached by
+            anchor; the client's own page gives it a section of its own with two
+            named platforms and their status, which is more than a row on
+            another page can carry. `/platforms` still redirects to
+            `/solutions#platforms`, and that anchor no longer exists — see the
+            note on the redirect in next.config.ts.
+          */
           title: "Platforms",
           links: [
             {
-              label: "Platform ecosystem",
-              href: "/solutions#platforms",
+              label: "Proprietary Platforms",
+              href: "/solutions/platforms",
               icon: "chip",
-              description: "All platforms in one view",
+              description: "Both platforms in one view",
             },
             {
-              label: "Interoperability Fabric™",
-              href: "/solutions#interoperability-fabric",
-              icon: "code",
-              description: "One integration layer across rails",
+              label: "Digital Currency Hub™",
+              href: "/solutions/platforms#digital-currency-hub",
+              icon: "coin",
+              description: "Bank-ready digital money infrastructure",
             },
             {
-              label: "Cross-Border Bridge™",
-              href: "/solutions#cross-border-bridge",
-              icon: "globe",
-              description: "Settlement across digital money networks",
+              label: "Lending Integration Hub",
+              href: "/solutions/platforms#lending-integration-hub",
+              icon: "nodes",
+              description: "Connecting the lending ecosystem",
             },
           ],
         },
@@ -298,12 +297,14 @@ export const footerNav = [
     title: "Solutions",
     links: [
       { label: "All solutions", href: "/solutions" },
-      { label: "Payments Infrastructure", href: "/solutions#payments-infrastructure" },
-      { label: "Digital Currency & CBDC", href: "/solutions#digital-currency-cbdc" },
-      { label: "Digital Assets & Tokenization", href: "/solutions#digital-assets-tokenization" },
-      { label: "Cross-Border & Interoperability", href: "/solutions#cross-border-interoperability" },
-      { label: "AI & Financial Intelligence", href: "/solutions#ai-financial-intelligence" },
-      { label: "Risk, Regulatory & Compliance", href: "/solutions#risk-regulatory-compliance" },
+      { label: "Payment & Rail Infrastructure", href: "/solutions#payment-rail-infrastructure" },
+      { label: "Digital Banking & Channels", href: "/solutions#digital-banking-channels" },
+      { label: "Digital Money & CBDC", href: "/solutions#digital-money-cbdc" },
+      { label: "Open Banking & Open Finance", href: "/solutions#open-banking-open-finance" },
+      {
+        label: "Digital Value Interoperability",
+        href: "/solutions#digital-value-interoperability",
+      },
     ],
   },
   {
@@ -324,9 +325,11 @@ export const footerNav = [
   {
     title: "Platforms",
     links: [
-      { label: "Platform ecosystem", href: "/solutions#platforms" },
-      { label: "Interoperability Fabric™", href: "/solutions#interoperability-fabric" },
-      { label: "Cross-Border Bridge™", href: "/solutions#cross-border-bridge" },
+      { label: "Proprietary Platforms", href: "/solutions/platforms" },
+      {
+        label: "Lending Integration Hub",
+        href: "/solutions/platforms#lending-integration-hub",
+      },
       { label: "Digital Currency Hub™", href: "/products/digital-currency-hub" },
     ],
   },

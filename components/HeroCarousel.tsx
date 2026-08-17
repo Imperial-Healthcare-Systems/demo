@@ -113,7 +113,10 @@ const PLATE_MASK_TIGHT_SIDES =
  */
 const PLATE_RATIO: Record<string, number> = {
   "global-solution-platform": 1400 / 1120,
-  "intelligent-platform": 1388 / 1133,
+  // Cut out of a square poster rather than exported at this size — the numbers
+  // are the crop box in prepare-assets.mjs, and the two have to stay in step or
+  // the box stops matching the picture and `object-cover` starts cropping it.
+  "intelligent-platform": 774 / 605,
   "seamless-interoperability": 1400 / 1078,
   // Replaced by a wider export — 1.500 against the 1.241 of the file before it,
   // which is why this one comes out shorter than its four neighbours.

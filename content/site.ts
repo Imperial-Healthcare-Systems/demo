@@ -65,7 +65,7 @@ export const capabilityTicker = [
   "CBDCs & Digital Money",
   "Stablecoins & Tokenization",
   "Digital Assets",
-  "Payment Hubs & FMI",
+  "Payment Infrastructure",
   "ISO 20022 Modernization",
   "AI for Financial Services",
   "Fraud Risk & Financial Crime",

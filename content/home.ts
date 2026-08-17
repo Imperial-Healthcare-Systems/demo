@@ -209,8 +209,8 @@ export const carouselSlides: CarouselSlide[] = [
       { label: "Smarter", accent: "Decisions" },
       { label: "Adaptive &", accent: "Secure" },
     ],
-    image: "/images/carousel/intelligent-platform.webp",
-    alt: "AI processor rendered inside a neural network above a connected globe",
+    image: "/images/carousel/intelligent-platform-v2.webp",
+    alt: "An AI processor at the centre of a neural network above a lit globe, linked out to financial infrastructure, data-driven insights, risk and fraud management, intelligent automation, customer-centric experiences and cloud-native flexibility",
     href: "/advisory#ai-for-financial-services",
     cta: "See our AI services",
     tab: {
@@ -481,6 +481,49 @@ export const proposition = {
   image: "/images/proposition-tokenized-value.webp",
   alt: "Tokenized value cube on a plinth in front of a connected globe over a city skyline",
 };
+
+/**
+ * The client's composed platform poster, shown whole.
+ *
+ * Everything here except `image` and `alt` exists because the poster is a
+ * picture of words. Its headline, its six labelled nodes and its five-item
+ * footer strip are pixels, not text — so they are unselectable, untranslatable,
+ * invisible to a screen reader and fixed in size while the page around them is
+ * not. Measured at the file, its smallest type is a 14px glyph run across
+ * 1254px, which holds above 11px only while the poster paints wider than about
+ * 985px. That is the full shell on a desktop and nothing narrower, so below
+ * `lg` the footer strip is decoration and `commitments` below is what a reader
+ * actually reads.
+ *
+ * `title` is the poster's own headline, carried as text so the section has a
+ * real heading in the document outline. On screen the poster sets it, so the
+ * heading is `sr-only` — the words are on the page either way, and this is the
+ * only way they reach anyone who cannot see the picture.
+ */
+export const platformPoster = {
+  eyebrow: "Intelligent platform",
+  title: "Intelligent Platform for Global Financial Institutions",
+  /* The original JPEG, not a WebP derivative. It is already lossy, so a
+     pre-encode would cost a second generation of loss on that 14px type to save
+     8% at the quality the type needs — and next/image derives what actually
+     ships regardless. */
+  image: "/images/intelligent-platform-poster.jpeg",
+  /* Describes the picture. The words baked into it are carried by `title` and
+     `commitments`, so this does not repeat them. */
+  alt: "An AI processor at the centre of a neural network, linked to financial infrastructure, data-driven insights, risk and fraud management, intelligent automation, customer-centric experiences and cloud-native flexibility, above a lit globe and a skyline of financial centres",
+  /** The poster's own footer strip, as text. */
+  commitments: [
+    { title: "Secure by design", body: "Built for trust and resilience", icon: "shield" },
+    { title: "Scalable & resilient", body: "Elastic by design. Always on.", icon: "cloud" },
+    {
+      title: "Interoperable & open",
+      body: "Seamless connectivity across ecosystems",
+      icon: "nodes",
+    },
+    { title: "Built for impact", body: "Empowering economies and communities", icon: "user" },
+    { title: "Partnership focused", body: "Collaborate. Co-create. Drive change.", icon: "share" },
+  ],
+} as const;
 
 export const whyOrbisMoneta = {
   eyebrow: "Why OrbisMoneta",

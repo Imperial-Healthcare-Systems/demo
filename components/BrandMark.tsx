@@ -26,16 +26,27 @@ import { cn } from "@/lib/utils";
  * one edit rather than a hunt through the tree.
  */
 
+/*
+  WebP, not the PNG beside it. These ship `unoptimized` — see the note on the
+  `Image` below — which means whatever is named here is what every visitor
+  downloads at full size on every page. As PNGs that was 158KB of brand marks,
+  and on a phone it was 45% of the page's entire image budget.
+
+  The WebPs are *lossless*, so this gives nothing up: same flat colour, same
+  hard edges, decoded pixels byte-identical to the PNGs'. It is 37% smaller for
+  no visual difference at all. The PNGs are still built and still in /public as
+  the fallback of record; nothing requests them.
+*/
 const SOURCES = {
   lockup: {
-    light: "/images/brand/orbismoneta-logo.png",
-    dark: "/images/brand/orbismoneta-logo-inverse.png",
+    light: "/images/brand/orbismoneta-logo.webp",
+    dark: "/images/brand/orbismoneta-logo-inverse.webp",
     width: 1400,
     height: 338,
   },
   symbol: {
-    light: "/images/brand/orbismoneta-symbol.png",
-    dark: "/images/brand/orbismoneta-symbol-inverse.png",
+    light: "/images/brand/orbismoneta-symbol.webp",
+    dark: "/images/brand/orbismoneta-symbol-inverse.webp",
     width: 512,
     height: 512,
   },

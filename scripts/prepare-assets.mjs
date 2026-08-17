@@ -57,7 +57,10 @@ if (SRC) {
   // Five premium carousel slides: artwork only, copy re-set in HTML.
   // Keep values are tuned per image so no baked-in lettering survives the crop.
   await cropRight("image3.png", "carousel/global-solution-platform.webp", 0.48);
-  await cropRight("image5.png", "carousel/intelligent-platform.webp", 0.52);
+  // image5 is two rounds out of date — the slide now points at the v2 crop at
+  // the foot of this file. Left in place because this block is the record of
+  // what the first round of artwork was, and it only runs with a media dir.
+  // await cropRight("image5.png", "carousel/intelligent-platform.webp", 0.52);
   await cropRight("image4.png", "carousel/seamless-interoperability.webp", 0.54);
   await cropRight("image7.png", "carousel/trust-and-security.webp", 0.53);
   await cropRight("image6.png", "carousel/innovation-led.webp", 0.5);
@@ -78,8 +81,66 @@ if (SRC) {
 // need re-encoding. Originals move to source-assets/ so /public never carries
 // a 2MB PNG.
 const CAROUSEL_SRC = path.join(process.cwd(), "source-assets", "carousel");
+const PUBLIC_POSTER = path.join(OUT, "intelligent-platform-poster.jpeg");
+
+// ...except where a later round went back to a full poster — headline column,
+// body paragraph, capability strip and footer band, all baked in — and the crop
+// has to come back with it. Every box below is measured off its own file rather
+// than taken as a fraction, because these compositions do not divide at a tidy
+// percentage the way the first set did.
+//
+// This poster is the one source file that stays in /public rather than moving
+// to source-assets, because unlike every other original here it is not just a
+// source: the homepage band shows it whole, so it is also a delivered asset.
+// It is pointed at directly rather than pre-encoded to WebP because it is
+// already a lossy JPEG — re-encoding would put a second generation of loss on
+// 14px type for an 8% saving at the quality that type needs, and next/image
+// derives the AVIF/WebP that actually ships either way.
+const CAROUSEL_CROPS = [
+  {
+    from: PUBLIC_POSTER,
+    // A new name, not a new file under the old one. This artwork replaces
+    // intelligent-platform.webp at a different aspect ratio, and the ratio is
+    // baked into the box the plate paints into — so anything still holding the
+    // old bytes under the old URL (a CDN edge, a returning visitor, Next's own
+    // image cache) would fit the previous picture to the new box and crop it.
+    // The superseded original is skipped below rather than left to race this.
+    out: "intelligent-platform-v2.webp",
+    supersedes: "intelligent-platform.png",
+    /*
+      A 1254x1254 poster carrying the whole slide: the headline, the subtitle,
+      the paragraph and the five-point strip are all baked into its left half,
+      and the slide re-sets every one of them as live HTML — so all of it has to
+      go, or the words print twice.
+
+      It does not divide with one vertical cut. The copy column's widest element
+      is the five-icon strip at x=557, but the artwork's leftmost element is the
+      "CUSTOMER-CENTRIC EXPERIENCES" label at x=528: they overlap by 29px, and
+      cutting clear of the strip beheads the label. What separates them is that
+      the strip starts at y=616 and the label sits at y=370. Cutting above the
+      strip lets the left edge come in to x=480 — clear of the headline at
+      x=469 and the paragraph at x=454 — and keeps all six nodes whole.
+
+      The other three edges are the feather's, not the artwork's. Top holds all
+      53px of dark margin above the first icon, which is what the plate's 8% top
+      feather needs to fade in empty space. Right leaves the 32px the poster
+      already had past the last label. Bottom cuts the globe mid-sphere at
+      y=605, where the 4% bottom feather dissolves the cut into the ground.
+
+      774x605 is 1.279 — the ratio PLATE_RATIO carries for this slide.
+    */
+    box: { left: 480, top: 0, width: 774, height: 605 },
+  },
+];
+
 if (existsSync(CAROUSEL_SRC)) {
-  const banners = (await readdir(CAROUSEL_SRC)).filter((f) => /\.png$/i.test(f));
+  // The originals a crop replaces stay in source-assets as the record of what
+  // the slide used to be, but they must not still be encoded into /public — the
+  // slide no longer points at them and shipping both is dead weight.
+  const superseded = new Set(CAROUSEL_CROPS.map((c) => c.supersedes).filter(Boolean));
+  const banners = (await readdir(CAROUSEL_SRC)).filter(
+    (f) => /\.png$/i.test(f) && !superseded.has(f),
+  );
   for (const file of banners) {
     await sharp(path.join(CAROUSEL_SRC, file))
       .resize({ width: 1400, withoutEnlargement: true })
@@ -87,6 +148,16 @@ if (existsSync(CAROUSEL_SRC)) {
       .toFile(path.join(OUT, "carousel", file.replace(/\.png$/i, ".webp")));
   }
   if (banners.length) console.log(`→ carousel/ (${banners.length} banners)`);
+
+  for (const { from, out, box } of CAROUSEL_CROPS) {
+    if (!existsSync(from)) continue;
+    await sharp(from)
+      .extract(box)
+      .resize({ width: 1400, withoutEnlargement: true })
+      .webp({ quality: 82, effort: 6 })
+      .toFile(path.join(OUT, "carousel", out));
+    console.log("→ carousel/" + out, `(cropped ${box.width}x${box.height})`);
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -254,19 +325,41 @@ if (existsSync(LOGO_PNG)) {
   const light = await sharp(out, raw).trim().png({ compressionLevel: 9 }).toBuffer();
   const dark = await sharp(navyToWhite(out), raw).trim().png({ compressionLevel: 9 }).toBuffer();
 
-  for (const [buf, name] of [[light, "orbismoneta-logo.png"], [dark, "orbismoneta-logo-inverse.png"]]) {
-    await sharp(buf).resize({ width: 1400, withoutEnlargement: true })
-      .png({ compressionLevel: 9 }).toFile(path.join(OUT, "brand", name));
+  /*
+    PNG and lossless WebP, both. The marks ship `unoptimized` — they are flat
+    colour with hard edges, which is where lossy re-encoding shows worst, and
+    skipping the optimiser also avoids the `images.qualities` trap. That is
+    still right; what it cost was 158KB of brand marks on every page at full
+    size, which on a phone was 45% of the whole image budget for a logo.
+
+    Lossless WebP is the way out that gives nothing up: no re-encode, no
+    artifacts, and the decoded pixels are byte-identical to the PNG's — checked,
+    not assumed. It takes the four marks from 196KB to 123KB, a 37% cut, for a
+    format every browser this site supports has handled for years.
+
+    The PNGs stay as the fallback of record and cost nothing unless requested.
+  */
+  for (const [buf, name] of [[light, "orbismoneta-logo"], [dark, "orbismoneta-logo-inverse"]]) {
+    const sized = sharp(buf).resize({ width: 1400, withoutEnlargement: true });
+    await sized.clone().png({ compressionLevel: 9 }).toFile(path.join(OUT, "brand", `${name}.png`));
+    await sized
+      .clone()
+      .webp({ lossless: true, effort: 6 })
+      .toFile(path.join(OUT, "brand", `${name}.webp`));
   }
 
   // Symbol: the glyph alone, cropped off the left of the trimmed lockup.
   const meta = await sharp(light).metadata();
   const side = meta.height;
-  for (const [buf, name] of [[light, "orbismoneta-symbol.png"], [dark, "orbismoneta-symbol-inverse.png"]]) {
-    await sharp(buf).extract({ left: 0, top: 0, width: side, height: side })
-      .resize({ width: 512 }).png({ compressionLevel: 9 }).toFile(path.join(OUT, "brand", name));
+  for (const [buf, name] of [[light, "orbismoneta-symbol"], [dark, "orbismoneta-symbol-inverse"]]) {
+    const sq = sharp(buf).extract({ left: 0, top: 0, width: side, height: side }).resize({ width: 512 });
+    await sq.clone().png({ compressionLevel: 9 }).toFile(path.join(OUT, "brand", `${name}.png`));
+    await sq
+      .clone()
+      .webp({ lossless: true, effort: 6 })
+      .toFile(path.join(OUT, "brand", `${name}.webp`));
   }
-  console.log("→ brand/*.png (transparent lockup + symbol, light + inverse)");
+  console.log("→ brand/*.png + .webp (transparent lockup + symbol, light + inverse)");
 }
 
 // ---------------------------------------------------------------------------

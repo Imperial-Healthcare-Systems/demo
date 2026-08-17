@@ -32,10 +32,13 @@ const nextConfig: NextConfig = {
       // and the page 500s in a loop.
       { source: "/services", destination: "/advisory", permanent: true },
 
-      // Platforms was briefly its own page. It is now a section of /solutions,
-      // because the platforms are what the solutions are delivered on and
-      // splitting them made the reader navigate to find the other half.
-      { source: "/platforms", destination: "/solutions#platforms", permanent: true },
+      // Platforms was its own page, then a section of /solutions, and is a page
+      // again — /solutions/platforms, under Solutions where it belongs. The
+      // `#platforms` anchor it pointed at in between no longer exists, so this
+      // has to name the page: a redirect to a missing fragment lands the reader
+      // at the top of /solutions with no indication anything was meant to
+      // happen.
+      { source: "/platforms", destination: "/solutions/platforms", permanent: true },
     ];
   },
 };

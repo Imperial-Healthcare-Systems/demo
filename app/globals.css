@@ -24,10 +24,24 @@
   --color-sky-400: #4dc0ff;
   --color-sky-500: #01a4ff; /* logo sky */
   --color-sky-600: #0086d6;
+  /*
+    The text-safe ends of the sky and green ramps.
+
+    Neither logo colour can carry small text on white: sky-500 measures 2.71:1
+    against it and green-500 3.02:1, where WCAG AA wants 4.5. The 600s do not
+    fix it either — sky-600 is 3.90, and green-600 lands on exactly 4.50 with no
+    margin at all, which is one rounding away from failing.
+
+    These two do, with room to spare: 5.72:1 and 5.51:1. They are the shade to
+    reach for whenever a brand colour has to be read rather than just seen. The
+    500s stay the brand: fills, rules, icons, anything decorative.
+  */
+  --color-sky-700: #006ba8;
 
   --color-green-400: #3ecb6a;
   --color-green-500: #01ac32; /* logo green */
   --color-green-600: #018a28;
+  --color-green-700: #017a23;
 
   --color-gold-400: #e3a32c;
   --color-gold-500: #c98a16;

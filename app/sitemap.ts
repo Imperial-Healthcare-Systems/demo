@@ -9,6 +9,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     [
       { path: "", priority: 1, changeFrequency: "weekly" },
       { path: "/solutions", priority: 0.9, changeFrequency: "monthly" },
+      { path: "/solutions/platforms", priority: 0.9, changeFrequency: "monthly" },
       { path: "/advisory", priority: 0.9, changeFrequency: "monthly" },
       { path: "/products/digital-currency-hub", priority: 0.9, changeFrequency: "monthly" },
       { path: "/industries", priority: 0.8, changeFrequency: "monthly" },

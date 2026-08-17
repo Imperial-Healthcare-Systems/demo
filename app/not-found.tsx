@@ -5,7 +5,7 @@ import { Eyebrow } from "@/components/Section";
 
 const suggestions = [
   { label: "Solutions", href: "/solutions" },
-  { label: "Platforms", href: "/solutions#platforms" },
+  { label: "Platforms", href: "/solutions/platforms" },
   { label: "Advisory", href: "/advisory" },
   { label: "Digital Currency Hub™", href: "/products/digital-currency-hub" },
   { label: "Industries", href: "/industries" },
