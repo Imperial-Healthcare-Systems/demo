@@ -137,12 +137,15 @@ export const primaryNav: NavItem[] = [
         },
         {
           /*
-            Products was a top-level nav item of its own and is now a column in
-            here, at the client's request — it is one product, and a whole
-            heading in the primary navigation for a single page overstated it
-            beside eight other sections.
-            Nothing was dropped in the move: the page, its route, its four
-            capability anchors and the deployment link all survive, and
+            Products was a top-level nav item of its own, then a column of four
+            links, and is now a column holding the one thing it describes — a
+            single product, at the client's request.
+
+            The three that went were all deep links into the same page
+            (#capabilities twice, #deployment once). Listing one page four times
+            padded the column rather than filling it, and it read as four
+            products to anyone scanning the menu. Both anchors still exist on
+            the page and both are still reachable from it;
             /products/digital-currency-hub still lights this item as active.
           */
           title: "Products",
@@ -152,24 +155,6 @@ export const primaryNav: NavItem[] = [
               href: "/products/digital-currency-hub",
               icon: "coin",
               description: "Retail CBDC platform for commercial banks",
-            },
-            {
-              label: "Retail CBDC Banking",
-              href: "/products/digital-currency-hub#capabilities",
-              icon: "bank",
-              description: "Issue, hold and move digital currency",
-            },
-            {
-              label: "Customer & Merchant Wallets",
-              href: "/products/digital-currency-hub#capabilities",
-              icon: "store",
-              description: "Consumer and acceptance side, one platform",
-            },
-            {
-              label: "Deployment models",
-              href: "/products/digital-currency-hub#deployment",
-              icon: "cloud",
-              description: "Licensed in your estate, or hosted by us",
             },
           ],
         },

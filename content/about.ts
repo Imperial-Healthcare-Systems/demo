@@ -269,25 +269,147 @@ export const partnersPage = {
   },
 };
 
+/**
+ * The Innovation Lab, from the client's page design.
+ *
+ * Every string below is theirs to the character — the masthead, the seven
+ * exploration areas, the five steps and the four kinds of collaborator. `icon`
+ * is the only field that is mine, and it is presentation only.
+ *
+ * This supersedes the page's previous "Coming soon" framing, which existed
+ * because the Lab had nothing to describe: three invented themes and a panel
+ * saying detail was on its way. The design describes the Lab as running — what
+ * it explores, how it works, who it works with — in the client's own present
+ * tense, so the caveat has nothing left to caveat. Nothing here claims a
+ * finished prototype, a result or a named partner; it is all activity and
+ * intent, which is what they have written. The superseded copy is kept at the
+ * foot of this object rather than deleted.
+ */
 export const labPage = {
-  eyebrow: "OrbisMoneta Lab",
-  headline: "Where we prototype the next generation of financial infrastructure.",
-  headlineAccent: "the next generation",
+  eyebrow: "OrbisMoneta",
+  headline: "Innovation Lab",
+  /** The painted word. "Innovation" sets the category, "Lab" is the thing. */
+  headlineAccent: "Lab",
+  tagline: "Exploring. Experimenting. Engineering the Future.",
   intro:
-    "Our innovation lab explores emerging technology — from AI-native payment rails to tokenized settlement — before it reaches production.",
+    "The OrbisMoneta Innovation Lab explores emerging technologies and future financial infrastructure concepts that can shape the next generation of financial services. We experiment, prototype and collaborate to turn forward-looking ideas into real-world possibilities.",
+  /** The four marks along the foot of the masthead. */
+  pillars: [
+    { title: "Future-Focused Research", icon: "target" },
+    { title: "Prototype & Experiment", icon: "flask" },
+    { title: "Collaborate & Co-Innovate", icon: "user" },
+    { title: "Solve Real Problems", icon: "bars" },
+  ],
+  explore: {
+    heading: "What we explore",
+    /** The painted half of the heading. */
+    headingAccent: "explore",
+    intro:
+      "Our Innovation Lab focuses on high-potential ideas and emerging technologies that can redefine how money moves, how value is created and how financial systems operate.",
+    items: [
+      {
+        title: "Digital Money & CBDC",
+        body: "Exploring digital currencies, tokenized deposits, CBDC use cases and programmable financial infrastructure.",
+        icon: "coin",
+      },
+      {
+        title: "Tokenized Finance",
+        body: "Researching asset tokenization, digital securities, tokenized bonds, real-world assets and on-chain financial primitives.",
+        icon: "layers",
+      },
+      {
+        title: "Programmable Money",
+        body: "Exploring rule-based, conditional and automated financial transactions for next-generation financial workflows.",
+        icon: "code",
+      },
+      {
+        title: "Open Finance",
+        body: "Innovating in API ecosystems, consent, data sharing, account aggregation and embedded finance models.",
+        icon: "nodes",
+      },
+      {
+        title: "Cross-Border Innovation",
+        body: "Researching future models for digital-value interoperability and next-generation cross-border settlement.",
+        icon: "globe",
+      },
+      {
+        title: "AI & Intelligent Finance",
+        body: "Exploring AI, machine learning and agentic technologies for smarter financial systems and operations.",
+        icon: "spark",
+      },
+      {
+        title: "Emerging Infrastructure",
+        body: "Studying distributed systems, privacy technologies, quantum resilience, digital identity and more.",
+        icon: "chip",
+      },
+    ],
+  },
+  process: {
+    heading: "How we innovate",
+    headingAccent: "innovate",
+    steps: [
+      {
+        title: "Discover",
+        body: "Identify emerging trends, technologies and problems worth solving.",
+        icon: "search",
+      },
+      {
+        title: "Experiment",
+        body: "Research, prototype and test ideas in a controlled innovation environment.",
+        icon: "flask",
+      },
+      {
+        title: "Collaborate",
+        body: "Engage with banks, fintechs, partners, academia and industry experts.",
+        icon: "user",
+      },
+      {
+        title: "Validate",
+        body: "Validate use cases, feasibility, security, compliance and business impact.",
+        icon: "check",
+      },
+      {
+        title: "Transform",
+        body: "Turn validated concepts into platforms, solutions and real-world value.",
+        icon: "play",
+      },
+    ],
+  },
+  coInnovation: {
+    heading: "Co-innovation is at our core",
+    body: "We believe the future of finance is built together. Our Innovation Lab collaborates with forward-thinking institutions, regulators, technology providers and academic partners to co-create what's next.",
+    /**
+     * Kinds of collaborator, not named ones. The design names no organisation
+     * and neither does this — these are the categories it lists.
+     */
+    partners: [
+      { title: "Banks & Financial Institutions", icon: "bank" },
+      { title: "Fintechs & Startups", icon: "rocket" },
+      { title: "Technology Partners", icon: "chip" },
+      { title: "Universities & Research Labs", icon: "graduation" },
+    ],
+  },
   /**
-   * The closing panel.
+   * The line the design closes on, above its footer bar.
    *
-   * `body` is the client's own last line from their Lab section, verbatim —
-   * their HTML reads "…before it reaches production. Details coming soon." The
-   * first sentence is `intro` above; this is the second.
+   * NOT RENDERED. The closing bar it fed and the masthead button that shared
+   * its label were both removed at the client's request, so the Lab page now
+   * carries no call to action of its own — the header's Contact Us is on every
+   * page regardless. Kept rather than deleted: putting either back is one JSX
+   * block, and this is the wording for it.
+   */
+  closing: {
+    line: "Building ideas today. Creating impact tomorrow.",
+    cta: "Collaborate with the Lab",
+  },
+  /**
+   * SUPERSEDED by everything above — the page no longer renders any of it.
+   * Kept because it is a record of what the page said while the Lab had nothing
+   * to describe, and because `comingSoon` is the honest fallback if the client
+   * ever wants the page back in that state.
    *
-   * `headline` and `status` are the two lines from the design the client
-   * supplied for this page. They are slogans, not claims — no date, no figure,
-   * nothing anyone could be held to. The rest of that design's copy ("building
-   * in stealth", "updates on our breakthroughs") is deliberately not here: it
-   * asserts activity and results that appear nowhere in the client's material,
-   * and "Details coming soon" says the same thing without asserting either.
+   * `themes` were three prototype areas written for the earlier page; the seven
+   * in `explore` are the client's own and replace them.
    */
   comingSoon: {
     eyebrow: "Coming soon",
@@ -295,9 +417,6 @@ export const labPage = {
     body: "Details coming soon.",
     status: "Innovation in progress",
   },
-  /* Was rendered in a dashed "In preparation" block, now replaced by the panel
-     above. Kept rather than deleted — it is still the accurate description of
-     where the Lab's detail stands. */
   note: "Detailed prototype themes and lab imagery are being prepared with the client team.",
   themes: [
     {

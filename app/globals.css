@@ -602,6 +602,25 @@
 /* Indeterminate progress for the Lab's coming-soon panel. It travels and
    turns rather than filling, because a filled bar states a percentage and
    there is no percentage to state. */
+/*
+   The Lab's process rail, which draws itself once when the track arrives.
+
+   Keyed off `Reveal`'s own `is-revealed` rather than given another observer:
+   the rail sits inside a Reveal already, and one element watching the viewport
+   is enough for both. The delay lets the five discs start their stagger first,
+   so the line appears to be drawn *through* them rather than under them.
+
+   Under reduced motion the rail is simply there — see the block near the foot
+   of this file, which forces every reveal to its resting state.
+*/
+[data-js] [data-reveal] .om-rail {
+  transform: scaleX(0);
+}
+[data-js] [data-reveal].is-revealed .om-rail {
+  transform: scaleX(1);
+  transition: transform 1.35s var(--ease-out-quint) 220ms;
+}
+
 @keyframes om-lab-scan {
   0% {
     transform: translateX(-100%);
@@ -714,6 +733,11 @@
   }
   [data-js] [data-reveal] {
     opacity: 1 !important;
+    transform: none !important;
+  }
+  /* The rail is a descendant of a reveal, not the reveal itself, so the rule
+     above does not reach it — and its resting state is scaled to nothing. */
+  [data-js] [data-reveal] .om-rail {
     transform: none !important;
   }
   .marquee-track {

@@ -66,6 +66,59 @@ type Frame = {
    * nothing crops them and they never pass under the copy.
    */
   bleed?: boolean;
+  /**
+   * The plate's own width/height. Setting the box to it means `object-cover`
+   * is an exact fit — no crop, no letterbox — which is what lets the mask below
+   * be measured against the artwork. Under `object-contain` the painted image
+   * sits *inside* its element, so a mask on the element lands in the empty
+   * margin and never touches the picture at all.
+   */
+  ratio?: number;
+  /**
+   * The plate's dissolve, as a full literal class string — Tailwind only
+   * generates the class names it can find written out in the source, so these
+   * are constants rather than anything composed.
+   */
+  mask?: string;
+};
+
+/**
+ * The plate's feather.
+ *
+ * Top and bottom get the room they need — 8% and 4% — because these plates
+ * carry nothing but ambient texture there. The sides get 1.5%, enough to take
+ * the hard corner off, and the ground pool behind the plate does the rest.
+ */
+const PLATE_MASK =
+  "lg:[mask-composite:intersect] lg:[mask-image:linear-gradient(180deg,transparent_0%,#000_8%,#000_96%,transparent_100%),linear-gradient(90deg,transparent_0%,#000_1.5%,#000_98.5%,transparent_100%)]";
+
+/**
+ * The same feather, asymmetric: 2.6% on the left, 0.8% on the right.
+ *
+ * Trust & Security is the only plate whose two sides can take different
+ * amounts, so it is the only one that gets its own. Measured at the type rather
+ * than at the glow around it, its right-hand labels sit 1.17% off the edge and
+ * its left-hand ones 2.86% — so the shared 1.5% hold would start fading "GLOBAL
+ * COMPLIANCE" and "THREAT DETECTION & RESPONSE" before they end, while leaving
+ * the left with less fade than it could have had. 0.8% clears the right with
+ * about six pixels to spare; 2.6% gives the left seventeen, which is what the
+ * globe arc running off that edge needs.
+ */
+const PLATE_MASK_TIGHT_SIDES =
+  "lg:[mask-composite:intersect] lg:[mask-image:linear-gradient(180deg,transparent_0%,#000_8%,#000_96%,transparent_100%),linear-gradient(90deg,transparent_0%,#000_2.6%,#000_99.2%,transparent_100%)]";
+
+/**
+ * Measured from the files, not assumed: these five were exported at four
+ * different sizes.
+ */
+const PLATE_RATIO: Record<string, number> = {
+  "global-solution-platform": 1400 / 1120,
+  "intelligent-platform": 1388 / 1133,
+  "seamless-interoperability": 1400 / 1078,
+  // Replaced by a wider export — 1.500 against the 1.241 of the file before it,
+  // which is why this one comes out shorter than its four neighbours.
+  "trust-and-security": 1536 / 1024,
+  "innovation-led": 1400 / 1120,
 };
 
 const FRAMES: Frame[] = [
@@ -83,11 +136,27 @@ const FRAMES: Frame[] = [
     src: slide.image,
     alt: slide.alt,
     label: `${slide.title} ${slide.titleAccent}`,
+    /*
+      Covers below lg, contains from lg.
+
+      Below lg the plate is full-bleed behind the copy and reads as texture —
+      the veil there runs top to bottom at 88–95% opacity, so almost none of it
+      is legible anyway and fitting it whole into a tall, narrow viewport would
+      only make a small picture behind text. From lg it moves into its own
+      column beside the copy, and there it contains: every label present, no
+      crop.
+    */
+    ratio: PLATE_RATIO[slide.id],
+    mask: slide.id === "trust-and-security" ? PLATE_MASK_TIGHT_SIDES : PLATE_MASK,
+    /* Covers at every width. Below lg that fills the stage behind the copy,
+       where the veil runs at 88–95% and the plate is texture. From lg the box
+       carries the plate's own ratio, so covering it crops nothing. */
     imageClass: "object-cover object-center",
     // 1023, not 1024: the `lg:` styles that give the plate its own width start
     // *at* 1024, so a `max-width: 1024px` condition would still be asking for a
-    // full-viewport asset on the first width that no longer needs one.
-    sizes: "(max-width: 1023px) 100vw, 1120px",
+    // full-viewport asset on the first width that no longer needs one. Above
+    // that the plate is height-bound at 810px, so 860 covers it with margin.
+    sizes: "(max-width: 1023px) 100vw, 860px",
   })),
 ];
 
@@ -188,54 +257,106 @@ export function HeroCarousel() {
               )}
             >
               <div className="absolute inset-0">
-                {/* Light behind the artwork, breathing slowly. */}
+                {/*
+                  The ground, then the light — in that order, both behind the
+                  plate.
+
+                  The pool has to be wider than the plate and sit outside it,
+                  which is the whole point: the plates are drawn on ~#000212 and
+                  the hero reaches #0a1f45 in this corner, so if the darkening
+                  stopped at the plate's own edge it would draw the very line it
+                  is there to remove. Spanning from 34% to past the right edge,
+                  it takes the section to the plates' own ground well before
+                  either meets the other.
+                */}
                 {!frame.bleed && (
-                  <div className="anim-breathe absolute inset-y-[8%] right-0 left-[38%] hidden rounded-full bg-[radial-gradient(closest-side,rgba(1,164,255,.20),rgba(1,172,50,.07)_55%,transparent_78%)] blur-2xl lg:block" />
+                  <>
+                    <div
+                      aria-hidden="true"
+                      className="absolute inset-y-[-12%] right-[-12%] left-[34%] hidden rounded-[50%] bg-[radial-gradient(closest-side,#00040f_52%,rgba(0,4,15,0)_100%)] blur-3xl lg:block"
+                    />
+                    <div className="anim-breathe absolute inset-y-[8%] right-0 left-[38%] hidden rounded-full bg-[radial-gradient(closest-side,rgba(1,164,255,.20),rgba(1,172,50,.07)_55%,transparent_78%)] blur-2xl lg:block" />
+                  </>
                 )}
 
                 {/*
-                  One plate, running off the top, the bottom and the right of
-                  the section, with its left edge dissolved under the copy.
+                  The five capability plates, whole.
 
-                  Two earlier attempts are worth recording, because both were
-                  wrong in the same way. `object-contain` across the full stage
-                  fitted each diagram to the section height, so it grew with
-                  every wider screen and sat hard against the header and the
-                  control bar. A fixed 5:4 frame fixed the scale but produced a
-                  plate with four visible edges floating beside the copy — two
-                  things on the page rather than one, which is exactly what a
-                  hero image must not read as.
+                  They used to bleed: 126% of the section height, anchored
+                  right, with a mask taking the left 46% to nothing. That made a
+                  hero image out of them — one surface rather than a picture
+                  beside some words — but it did so by hiding most of each
+                  plate, and these are not backdrops. They are information
+                  graphics with their own labelling, and on
+                  `trust-and-security` the mask fell exactly across "DATA
+                  PRIVACY BY DESIGN", "RISK & FRAUD PROTECTION" and "SECURE
+                  CLOUD INFRASTRUCTURE" while the 126% clipped a further 26% off
+                  the top and bottom. A reader could see about half of what the
+                  artwork was saying.
 
-                  Bleeding it is what makes it one thing. At 126% of the section
-                  height there is no top or bottom edge to see, the right edge is
-                  the viewport's own, and the only boundary left is the left one
-                  — which the mask takes to zero across nearly half the plate, so
-                  the artwork is already gone by the time it reaches the words.
-                  The copy sits over the tail of that fade rather than beside a
-                  picture, and the plate is roughly 1100px wide at 1440 and up,
-                  against the 630 it was.
+                  So the plate is contained now, in a box to the right of the
+                  copy, and nothing is cropped or masked. The copy block is
+                  586px wide at every breakpoint — it shrinks to the headline
+                  rather than to its `max-w` — which is what leaves room for
+                  this: 766px clear at 1440 and 1006px at 1920. The width steps
+                  at xl because below 1280 there is not enough clear space to
+                  take without running under the words.
+
+                  What the bleed used to buy is bought instead by the pool
+                  below. These plates are drawn on near-black, around #000212,
+                  against a hero that reaches #0a1f45 in this corner — close, but
+                  not close enough, and unequal grounds meeting on a straight
+                  line is what makes a raster read as pasted on. A soft dark
+                  radial under the plate takes the hero to the plate's own ground
+                  before the plate arrives, so there is no edge left to see.
 
                   The globe needs none of this: it is a full-bleed photographic
                   plate that already covers the section.
                 */}
+                {/*
+                  The dissolve, sized from the artwork rather than picked.
+
+                  Each plate was scanned for how far its own drawing sits from
+                  each edge, and the answer is lopsided. Every one of the five
+                  leaves 9–16% blank across the top, so the top can take a
+                  generous fade. None of them leaves anything at the sides:
+                  even at a high luminance gate the labels run flush to both
+                  left and right — "SECURE CLOUD INFRASTRUCTURE" is already
+                  clipped in the supplied file — so a symmetric feather would
+                  have dissolved the very words this change exists to show. The
+                  sides get 1.5%, enough to take the hard corner off, and the
+                  pool behind does the rest of the work there.
+
+                  Two gradients intersected rather than one radial: a radial
+                  soft enough to hide the corners takes the mid-edges with it,
+                  and the mid-edges are where the labels are.
+
+                  `aspectRatio` is inline because it is data — four different
+                  ratios across the five files. Below lg it is inert: `inset-0`
+                  makes both dimensions definite, so there is nothing for a
+                  ratio to decide.
+                */}
                 <div
+                  style={frame.bleed ? undefined : { aspectRatio: frame.ratio }}
                   className={cn(
                     "absolute inset-0",
                     !frame.bleed &&
-                      "lg:inset-auto lg:top-1/2 lg:right-0 lg:aspect-[5/4] lg:h-[118%] lg:w-auto lg:-translate-y-1/2 lg:[mask-image:linear-gradient(90deg,transparent_0%,#000_46%)] xl:h-[126%]",
+                      "lg:inset-auto lg:top-1/2 lg:right-[2%] lg:left-auto lg:h-auto lg:w-[38%] lg:-translate-y-1/2 xl:w-[46%] xl:max-w-[49rem]",
                     isActive && "anim-art-in",
                   )}
                 >
-                  <div className="anim-float absolute inset-0">
-                    <Image
-                      src={frame.src}
-                      alt={frame.alt}
-                      fill
-                      priority={i === 0}
-                      sizes={frame.sizes}
-                      quality={82}
-                      className={frame.imageClass}
-                    />
+                  <div className={cn("absolute inset-0", !frame.bleed && frame.mask)}>
+                    <div className="anim-float absolute inset-0">
+                      <Image
+                        src={frame.src}
+                        alt={frame.alt}
+                        fill
+                        priority={i === 0}
+                        sizes={frame.sizes}
+                        quality={82}
+                        className={frame.imageClass}
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -255,8 +376,16 @@ export function HeroCarousel() {
           Below lg the artwork sits behind the copy, so the veil runs top to
           bottom; from lg it runs across, dark under the words and clear over
           the artwork.
+
+          It has to reach clear sooner than it used to. While the plates were
+          masked away under the copy there was nothing on the right worth
+          reading, so the veil could still be at 28% at the far edge; now the
+          labels live there, and 28% of #030d22 over 12px type is the difference
+          between reading it and squinting at it. The copy ends at 47% of the
+          viewport and the plate starts around 52%, so the fall happens between
+          them and the words keep the cover they had.
         */}
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(3,13,34,.95)_0%,rgba(3,13,34,.88)_46%,rgba(3,13,34,.6)_76%,rgba(3,13,34,.4)_100%)] lg:bg-[linear-gradient(100deg,#030d22_8%,rgba(3,13,34,.94)_34%,rgba(3,13,34,.55)_58%,rgba(3,13,34,.28)_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(3,13,34,.95)_0%,rgba(3,13,34,.88)_46%,rgba(3,13,34,.6)_76%,rgba(3,13,34,.4)_100%)] lg:bg-[linear-gradient(100deg,#030d22_10%,rgba(3,13,34,.93)_30%,rgba(3,13,34,.45)_47%,rgba(3,13,34,.04)_64%)]" />
 
         <div className="absolute inset-0 bg-[linear-gradient(to_top,#030d22_1%,transparent_30%)]" />
       </div>

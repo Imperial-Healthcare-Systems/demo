@@ -257,8 +257,10 @@ export const carouselSlides: CarouselSlide[] = [
       { label: "Resilient &", accent: "Reliable", detail: "High availability, fault tolerance and business continuity" },
       { label: "Governance &", accent: "Transparency", detail: "Audit-ready, monitorable and accountable" },
     ],
-    image: "/images/carousel/trust-and-security.webp",
-    alt: "Security shield with a padlock above a globe, ringed by data privacy, risk, threat detection and monitoring controls",
+    image: "/images/carousel/tands.png",
+    /* The six controls are drawn into the plate and appear nowhere else on the
+       page, so the alt names every one of them. */
+    alt: "Security shield with a padlock above a lit globe, ringed by data privacy by design, risk and fraud protection, secure cloud infrastructure, global standards and compliance, threat detection and response, and continuous monitoring",
     href: "/advisory#ai-for-financial-services",
     cta: "How we build trust",
     tab: {

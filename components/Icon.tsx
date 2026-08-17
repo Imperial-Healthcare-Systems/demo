@@ -185,6 +185,29 @@ const paths = {
       <path d="M3 21h18" strokeOpacity="0.45" />
     </>
   ),
+  /* The three below come from the Innovation Lab design, which names things the
+     rest of this set had no honest stand-in for: experimenting, startups and
+     academic research. Drawn to the same 24-box, 1.6 stroke and rounded joins
+     as everything above so they sit in the set rather than beside it. */
+  flask: (
+    <>
+      <path d="M9.5 3.5h5M10.5 3.5v5.4L5.8 17a2.2 2.2 0 0 0 1.9 3.4h8.6a2.2 2.2 0 0 0 1.9-3.4l-4.7-8.1V3.5" />
+      <path d="M8 14.5h8" strokeOpacity="0.45" />
+    </>
+  ),
+  rocket: (
+    <>
+      <path d="M12 3.2c2.7 2 4.2 5 4.2 8.4l1.6 2.2a1.2 1.2 0 0 1 .2.7v4L14.6 16H9.4L5.9 18.5v-4a1.2 1.2 0 0 1 .2-.7l1.6-2.2c0-3.4 1.5-6.4 4.2-8.4Z" />
+      <path d="M9.4 16 12 20.8 14.6 16" />
+      <circle cx="12" cy="10" r="1.6" strokeOpacity="0.5" />
+    </>
+  ),
+  graduation: (
+    <>
+      <path d="M12 4 2.8 8.4 12 12.8l9.2-4.4L12 4Z" />
+      <path d="M6.6 10.6v4.9c0 1.6 2.4 2.9 5.4 2.9s5.4-1.3 5.4-2.9v-4.9M21.2 8.4v5.2" />
+    </>
+  ),
 } as const;
 
 export function Icon({
