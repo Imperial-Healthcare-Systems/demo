@@ -621,7 +621,7 @@ export default function SolutionsPage() {
         `md` up, where the steps are actually side by side; stacked, each step's
         own number does the work.
       */}
-      <DarkSection>
+      <DarkSection id="delivery-lifecycle">
         <div className="shell section">
           <div className="flex max-w-3xl flex-col gap-5">
             <Eyebrow onDark>{deliveryLifecycle.eyebrow}</Eyebrow>
@@ -656,25 +656,6 @@ export default function SolutionsPage() {
           </ol>
         </div>
       </DarkSection>
-
-      {/* Closing */}
-      <section className="section ground-soft bg-surface">
-        <div className="shell flex flex-col items-start gap-6 md:items-center md:text-center">
-          <Eyebrow>Next step</Eyebrow>
-          <h2 className="h-display-2 max-w-3xl">
-            Want to see our product{" "}
-            <span className="text-brand-gradient">in action</span>?
-          </h2>
-          <ButtonLink
-            href="/contact"
-            size="lg"
-            icon="arrowRight"
-            className="mt-2"
-          >
-            Contact Us
-          </ButtonLink>
-        </div>
-      </section>
     </>
   );
 }

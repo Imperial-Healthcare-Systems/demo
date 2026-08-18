@@ -69,37 +69,38 @@ export const primaryNav: NavItem[] = [
         "Advisory, architecture and engineering across five functional domains.",
       columns: [
         {
-          title: "Functional domains",
+          /*
+            The page's own sections, not its cards.
+
+            This column listed the five functional domains, which put the same
+            five names in the menu, in the footer and on the page, and told a
+            reader scanning the menu nothing about what else /solutions holds.
+            These three are what the page is actually made of, in the order they
+            appear, so the menu reads as a table of contents.
+
+            Both anchors exist: `#solution-areas` and `#delivery-lifecycle` are
+            set on the page. The five domain anchors are untouched and the
+            footer still lists every one of them, so nothing became unreachable.
+          */
+          title: "Solutions & Services",
           links: [
             {
-              label: "Payment Infrastructure Modernization",
-              href: "/solutions#payment-infrastructure-modernization",
-              icon: "transfer",
-              description: "RTGS, payment hubs, ISO 20022, instant rails",
+              label: "Solutions for Modern Financial Institutions",
+              href: "/solutions",
+              icon: "layers",
+              description: "Advisory, architecture and engineering, end to end",
             },
             {
-              label: "Digital Banking & Channels",
-              href: "/solutions#digital-banking-channels",
-              icon: "phone",
-              description: "Corporate cash, mobile, onboarding, API banking",
-            },
-            {
-              label: "Digital Money & CBDC",
-              href: "/solutions#digital-money-cbdc",
-              icon: "coin",
-              description: "CBDC engine, wallets, token lifecycle",
-            },
-            {
-              label: "Open Banking & Open Finance",
-              href: "/solutions#open-banking-open-finance",
+              label: "Functional Solution Domains",
+              href: "/solutions#solution-areas",
               icon: "nodes",
-              description: "Open APIs, consent, account aggregation",
+              description: "The five domains we build in",
             },
             {
-              label: "Digital Value Interoperability",
-              href: "/solutions#digital-value-interoperability",
-              icon: "globe",
-              description: "Rail adapters, settlement flow, reconciliation",
+              label: "Delivery Lifecycle",
+              href: "/solutions#delivery-lifecycle",
+              icon: "target",
+              description: "From Strategy to Enterprise Production",
             },
           ],
         },
