@@ -397,7 +397,7 @@ export default function SolutionsPage() {
           <SectionHeading
             eyebrow="Functional Solution Domains"
             title="Where we build"
-            intro="Five domains, each pairing domain practitioners with engineers. Turn a card for the capabilities it covers."
+            intro="Five domains, each pairing domain practitioners with engineers."
             className="mb-14"
           />
 
