@@ -46,7 +46,6 @@ function hasKeyboardFocus(root: HTMLElement | null) {
   }
 }
 
-
 export function SiteHeader() {
   const pathname = usePathname();
   const { openRfq } = useConversion();
@@ -164,6 +163,12 @@ export function SiteHeader() {
 
   const isActive = (item: NavItem) => {
     if (item.href === "/") return pathname === "/";
+    // Checked first, and it has to be: one nav item's route can sit under
+    // another's — Platforms is /solutions/platforms — and the `startsWith`
+    // below would otherwise light both tabs on that page.
+    if ((item.excludes ?? []).some((prefix) => pathname.startsWith(prefix))) {
+      return false;
+    }
     if (pathname.startsWith(item.href.split("#")[0])) return true;
     // A section can own pages that do not sit under its own href.
     return (item.matches ?? []).some((prefix) => pathname.startsWith(prefix));
@@ -193,118 +198,124 @@ export function SiteHeader() {
         data-overlay={overlay || undefined}
         data-retracted={retracted || undefined}
       >
-      {/*
+        {/*
         No utility strip. The tagline, a mail link and a second Contact entry
         above the masthead added a third row of navigation for information the
         footer already carries, and pushed the mark and the primary nav down the
         page. The header is one bar: mark, navigation, one action.
       */}
-      <div className="shell flex h-16 items-center justify-between gap-6 lg:h-[4.5rem]">
-        <Link
-          href="/"
-          className="relative z-10 flex shrink-0 items-center"
-          aria-label={`${site.name} — home`}
-        >
-          <BrandMark
-            tone={overlay ? "dark" : "light"}
-            priority
-            className="h-8 lg:h-9"
-          />
-        </Link>
-
-        {/* Desktop navigation */}
-        <nav aria-label="Primary" className="hidden lg:block">
-          <ul className="flex items-center gap-1">
-            {primaryNav.map((item) => {
-              const active = isActive(item);
-              const expanded = openPanel === item.label;
-              return (
-                <li
-                  key={item.label}
-                  className="group/nav"
-                  onMouseEnter={() => {
-                    cancelClose();
-                    setOpenPanel(item.panel ? item.label : null);
-                  }}
-                >
-                  {item.panel ? (
-                    <button
-                      type="button"
-                      aria-expanded={expanded}
-                      aria-haspopup="true"
-                      onClick={() => setOpenPanel(expanded ? null : item.label)}
-                      className={cn(
-                        "relative flex cursor-pointer items-center gap-1.5 rounded-full px-3.5 py-2 text-[0.875rem] font-medium transition-colors",
-                        overlay
-                          ? "text-white/85 hover:text-white"
-                          : "text-ink-2 hover:text-navy-600",
-                        (active || expanded) && (overlay ? "text-white" : "text-navy-600"),
-                      )}
-                    >
-                      {item.label}
-                      <Icon
-                        name="chevronDown"
-                        className={cn(
-                          "h-3.5 w-3.5 transition-transform duration-200",
-                          expanded && "rotate-180",
-                        )}
-                        strokeWidth={2}
-                      />
-                      <NavUnderline show={active || expanded} overlay={overlay} />
-                    </button>
-                  ) : (
-                    <Link
-                      href={item.href}
-                      className={cn(
-                        "relative flex items-center rounded-full px-3.5 py-2 text-[0.875rem] font-medium transition-colors",
-                        overlay
-                          ? "text-white/85 hover:text-white"
-                          : "text-ink-2 hover:text-navy-600",
-                        active && (overlay ? "text-white" : "text-navy-600"),
-                      )}
-                      aria-current={active ? "page" : undefined}
-                    >
-                      {item.label}
-                      <NavUnderline show={active} overlay={overlay} />
-                    </Link>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
-
-        <div className="flex items-center gap-2.5">
-          {/* Wrapped rather than class-toggled: `hidden` and the button's own
-              `inline-flex` are both display utilities and would collide. */}
-          <div className="hidden md:block">
-            <ButtonLink
-              href="/contact"
-              tone={overlay ? "onDark" : "primary"}
-              size="sm"
-              icon="arrowRight"
-            >
-              Contact Us
-            </ButtonLink>
-          </div>
-
-          <button
-            type="button"
-            onClick={() => setMobileOpen((v) => !v)}
-            aria-expanded={mobileOpen}
-            aria-controls="mobile-nav"
-            aria-label={mobileOpen ? "Close menu" : "Open menu"}
-            className={cn(
-              "flex h-11 w-11 cursor-pointer items-center justify-center rounded-full transition-colors lg:hidden",
-              overlay
-                ? "text-white ring-1 ring-inset ring-white/25 hover:bg-white/10"
-                : "text-ink ring-1 ring-inset ring-line-strong hover:bg-surface",
-            )}
+        <div className="shell flex h-16 items-center justify-between gap-6 lg:h-[4.5rem]">
+          <Link
+            href="/"
+            className="relative z-10 flex shrink-0 items-center"
+            aria-label={`${site.name} — home`}
           >
-            <Icon name={mobileOpen ? "close" : "menu"} className="h-5 w-5" />
-          </button>
+            <BrandMark
+              tone={overlay ? "dark" : "light"}
+              priority
+              className="h-8 lg:h-9"
+            />
+          </Link>
+
+          {/* Desktop navigation */}
+          <nav aria-label="Primary" className="hidden lg:block">
+            <ul className="flex items-center gap-1">
+              {primaryNav.map((item) => {
+                const active = isActive(item);
+                const expanded = openPanel === item.label;
+                return (
+                  <li
+                    key={item.label}
+                    className="group/nav"
+                    onMouseEnter={() => {
+                      cancelClose();
+                      setOpenPanel(item.panel ? item.label : null);
+                    }}
+                  >
+                    {item.panel ? (
+                      <button
+                        type="button"
+                        aria-expanded={expanded}
+                        aria-haspopup="true"
+                        onClick={() =>
+                          setOpenPanel(expanded ? null : item.label)
+                        }
+                        className={cn(
+                          "relative flex cursor-pointer items-center gap-1.5 rounded-full px-3.5 py-2 text-[0.875rem] font-medium transition-colors",
+                          overlay
+                            ? "text-white/85 hover:text-white"
+                            : "text-ink-2 hover:text-navy-600",
+                          (active || expanded) &&
+                            (overlay ? "text-white" : "text-navy-600"),
+                        )}
+                      >
+                        {item.label}
+                        <Icon
+                          name="chevronDown"
+                          className={cn(
+                            "h-3.5 w-3.5 transition-transform duration-200",
+                            expanded && "rotate-180",
+                          )}
+                          strokeWidth={2}
+                        />
+                        <NavUnderline
+                          show={active || expanded}
+                          overlay={overlay}
+                        />
+                      </button>
+                    ) : (
+                      <Link
+                        href={item.href}
+                        className={cn(
+                          "relative flex items-center rounded-full px-3.5 py-2 text-[0.875rem] font-medium transition-colors",
+                          overlay
+                            ? "text-white/85 hover:text-white"
+                            : "text-ink-2 hover:text-navy-600",
+                          active && (overlay ? "text-white" : "text-navy-600"),
+                        )}
+                        aria-current={active ? "page" : undefined}
+                      >
+                        {item.label}
+                        <NavUnderline show={active} overlay={overlay} />
+                      </Link>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+
+          <div className="flex items-center gap-2.5">
+            {/* Wrapped rather than class-toggled: `hidden` and the button's own
+              `inline-flex` are both display utilities and would collide. */}
+            <div className="hidden md:block">
+              <ButtonLink
+                href="/contact"
+                tone={overlay ? "onDark" : "primary"}
+                size="sm"
+                icon="arrowRight"
+              >
+                Contact Us
+              </ButtonLink>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setMobileOpen((v) => !v)}
+              aria-expanded={mobileOpen}
+              aria-controls="mobile-nav"
+              aria-label={mobileOpen ? "Close menu" : "Open menu"}
+              className={cn(
+                "flex h-11 w-11 cursor-pointer items-center justify-center rounded-full transition-colors lg:hidden",
+                overlay
+                  ? "text-white ring-1 ring-inset ring-white/25 hover:bg-white/10"
+                  : "text-ink ring-1 ring-inset ring-line-strong hover:bg-surface",
+              )}
+            >
+              <Icon name={mobileOpen ? "close" : "menu"} className="h-5 w-5" />
+            </button>
+          </div>
         </div>
-      </div>
 
         {/* Mega menu */}
         {primaryNav.map((item) =>
@@ -343,7 +354,9 @@ export function SiteHeader() {
                     <button
                       type="button"
                       onClick={() =>
-                        setMobileSection((v) => (v === item.label ? null : item.label))
+                        setMobileSection((v) =>
+                          v === item.label ? null : item.label,
+                        )
                       }
                       aria-expanded={mobileSection === item.label}
                       className="flex w-full cursor-pointer items-center justify-between py-3.5 text-left text-[1.0625rem] font-medium text-ink"
@@ -367,7 +380,9 @@ export function SiteHeader() {
                                 href={link.href}
                                 className="flex flex-col rounded-lg px-3 py-2.5 -mx-3 text-[0.9375rem] text-ink-2 transition-colors hover:bg-surface hover:text-navy-600"
                               >
-                                <span className="font-medium text-ink">{link.label}</span>
+                                <span className="font-medium text-ink">
+                                  {link.label}
+                                </span>
                                 {link.description && (
                                   <span className="text-[0.8125rem] text-ink-3">
                                     {link.description}
@@ -394,7 +409,12 @@ export function SiteHeader() {
           </ul>
 
           <div className="mt-8 flex flex-col gap-3">
-            <ButtonLink href="/contact" size="lg" icon="arrowRight" className="w-full">
+            <ButtonLink
+              href="/contact"
+              size="lg"
+              icon="arrowRight"
+              className="w-full"
+            >
               Contact Us
             </ButtonLink>
             <button
@@ -488,8 +508,13 @@ function MegaPanel({
             <h2 className="mt-3 text-[1.1875rem] leading-[1.2] xl:text-[1.375rem]">
               {panel.heading}
             </h2>
-            <span aria-hidden="true" className="mt-4 h-[3px] w-9 rounded-full bg-navy-600" />
-            <p className="mt-4 text-[0.875rem] leading-relaxed text-ink-2">{panel.blurb}</p>
+            <span
+              aria-hidden="true"
+              className="mt-4 h-[3px] w-9 rounded-full bg-navy-600"
+            />
+            <p className="mt-4 text-[0.875rem] leading-relaxed text-ink-2">
+              {panel.blurb}
+            </p>
             {/* `mt-auto` pins this to the bottom of the tallest column. */}
             <Link
               href={item.href}
@@ -507,15 +532,15 @@ function MegaPanel({
           <div
             className={cn(
               "grid gap-x-6",
-              panel.feature ? "col-span-6" : "col-span-9",
               // Written out, not interpolated — Tailwind only generates class
               // names it can find as literal text.
+              panel.feature ? "col-span-6" : "col-span-9",
               panel.columns.length >= 3 ? "grid-cols-3" : "grid-cols-2",
             )}
           >
             {panel.columns.map((col) => (
               <div key={col.title} className="flex flex-col">
-                <p className="mb-2 px-3 font-mono text-[0.625rem] uppercase tracking-[0.18em] text-ink-3">
+                <p className="mb-2 px-3 font-mono text-[0.625rem] tracking-[0.18em] text-ink-3 uppercase">
                   {col.title}
                 </p>
                 {col.links.map((link) => (
@@ -530,7 +555,11 @@ function MegaPanel({
                         aria-hidden="true"
                         className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-navy-50 text-navy-600 transition-colors duration-200 group-hover/item:bg-navy-600 group-hover/item:text-white xl:h-10 xl:w-10"
                       >
-                        <Icon name={link.icon} className="h-5 w-5" strokeWidth={1.6} />
+                        <Icon
+                          name={link.icon}
+                          className="h-5 w-5"
+                          strokeWidth={1.6}
+                        />
                       </span>
                     )}
                     <span className="flex min-w-0 flex-col gap-1 pt-1 xl:pt-0.5">
@@ -570,7 +599,9 @@ function MegaPanel({
                 <p className="font-mono text-[0.625rem] uppercase tracking-[0.18em] text-sky-400">
                   {panel.feature.eyebrow}
                 </p>
-                <h3 className="text-[1.0625rem] leading-snug text-white">{panel.feature.title}</h3>
+                <h3 className="text-[1.0625rem] leading-snug text-white">
+                  {panel.feature.title}
+                </h3>
                 <p className="text-[0.8125rem] leading-relaxed text-ink-inv-2">
                   {panel.feature.body}
                 </p>

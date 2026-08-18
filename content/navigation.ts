@@ -41,6 +41,14 @@ export type NavItem = {
    * into Solutions, so /products/* has to light Solutions rather than nothing.
    */
   matches?: string[];
+  /**
+   * Paths that must NOT mark this item current, checked before `matches`.
+   *
+   * Needed as soon as one nav item's route sits under another's: Platforms is
+   * /solutions/platforms, so the plain `startsWith` below lights Solutions on
+   * that page too and two tabs come up underlined at once.
+   */
+  excludes?: string[];
   /** Rendered as a mega-menu panel when present. */
   panel?: {
     eyebrow: string;
@@ -59,113 +67,40 @@ export type NavItem = {
 
 export const primaryNav: NavItem[] = [
   {
+    /*
+      A plain link, not a mega-menu.
+
+      It carried a panel listing the page's three sections, and before that the
+      five functional domains — both removed at the client's request: clicking
+      Solutions should land on /solutions and nothing else. The sections it
+      pointed at are all still on the page and still anchored
+      (`#solution-areas`, `#delivery-lifecycle`), so nothing became unreachable;
+      there is simply no second way to reach them from the bar.
+
+      `excludes` stays and is load-bearing. Platforms sits at
+      /solutions/platforms — under this href — so without it the `startsWith`
+      in Header's `isActive` lights both tabs on that page.
+    */
     label: "Solutions",
     href: "/solutions",
+    excludes: ["/solutions/platforms"],
+  },
+  {
+    /*
+      A tab of its own, next to Solutions, at the client's request.
+
+      It was a column inside the Solutions panel and before that a section of
+      that page. As a top-level entry it lands straight on /solutions/platforms,
+      and the product pages are reached from the cards there rather than from a
+      second menu — which is why the Products column came out of the Solutions
+      panel at the same time.
+
+      `matches` carries /products so a reader on the Digital Currency Hub page
+      sees the tab they arrived through still marked current.
+    */
+    label: "Platforms",
+    href: "/solutions/platforms",
     matches: ["/products"],
-    panel: {
-      eyebrow: "Solutions & Services",
-      heading: "Solutions for modern financial institutions.",
-      blurb:
-        "Advisory, architecture and engineering across five functional domains.",
-      columns: [
-        {
-          /*
-            The page's own sections, not its cards.
-
-            This column listed the five functional domains, which put the same
-            five names in the menu, in the footer and on the page, and told a
-            reader scanning the menu nothing about what else /solutions holds.
-            These three are what the page is actually made of, in the order they
-            appear, so the menu reads as a table of contents.
-
-            Both anchors exist: `#solution-areas` and `#delivery-lifecycle` are
-            set on the page. The five domain anchors are untouched and the
-            footer still lists every one of them, so nothing became unreachable.
-          */
-          title: "Solutions & Services",
-          links: [
-            {
-              label: "Solutions for Modern Financial Institutions",
-              href: "/solutions",
-              icon: "layers",
-              description: "Advisory, architecture and engineering, end to end",
-            },
-            {
-              label: "Functional Solution Domains",
-              href: "/solutions#solution-areas",
-              icon: "nodes",
-              description: "The five domains we build in",
-            },
-            {
-              label: "Delivery Lifecycle",
-              href: "/solutions#delivery-lifecycle",
-              icon: "target",
-              description: "From Strategy to Enterprise Production",
-            },
-          ],
-        },
-        {
-          /*
-            Platforms is a page again. It was a section of /solutions, reached by
-            anchor; the client's own page gives it a section of its own with two
-            named platforms and their status, which is more than a row on
-            another page can carry. `/platforms` still redirects to
-            `/solutions#platforms`, and that anchor no longer exists — see the
-            note on the redirect in next.config.ts.
-          */
-          title: "Platforms",
-          links: [
-            {
-              label: "Proprietary Platforms",
-              href: "/solutions/platforms",
-              icon: "chip",
-              description: "Both platforms in one view",
-            },
-            {
-              label: "Digital Currency Hub™",
-              href: "/solutions/platforms#digital-currency-hub",
-              icon: "coin",
-              description: "Bank-ready digital money infrastructure",
-            },
-            {
-              label: "Lending Integration Hub",
-              href: "/solutions/platforms#lending-integration-hub",
-              icon: "nodes",
-              description: "Connecting the lending ecosystem",
-            },
-          ],
-        },
-        {
-          /*
-            Products was a top-level nav item of its own, then a column of four
-            links, and is now a column holding the one thing it describes — a
-            single product, at the client's request.
-
-            The three that went were all deep links into the same page
-            (#capabilities twice, #deployment once). Listing one page four times
-            padded the column rather than filling it, and it read as four
-            products to anyone scanning the menu. Both anchors still exist on
-            the page and both are still reachable from it;
-            /products/digital-currency-hub still lights this item as active.
-          */
-          title: "Products",
-          links: [
-            {
-              label: "Digital Currency Hub™",
-              href: "/products/digital-currency-hub",
-              icon: "coin",
-              description: "Retail CBDC platform for commercial banks",
-            },
-          ],
-        },
-      ],
-      /*
-        No feature card. It pointed at /solutions#platforms with the label
-        "View platform ecosystem", which is the same destination as the first
-        link in the Platforms column — the panel offered one thing twice. Its
-        space goes to the third column instead.
-      */
-    },
   },
   {
     label: "Advisory",

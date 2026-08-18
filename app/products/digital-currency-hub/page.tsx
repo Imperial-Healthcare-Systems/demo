@@ -339,10 +339,18 @@ export default function DigitalCurrencyHubPage() {
 
         <div className="shell flex flex-1 flex-col justify-center">
           <Reveal kind="fade">
+            {/*
+              The middle crumb pointed at "Products" — with this page's own href
+              on it, so the step back landed on the page the reader was already
+              standing on. It names Platforms now, which is both a real
+              destination and the true parent: Platforms is a top-level tab, its
+              page carries the card that links here, and it is the route a
+              reader takes to arrive.
+            */}
             <Breadcrumbs
               onDark
               items={[
-                { label: "Products", href: "/products/digital-currency-hub" },
+                { label: "Platforms", href: "/solutions/platforms" },
                 { label: dch.name },
               ]}
             />

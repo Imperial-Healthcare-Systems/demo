@@ -52,7 +52,8 @@ const CARD_TONES = {
     card:
       "border-[rgba(0,136,204,.35)] bg-[radial-gradient(circle_at_90%_10%,rgba(0,136,204,.08)_0%,transparent_60%),linear-gradient(180deg,#111827_0%,#0c111d_100%)] " +
       "shadow-[0_20px_50px_rgba(0,0,0,.5),0_0_35px_rgba(0,136,204,.18)]",
-    badge: "bg-[rgba(0,136,204,.12)] text-[#38bdf8] border-[rgba(0,136,204,.4)]",
+    badge:
+      "bg-[rgba(0,136,204,.12)] text-[#38bdf8] border-[rgba(0,136,204,.4)]",
     dot: "bg-[#0088cc] shadow-[0_0_6px_#0088cc]",
     icon: "bg-[rgba(0,136,204,.12)] text-[#38bdf8] ring-[rgba(0,136,204,.35)]",
     cta: "bg-[#0b2e9a] hover:bg-[#0f3bc4] border-[rgba(255,255,255,.15)] shadow-[0_4px_14px_rgba(11,46,154,.35)]",
@@ -64,8 +65,8 @@ export default function PlatformsPage() {
     <div className="on-dark bg-[#070a11]">
       {/*
         Opening. The client's own hero is centred with a gradient-filled
-        headline; that is kept, with breadcrumbs added because this page sits
-        under /solutions and a reader needs the way back up.
+        headline; that is kept, with a breadcrumb added so the reader has a way
+        back to the top of the site.
       */}
       <section
         className={cn(
@@ -79,10 +80,21 @@ export default function PlatformsPage() {
         />
         <div className="shell">
           <Reveal kind="fade">
-            <Breadcrumbs
-              onDark
-              items={[{ label: "Solutions", href: "/solutions" }, { label: "Platforms" }]}
-            />
+            {/*
+              "Home > Platforms", not "Home > Solutions > Platforms".
+
+              The trail follows the navigation, not the URL. This page used to
+              be reached only through Solutions — it was a section of that page
+              and then a column in its menu — so Solutions was a real step on
+              the way here. It is a top-level tab now, so nobody passes through
+              Solutions to arrive, and a crumb for it would offer a step back to
+              somewhere the reader has not been.
+
+              The route is still /solutions/platforms, so the trail and the path
+              no longer agree. That is the right way round: the trail is for the
+              reader, and the reader's route is Home then Platforms.
+            */}
+            <Breadcrumbs onDark items={[{ label: "Platforms" }]} />
           </Reveal>
 
           <div className="mt-9 flex max-w-3xl flex-col items-start gap-5">
@@ -100,7 +112,9 @@ export default function PlatformsPage() {
               </h1>
             </Reveal>
             <Reveal delay={120}>
-              <p className="text-[1.08rem] leading-relaxed text-[#94a3b8]">{platformsPage.intro}</p>
+              <p className="text-[1.08rem] leading-relaxed text-[#94a3b8]">
+                {platformsPage.intro}
+              </p>
             </Reveal>
           </div>
         </div>
@@ -151,7 +165,11 @@ export default function PlatformsPage() {
                           tone.icon,
                         )}
                       >
-                        <Icon name={p.icon as never} className="h-4.5 w-4.5" strokeWidth={1.7} />
+                        <Icon
+                          name={p.icon as never}
+                          className="h-4.5 w-4.5"
+                          strokeWidth={1.7}
+                        />
                       </span>
                     </div>
 
@@ -161,7 +179,9 @@ export default function PlatformsPage() {
                     <p className="mt-1.5 text-[1.02rem] font-semibold text-[#0aa2e6]">
                       {p.subtitle}
                     </p>
-                    <p className="mt-3.5 text-[0.95rem] leading-relaxed text-[#94a3b8]">{p.body}</p>
+                    <p className="mt-3.5 text-[0.95rem] leading-relaxed text-[#94a3b8]">
+                      {p.body}
+                    </p>
 
                     {/* `.caps-tag-list` */}
                     <ul className="mt-6 flex flex-wrap gap-2">
@@ -199,7 +219,9 @@ export default function PlatformsPage() {
                           )}
                         >
                           <p className="font-bold text-white">{b.title}</p>
-                          <p className="mt-1 leading-relaxed text-[#94a3b8]">{b.body}</p>
+                          <p className="mt-1 leading-relaxed text-[#94a3b8]">
+                            {b.body}
+                          </p>
                         </li>
                       ))}
                     </ul>
@@ -220,7 +242,11 @@ export default function PlatformsPage() {
                     )}
                   >
                     {p.cta.label}
-                    <Icon name="arrowRight" className="h-4 w-4" strokeWidth={2} />
+                    <Icon
+                      name="arrowRight"
+                      className="h-4 w-4"
+                      strokeWidth={2}
+                    />
                   </Link>
                 </Reveal>
               );
@@ -236,9 +262,10 @@ export default function PlatformsPage() {
             Let&rsquo;s Build the Future of Finance
           </h2>
           <p className="text-[1.05rem] leading-relaxed text-[#94a3b8]">
-            Whether modernizing an existing financial platform, integrating new ecosystems or
-            developing a new digital financial capability, OrbisMoneta brings together strategy,
-            domain expertise and technology execution.
+            Whether modernizing an existing financial platform, integrating new
+            ecosystems or developing a new digital financial capability,
+            OrbisMoneta brings together strategy, domain expertise and
+            technology execution.
           </p>
           <Link
             href="/contact"
