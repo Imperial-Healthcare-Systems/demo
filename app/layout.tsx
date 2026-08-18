@@ -129,7 +129,8 @@ const organisationSchema = {
   email: site.email,
   address: {
     "@type": "PostalAddress",
-    streetAddress: "Skyline Icon, 7th Floor, Andheri – Kurla Rd, Mittal Industrial Estate, Marol",
+    streetAddress:
+      "Skyline Icon, 7th Floor, Andheri – Kurla Rd, Mittal Industrial Estate, Marol",
     addressLocality: site.address.locality,
     addressRegion: site.address.region,
     postalCode: site.address.postalCode,
@@ -138,7 +139,11 @@ const organisationSchema = {
   sameAs: site.social.map((s) => s.href),
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   // `suppressHydrationWarning` covers the `data-js` flag set by the inline
   // script in the head, and nothing else — the prop applies to this element's
   // own attributes, one level deep, not to the tree beneath it.
@@ -171,13 +176,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           React's, and a script appending to it fights whatever React renders.
         */}
         <script
-          dangerouslySetInnerHTML={{ __html: `document.documentElement.dataset.js="1"` }}
+          dangerouslySetInnerHTML={{
+            __html: `document.documentElement.dataset.js="1"`,
+          }}
         />
       </head>
       <body className="antialiased">
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organisationSchema) }}
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organisationSchema),
+          }}
         />
         <a
           href="#main"

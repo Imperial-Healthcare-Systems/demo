@@ -10,6 +10,10 @@ const tiles = aboutPage.credentials;
 const INTERVAL = 5600;
 
 /**
+ * PARKED. Nothing mounts this — the capability deck took its place on /about,
+ * and that band has since come off too. Held on the same terms as
+ * components/ParkedSections.tsx: do not delete without asking.
+ *
  * "Leadership & Payment Experience" — the rotating panel from the brief.
  *
  * The rotating figure sits above a fixed strip of credential tiles. They used

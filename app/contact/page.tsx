@@ -33,7 +33,6 @@ export default function ContactPage() {
           </>
         }
         intro={contactPage.intro}
-        crumbs={[{ label: "Contact" }]}
       />
 
       <section className="section ground-soft bg-canvas">
@@ -59,11 +58,19 @@ export default function ContactPage() {
                 className="group/route flex items-start gap-4 rounded-[var(--radius-card)] bg-white p-6 ring-1 ring-line shadow-[0_1px_2px_rgba(10,21,51,.03)] transition-[transform,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:shadow-[0_2px_6px_rgba(10,21,51,.05),0_20px_38px_-22px_rgba(0,46,166,.35)] motion-reduce:hover:translate-y-0"
               >
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-navy-600/10 text-navy-600 ring-1 ring-navy-600/12 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/route:scale-110 group-hover/route:[transform:perspective(520px)_rotateY(-12deg)] group-hover/route:bg-navy-600 group-hover/route:text-white group-hover/route:ring-navy-600">
-                  <Icon name={ROUTE_ICONS[route.id] ?? "mail"} className="h-5 w-5" strokeWidth={1.6} />
+                  <Icon
+                    name={ROUTE_ICONS[route.id] ?? "mail"}
+                    className="h-5 w-5"
+                    strokeWidth={1.6}
+                  />
                 </span>
                 <div className="flex flex-col gap-1.5">
-                  <h2 className="text-[0.9375rem] font-medium text-ink">{route.title}</h2>
-                  <p className="text-[0.8125rem] leading-relaxed text-ink-2">{route.body}</p>
+                  <h2 className="text-[0.9375rem] font-medium text-ink">
+                    {route.title}
+                  </h2>
+                  <p className="text-[0.8125rem] leading-relaxed text-ink-2">
+                    {route.body}
+                  </p>
                   <a
                     href={`mailto:${route.email}`}
                     className="w-fit text-[0.8125rem] font-medium text-navy-600 underline underline-offset-4 transition-colors hover:text-navy-800"
@@ -75,11 +82,17 @@ export default function ContactPage() {
             ))}
 
             {/* Registered office */}
-            <Reveal delay={300} className="flex flex-col gap-5 rounded-[var(--radius-card)] bg-surface p-6 ring-1 ring-line">
+            <Reveal
+              delay={300}
+              className="flex flex-col gap-5 rounded-[var(--radius-card)] bg-surface p-6 ring-1 ring-line"
+            >
               <Eyebrow>Registered office</Eyebrow>
               <address className="flex flex-col gap-4 text-[0.875rem] not-italic text-ink-2">
                 <div className="flex items-start gap-3">
-                  <Icon name="pin" className="mt-0.5 h-4 w-4 shrink-0 text-navy-600" />
+                  <Icon
+                    name="pin"
+                    className="mt-0.5 h-4 w-4 shrink-0 text-navy-600"
+                  />
                   <span>
                     {site.address.lines.map((line) => (
                       <span key={line} className="block">
@@ -92,14 +105,20 @@ export default function ContactPage() {
                   href={`mailto:${site.email}`}
                   className="flex items-center gap-3 transition-colors hover:text-navy-600"
                 >
-                  <Icon name="mail" className="h-4 w-4 shrink-0 text-navy-600" />
+                  <Icon
+                    name="mail"
+                    className="h-4 w-4 shrink-0 text-navy-600"
+                  />
                   {site.email}
                 </a>
                 <a
                   href={site.url}
                   className="flex items-center gap-3 transition-colors hover:text-navy-600"
                 >
-                  <Icon name="globe" className="h-4 w-4 shrink-0 text-navy-600" />
+                  <Icon
+                    name="globe"
+                    className="h-4 w-4 shrink-0 text-navy-600"
+                  />
                   www.orbismoneta.com
                 </a>
               </address>
@@ -110,9 +129,15 @@ export default function ContactPage() {
               delay={360}
               className="surface-deep on-dark flex gap-4 rounded-[var(--radius-card)] p-6"
             >
-              <Icon name="lock" className="h-5 w-5 shrink-0 text-sky-400" strokeWidth={1.6} />
+              <Icon
+                name="lock"
+                className="h-5 w-5 shrink-0 text-sky-400"
+                strokeWidth={1.6}
+              />
               <div className="flex flex-col gap-1.5">
-                <h2 className="text-[0.9375rem] text-white">What happens next</h2>
+                <h2 className="text-[0.9375rem] text-white">
+                  What happens next
+                </h2>
                 <p className="text-[0.8125rem] leading-relaxed text-ink-inv-2">
                   {contactPage.reassurance}
                 </p>

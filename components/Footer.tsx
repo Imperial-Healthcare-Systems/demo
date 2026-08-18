@@ -130,18 +130,54 @@ export function SiteFooter() {
             </p>
             <p>{site.legal.copyright}</p>
           </div>
-          <ul className="flex flex-wrap items-center gap-x-6 gap-y-2">
-            {legalNav.map((link) => (
-              <li key={link.href}>
-                <Link
-                  href={link.href}
-                  className="text-[0.75rem] text-ink-inv-3 transition-colors hover:text-white"
-                >
-                  {link.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
+          {/*
+            Legal links and the builder credit share the right end of the bar.
+            They are one group rather than two children of the bar itself: the
+            bar is `justify-between`, so a third child would push the legal
+            links into the middle of it and break the two-ended balance the
+            brand block on the left is set against.
+
+            They only sit side by side from lg. Measured at 768, where the bar
+            first becomes a row: the brand sentence takes ~400px of the 704
+            available, and links plus credit want ~370 — so both wrapped, the
+            three legal links onto two lines and the credit into "Built by" /
+            "Imperial". Stacked until lg, the group is as wide as the links
+            alone and everything stays on one line.
+
+            The rule between them appears with the row for the same reason —
+            stacked it would be a stray horizontal mark.
+
+            `md:items-end` covers the band in between, md to lg, where the bar
+            is already a row and this group already sits at its right end: the
+            credit is pulled flush with the links above it rather than hanging
+            off their left. Below md the bar is stacked and the group runs the
+            full width from the left, so it stays as it is.
+          */}
+          <div className="flex flex-col gap-3 md:items-end lg:flex-row lg:items-center lg:gap-6">
+            <ul className="flex flex-wrap items-center gap-x-6 gap-y-2">
+              {legalNav.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-[0.75rem] text-ink-inv-3 transition-colors hover:text-white"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <p className="text-[0.75rem] whitespace-nowrap text-ink-inv-3 lg:border-l lg:border-white/10 lg:pl-6">
+              {site.legal.builtBy.prefix}{" "}
+              <a
+                href={site.legal.builtBy.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-ink-inv-2 transition-colors hover:text-sky-400"
+              >
+                {site.legal.builtBy.label}
+              </a>
+            </p>
+          </div>
         </div>
       </div>
     </footer>

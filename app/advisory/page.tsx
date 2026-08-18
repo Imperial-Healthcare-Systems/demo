@@ -53,7 +53,6 @@ export default function AdvisoryPage() {
         title={advisoryPage.headline}
         accent={advisoryPage.headlineAccent}
         intro={advisoryPage.intro}
-        crumbs={[{ label: "Advisory" }]}
         aside={<CapabilityOrbit />}
         actions={
           <>
@@ -75,13 +74,19 @@ export default function AdvisoryPage() {
             {advisoryPage.approach.steps.map((step, i) => (
               <li key={step.step} className="flex items-start gap-3.5">
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-navy-50 text-navy-600">
-                  <Icon name={STEP_ICONS[i]} className="h-[1.125rem] w-[1.125rem]" strokeWidth={1.7} />
+                  <Icon
+                    name={STEP_ICONS[i]}
+                    className="h-[1.125rem] w-[1.125rem]"
+                    strokeWidth={1.7}
+                  />
                 </span>
                 <span className="flex flex-col gap-1">
                   <span className="text-[0.9375rem] leading-snug font-semibold text-ink">
                     {step.step}
                   </span>
-                  <span className="text-[0.8125rem] leading-relaxed text-ink-2">{step.body}</span>
+                  <span className="text-[0.8125rem] leading-relaxed text-ink-2">
+                    {step.body}
+                  </span>
                 </span>
               </li>
             ))}
@@ -103,11 +108,11 @@ export default function AdvisoryPage() {
             {services.map((service, i) => {
               const tone = SERVICE_TONES[i % SERVICE_TONES.length];
               return (
-              <Reveal
-                key={service.id}
-                id={service.id}
-                delay={i * 50}
-                /*
+                <Reveal
+                  key={service.id}
+                  id={service.id}
+                  delay={i * 50}
+                  /*
                   Lift, a brand rule drawn across the top, a tone-filled tile
                   and a sheen raking over as the pointer arrives — the same
                   vocabulary the partner tiers and capability deck use, so the
@@ -116,60 +121,68 @@ export default function AdvisoryPage() {
                   the ring and the tile background onto the same curve, and both
                   of those want to snap.
                 */
-                className={`group/svc relative overflow-hidden rounded-[var(--radius-card)] bg-white p-7 ring-1 ring-line shadow-[0_1px_2px_rgba(10,21,51,.04),0_12px_28px_-20px_rgba(10,21,51,.22)] transition-[transform,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-2 motion-reduce:hover:translate-y-0 md:p-9 ${tone.lift}`}
-              >
-                <span
-                  aria-hidden="true"
-                  className={`absolute inset-x-0 top-0 h-[3px] origin-left scale-x-0 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/svc:scale-x-100 ${tone.bar}`}
-                />
-                <span
-                  aria-hidden="true"
-                  className="pointer-events-none absolute inset-y-0 -left-1/4 w-1/4 bg-[linear-gradient(90deg,transparent,rgba(1,164,255,.10),transparent)] opacity-0 group-hover/svc:animate-[om-sheen_1.15s_ease-out] group-hover/svc:opacity-100 motion-reduce:hidden"
-                />
+                  className={`group/svc relative overflow-hidden rounded-[var(--radius-card)] bg-white p-7 ring-1 ring-line shadow-[0_1px_2px_rgba(10,21,51,.04),0_12px_28px_-20px_rgba(10,21,51,.22)] transition-[transform,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-2 motion-reduce:hover:translate-y-0 md:p-9 ${tone.lift}`}
+                >
+                  <span
+                    aria-hidden="true"
+                    className={`absolute inset-x-0 top-0 h-[3px] origin-left scale-x-0 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/svc:scale-x-100 ${tone.bar}`}
+                  />
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-y-0 -left-1/4 w-1/4 bg-[linear-gradient(90deg,transparent,rgba(1,164,255,.10),transparent)] opacity-0 group-hover/svc:animate-[om-sheen_1.15s_ease-out] group-hover/svc:opacity-100 motion-reduce:hidden"
+                  />
 
-                <div className="relative grid gap-7 lg:grid-cols-12 lg:gap-10">
-                  <div className="flex items-start gap-5 lg:col-span-5">
-                    <span className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ring-1 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/svc:scale-110 group-hover/svc:[transform:perspective(520px)_rotateY(-12deg)] ${tone.tile}`}>
-                      <Icon name={service.icon as never} className="h-6 w-6" strokeWidth={1.5} />
-                    </span>
-                    <div className="flex flex-col gap-2">
-                      <span className={`font-mono text-[0.6875rem] tabular transition-colors duration-300 ${tone.index}`}>
-                        {service.index}
+                  <div className="relative grid gap-7 lg:grid-cols-12 lg:gap-10">
+                    <div className="flex items-start gap-5 lg:col-span-5">
+                      <span
+                        className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ring-1 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/svc:scale-110 group-hover/svc:[transform:perspective(520px)_rotateY(-12deg)] ${tone.tile}`}
+                      >
+                        <Icon
+                          name={service.icon as never}
+                          className="h-6 w-6"
+                          strokeWidth={1.5}
+                        />
                       </span>
-                      <h3 className="text-[1.25rem] leading-snug md:text-[1.375rem]">
-                        {service.title}
-                      </h3>
+                      <div className="flex flex-col gap-2">
+                        <span
+                          className={`font-mono text-[0.6875rem] tabular transition-colors duration-300 ${tone.index}`}
+                        >
+                          {service.index}
+                        </span>
+                        <h3 className="text-[1.25rem] leading-snug md:text-[1.375rem]">
+                          {service.title}
+                        </h3>
+                      </div>
+                    </div>
+
+                    <div className="lg:col-span-4">
+                      <p className="text-[0.9375rem] leading-relaxed text-ink-2">
+                        {service.promise}
+                      </p>
+                    </div>
+
+                    <div className="lg:col-span-3">
+                      <p className="mb-3 font-mono text-[0.625rem] uppercase tracking-[0.18em] text-ink-3">
+                        Focus areas
+                      </p>
+                      <ul className="flex flex-col gap-2">
+                        {service.focusAreas.map((area) => (
+                          <li
+                            key={area}
+                            className="flex items-start gap-2.5 text-[0.875rem] text-ink"
+                          >
+                            <Icon
+                              name="check"
+                              className="mt-0.5 h-3.5 w-3.5 shrink-0 text-green-500"
+                              strokeWidth={2.4}
+                            />
+                            {area}
+                          </li>
+                        ))}
+                      </ul>
                     </div>
                   </div>
-
-                  <div className="lg:col-span-4">
-                    <p className="text-[0.9375rem] leading-relaxed text-ink-2">
-                      {service.promise}
-                    </p>
-                  </div>
-
-                  <div className="lg:col-span-3">
-                    <p className="mb-3 font-mono text-[0.625rem] uppercase tracking-[0.18em] text-ink-3">
-                      Focus areas
-                    </p>
-                    <ul className="flex flex-col gap-2">
-                      {service.focusAreas.map((area) => (
-                        <li
-                          key={area}
-                          className="flex items-start gap-2.5 text-[0.875rem] text-ink"
-                        >
-                          <Icon
-                            name="check"
-                            className="mt-0.5 h-3.5 w-3.5 shrink-0 text-green-500"
-                            strokeWidth={2.4}
-                          />
-                          {area}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </Reveal>
+                </Reveal>
               );
             })}
           </div>
@@ -203,7 +216,9 @@ export default function AdvisoryPage() {
                   </span>
                   <div className="flex flex-col gap-1.5">
                     <h3 className="text-lg text-white">{step.step}</h3>
-                    <p className="text-[0.9375rem] leading-relaxed text-ink-inv-2">{step.body}</p>
+                    <p className="text-[0.9375rem] leading-relaxed text-ink-inv-2">
+                      {step.body}
+                    </p>
                   </div>
                 </Reveal>
               ))}
@@ -218,7 +233,10 @@ export default function AdvisoryPage() {
           <Eyebrow>{advisoryPage.closing.eyebrow}</Eyebrow>
           <h2 className="max-w-3xl h-display-2">
             Let&apos;s Shape the{" "}
-            <span className="text-brand-gradient">Future of Financial Infrastructure</span>.
+            <span className="text-brand-gradient">
+              Future of Financial Infrastructure
+            </span>
+            .
           </h2>
           <p className="max-w-2xl text-[1.0625rem] leading-relaxed text-ink-2">
             {advisoryPage.closing.body}

@@ -55,6 +55,16 @@ export const site = {
   legal: {
     brandLine: "OrbisMoneta is a brand of Monetanova Technologies Pvt. Ltd.",
     copyright: "© 2026 Monetanova Technologies Pvt. Ltd. All rights reserved.",
+    /*
+      Builder credit, last item in the footer's legal bar. Kept here with the
+      other legal-bar strings rather than written into the component, so the
+      wording and the destination are changed in one place.
+    */
+    builtBy: {
+      prefix: "Built by",
+      label: "Imperial",
+      href: "https://www.imperialtechinnovations.com/",
+    },
   },
 } as const;
 

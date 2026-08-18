@@ -1,3 +1,22 @@
+/*
+  PARKED, and not routable.
+
+  The folder is `_careers`, and the underscore is what does it: Next opts a
+  private folder and everything under it out of routing, so this page builds
+  nothing and /about/careers now 404s. The client asked for Careers to come off
+  the site but the page itself to be kept, ready to go live when they say.
+
+  To make it live: rename this folder to `careers`, put the sitemap entry back
+  in app/sitemap.ts, and restore the links — the footer's Company column in
+  content/navigation.ts, and the button beside "Meet the leadership" on
+  app/about/page.tsx. The closing band on app/about/leadership/page.tsx went
+  with them; it was a Careers ask and nothing else, so it is in git rather than
+  in a comment.
+
+  Nothing inside here changed. `careersPage` in content/about.ts is untouched
+  and this file still typechecks and lints with the rest of the project, so it
+  cannot rot quietly while it waits.
+*/
 import type { Metadata } from "next";
 import { careersPage } from "@/content/about";
 import { PageHero } from "@/components/PageHero";
@@ -21,9 +40,11 @@ export default function CareersPage() {
         title={careersPage.headline}
         accent={careersPage.headlineAccent}
         intro={careersPage.intro}
-        crumbs={[{ label: "About", href: "/about" }, { label: "Careers" }]}
         actions={
-          <ButtonLink href={`mailto:${careersPage.cta.email}`} icon="arrowRight">
+          <ButtonLink
+            href={`mailto:${careersPage.cta.email}`}
+            icon="arrowRight"
+          >
             Introduce yourself
           </ButtonLink>
         }
@@ -47,8 +68,12 @@ export default function CareersPage() {
                 <span className="font-mono text-[0.6875rem] tabular text-navy-600">
                   0{i + 1}
                 </span>
-                <h2 className="text-[1.125rem] leading-snug">{principle.title}</h2>
-                <p className="text-[0.9375rem] leading-relaxed text-ink-2">{principle.body}</p>
+                <h2 className="text-[1.125rem] leading-snug">
+                  {principle.title}
+                </h2>
+                <p className="text-[0.9375rem] leading-relaxed text-ink-2">
+                  {principle.body}
+                </p>
               </Reveal>
             ))}
           </ul>

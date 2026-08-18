@@ -31,7 +31,8 @@ const TIER_TONES = [
   {
     ring: "ring-sky-400/18",
     panel: "bg-[linear-gradient(180deg,#020a1c,#071a3d_58%,#0a2350)]",
-    badge: "bg-[linear-gradient(145deg,var(--color-sky-500),var(--color-navy-600))] shadow-[0_16px_34px_-14px_rgba(1,164,255,.85)]",
+    badge:
+      "bg-[linear-gradient(145deg,var(--color-sky-500),var(--color-navy-600))] shadow-[0_16px_34px_-14px_rgba(1,164,255,.85)]",
     label: "text-sky-400",
     link: "text-sky-400",
     ghost: "text-sky-400/15 group-hover/tier:text-sky-400/30",
@@ -41,7 +42,8 @@ const TIER_TONES = [
   {
     ring: "ring-green-400/20",
     panel: "bg-[linear-gradient(180deg,#010d05,#06240f_58%,#0a3317)]",
-    badge: "bg-[linear-gradient(145deg,var(--color-green-400),var(--color-green-600))] shadow-[0_16px_34px_-14px_rgba(1,172,50,.85)]",
+    badge:
+      "bg-[linear-gradient(145deg,var(--color-green-400),var(--color-green-600))] shadow-[0_16px_34px_-14px_rgba(1,172,50,.85)]",
     label: "text-green-400",
     link: "text-green-400",
     ghost: "text-green-400/15 group-hover/tier:text-green-400/30",
@@ -55,7 +57,8 @@ const TIER_TONES = [
        drawn rather than baked, and it sits over the lit face of the bank —
        at sky-600/navy-700 it read as a flat patch beside the glowing tiles on
        the other two cards. */
-    badge: "bg-[linear-gradient(145deg,var(--color-sky-400),var(--color-navy-600))] shadow-[0_16px_36px_-12px_rgba(1,164,255,.95)]",
+    badge:
+      "bg-[linear-gradient(145deg,var(--color-sky-400),var(--color-navy-600))] shadow-[0_16px_36px_-12px_rgba(1,164,255,.95)]",
     label: "text-sky-400",
     link: "text-sky-400",
     ghost: "text-sky-300/15 group-hover/tier:text-sky-300/30",
@@ -111,39 +114,6 @@ function EcosystemGallery() {
   );
 }
 
-/** Alternating navy / green, the logo's order — same as the solution cards. */
-const PROOF_TONES = [
-  "bg-navy-600/8 text-navy-600 ring-navy-600/14 group-hover/proof:bg-navy-600 group-hover/proof:text-white group-hover/proof:ring-navy-600",
-  "bg-green-500/10 text-green-600 ring-green-500/18 group-hover/proof:bg-green-500 group-hover/proof:text-white group-hover/proof:ring-green-500",
-];
-
-function ProofStrip() {
-  return (
-    <ul className="grid grid-cols-2 gap-x-5 gap-y-6 sm:grid-cols-4 sm:gap-x-0">
-      {partnersPage.hero.proof.map((point, i) => (
-        <li
-          key={point.label}
-          className={`group/proof flex items-start gap-3 sm:px-5 sm:first:pl-0 sm:last:pr-0 ${
-            i > 0 ? "sm:border-l sm:border-line" : ""
-          }`}
-        >
-          <span
-            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ring-1 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/proof:scale-110 group-hover/proof:[transform:perspective(520px)_rotateY(-14deg)] ${
-              PROOF_TONES[i % PROOF_TONES.length]
-            }`}
-          >
-            <Icon name={point.icon as IconName} className="h-[1.1rem] w-[1.1rem]" strokeWidth={1.7} />
-          </span>
-          <span className="flex min-w-0 flex-col gap-0.5">
-            <span className="text-[0.875rem] leading-snug font-semibold">{point.label}</span>
-            <span className="text-[0.8125rem] leading-snug text-ink-3">{point.body}</span>
-          </span>
-        </li>
-      ))}
-    </ul>
-  );
-}
-
 export default function PartnersPage() {
   /* "Become an OrbisMoneta partner." with the brand name painted. Split on the
      name rather than stored pre-split, so the sentence stays one string. */
@@ -156,15 +126,16 @@ export default function PartnersPage() {
         title={partnersPage.headline}
         accent={partnersPage.headlineAccent}
         intro={partnersPage.intro}
-        crumbs={[{ label: "Partners" }]}
         split="showcase"
         actions={
-          <ButtonLink href={`mailto:${partnersPage.cta.email}`} icon="arrowRight">
+          <ButtonLink
+            href={`mailto:${partnersPage.cta.email}`}
+            icon="arrowRight"
+          >
             {partnersPage.cta.label}
           </ButtonLink>
         }
         aside={<EcosystemGallery />}
-        footer={<ProofStrip />}
       />
 
       <section className="section ground-soft bg-canvas">
@@ -233,13 +204,17 @@ export default function PartnersPage() {
                           aria-hidden="true"
                           className={`absolute bottom-[3%] left-1/2 flex h-16 w-16 -translate-x-1/2 items-center justify-center rounded-2xl text-white ring-1 ring-white/20 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/tier:scale-110 group-hover/tier:rotate-[-8deg] motion-reduce:transition-none ${tone.badge}`}
                         >
-                          <Icon name={tier.icon as IconName} className="h-7 w-7" strokeWidth={1.6} />
+                          <Icon
+                            name={tier.icon as IconName}
+                            className="h-7 w-7"
+                            strokeWidth={1.6}
+                          />
                         </span>
                       </>
                     )}
                   </div>
 
-                  <div className="relative flex flex-1 flex-col gap-3 px-7 pt-12 pb-7">
+                  <div className="relative flex flex-1 flex-col gap-2 px-7 pt-10 pb-7">
                     {/* Oversized numeral, sunk into the corner. */}
                     <span
                       aria-hidden="true"
@@ -253,10 +228,16 @@ export default function PartnersPage() {
                     >
                       {tier.tier}
                     </span>
-                    <h2 className="text-[1.25rem] leading-snug text-white">{tier.title}</h2>
-                    <p className="relative text-[0.9375rem] leading-relaxed text-ink-inv-2">
-                      {tier.body}
-                    </p>
+                    <h2 className="text-[1.25rem] leading-snug text-white">
+                      {tier.title}
+                    </h2>
+                    {/*
+                      No paragraph. Each tier's description came off at the
+                      client's request, so the card is the render, the tier
+                      label, the name and the ask. `tier.body` stays in
+                      content/about.ts — the copy is the client's own and
+                      nothing else was reworded around its absence.
+                    */}
 
                     {/*
                       A real destination, not the reference's decorative "Learn
@@ -267,7 +248,7 @@ export default function PartnersPage() {
                     */}
                     <a
                       href={`mailto:${partnersPage.cta.email}?subject=${encodeURIComponent(tier.title)}`}
-                      className={`relative mt-auto inline-flex w-fit items-center gap-2 pt-5 font-mono text-[0.6875rem] tracking-[0.14em] uppercase transition-colors duration-200 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-current ${tone.link}`}
+                      className={`relative mt-auto inline-flex w-fit items-center gap-2 pt-8 font-mono text-[0.6875rem] tracking-[0.14em] uppercase transition-colors duration-200 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-current ${tone.link}`}
                     >
                       Become a partner
                       <Icon
@@ -320,8 +301,18 @@ export default function PartnersPage() {
               className="pointer-events-none absolute inset-x-0 bottom-0 h-[82%] w-full"
             >
               <defs>
-                <linearGradient id="om-partner-wave" x1="0" y1="0" x2="1" y2="0">
-                  <stop offset="0%" stopColor="var(--color-navy-500)" stopOpacity="0.2" />
+                <linearGradient
+                  id="om-partner-wave"
+                  x1="0"
+                  y1="0"
+                  x2="1"
+                  y2="0"
+                >
+                  <stop
+                    offset="0%"
+                    stopColor="var(--color-navy-500)"
+                    stopOpacity="0.2"
+                  />
                   <stop offset="55%" stopColor="var(--color-sky-500)" />
                   <stop offset="100%" stopColor="var(--color-green-400)" />
                 </linearGradient>
@@ -357,7 +348,11 @@ export default function PartnersPage() {
                 className="relative flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-white/[0.07] ring-1 ring-white/15 backdrop-blur-sm transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/partner-cta:scale-105 motion-reduce:transition-none"
               >
                 <span className="absolute inset-0 rounded-full bg-[radial-gradient(circle,rgba(1,164,255,.30),transparent_70%)]" />
-                <Icon name="nodes" className="relative h-9 w-9 text-sky-400" strokeWidth={1.5} />
+                <Icon
+                  name="nodes"
+                  className="relative h-9 w-9 text-sky-400"
+                  strokeWidth={1.5}
+                />
               </span>
 
               <div className="flex flex-col gap-3 lg:flex-1">

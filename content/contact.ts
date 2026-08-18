@@ -38,15 +38,23 @@ export const contactRoutes = [
   },
 ];
 
+/*
+  Four options came off these two lists at the client's request: "Regulator or
+  Supervisory Authority" and "Digital Asset or Crypto Firm" here, and "Payment
+  Hub & FMI" and "Fraud, Risk & Financial Crime" from the interest areas below.
+
+  Both lists keep "Other", which is what an enquiry from one of those now
+  selects — nothing about the form blocks them, and the message field is free
+  text. Worth knowing when reading enquiries: a regulator will arrive as
+  "Other", not as nothing.
+*/
 export const organisationTypes = [
   "Bank or Financial Institution",
   "Fintech or Digital Bank",
   "Corporate or Treasury",
   "Government or Public Sector",
-  "Regulator or Supervisory Authority",
   "Financial Market Infrastructure",
   "Payment Processor or Network",
-  "Digital Asset or Crypto Firm",
   "Technology or Consulting Firm",
   "Other",
 ];
@@ -57,10 +65,8 @@ export const interestAreas = [
   "CBDC & Digital Money",
   "Stablecoin & Tokenization Strategy",
   "Digital Asset Strategy",
-  "Payment Hub & FMI",
   "ISO 20022 Modernization",
   "AI Strategy & Implementation",
-  "Fraud, Risk & Financial Crime",
   "Product Strategy & Innovation",
   "API Banking & Open Finance",
   "Cloud Native Platform Engineering",

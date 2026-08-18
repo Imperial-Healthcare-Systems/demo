@@ -461,12 +461,24 @@
   will-change: auto;
 }
 
+/*
+  The track holds `--marquee-copies` identical rows and travels the width of
+  exactly one of them, which is what makes the loop seamless: at the end of the
+  cycle copy 2 is standing where copy 1 started.
+
+  The divisor used to be hard-coded at -50%, i.e. two copies. Two is only enough
+  while one row is wider than the viewport — below that the track runs out
+  before the cycle does and a band of empty space crosses the strip. The /about
+  capability ticker is 1582px for six short labels, so it broke at any window
+  over that, which is most desktops. The count is the element's own now, and
+  the fallback keeps every existing two-copy strip exactly where it was.
+*/
 @keyframes om-marquee {
   from {
     transform: translate3d(0, 0, 0);
   }
   to {
-    transform: translate3d(-50%, 0, 0);
+    transform: translate3d(calc(-100% / var(--marquee-copies, 2)), 0, 0);
   }
 }
 .marquee-track {

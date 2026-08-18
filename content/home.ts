@@ -179,7 +179,34 @@ export type CarouselSlide = {
   tab: { label: string; body: string; icon: string };
 };
 
-/** The five slides the client supplied as "5 Carousal Image". */
+/*
+  The hero plates.
+
+  Four now rather than five, and all four are the client's latest banners —
+  full posters this time, cropped in scripts/prepare-assets.mjs to the diagram
+  below each one's baked-in headline block. Seamless Interoperability came out
+  of the rotation at the client's request; its slide is kept at the foot of this
+  file rather than deleted, because its copy is the only record of what that
+  banner said.
+
+  The posters are shipped whole — no crop, no feather, nothing trimmed at any
+  edge — at the client's request. They were cropped at the dark band under each
+  one's baked-in headline at first, so the hero's own headline was the only one
+  on screen; that came off. Each `alt` below therefore opens with the headline
+  block the picture now carries, because a screen reader should get what a
+  sighted reader gets.
+
+  Every `image` here carries a `-banner` name it did not have before. That is
+  deliberate: each plate's aspect ratio is baked into the box it paints into, so
+  reusing a URL whose bytes have changed shape would leave CDN edges, returning
+  browsers and Next's own image cache fitting the previous picture to the new
+  box.
+
+  The copy below is no longer rendered — HeroCarousel holds one fixed
+  proposition and reads only `image`, `alt` and the title for each frame's
+  label. It stays because the client's five capability banners may yet get a
+  section of their own further down the page.
+*/
 export const carouselSlides: CarouselSlide[] = [
   {
     id: "global-solution-platform",
@@ -193,8 +220,8 @@ export const carouselSlides: CarouselSlide[] = [
       { label: "Built for", accent: "Scale" },
       { label: "Secure by", accent: "Design" },
     ],
-    image: "/images/carousel/global-solution-platform.webp",
-    alt: "Illuminated globe linking banking, cloud, card and mobile channels across a worldwide network",
+    image: "/images/carousel/global-solution-platform-square.webp",
+    alt: "Poster headed “Global Solution Platform for Global Financial Institutions — a future-ready platform connecting financial ecosystems worldwide with intelligence, security and scale”, over a lit globe crossed by network corridors with six linked nodes arcing above it: a globe, a bank, a server stack, an analytics screen, a mobile handset and a cloud",
     href: "/products/digital-currency-hub",
     cta: "Explore the platform",
     tab: {
@@ -217,37 +244,14 @@ export const carouselSlides: CarouselSlide[] = [
       { label: "Smarter", accent: "Decisions" },
       { label: "Adaptive &", accent: "Secure" },
     ],
-    image: "/images/carousel/intelligent-platform-v2.webp",
-    alt: "An AI processor at the centre of a neural network above a lit globe, linked out to financial infrastructure, data-driven insights, risk and fraud management, intelligent automation, customer-centric experiences and cloud-native flexibility",
+    image: "/images/carousel/intelligent-platform-square.webp",
+    alt: "Poster headed “Intelligent Platform for Global Financial Institutions — AI-powered insights, intelligent automation and real-time intelligence to drive smarter decisions and outcomes”, over an AI chip inside a neural-network brain above a lit globe, linked out to six nodes: banking, security, customer groups, growth, automation and cloud",
     href: "/advisory#ai-for-financial-services",
     cta: "See our AI services",
     tab: {
       label: "Intelligent Platforms",
       body: "Cloud-native, secure and scalable platforms for the future.",
       icon: "layers",
-    },
-  },
-  {
-    id: "seamless-interoperability",
-    eyebrow: "Connectivity",
-    title: "Seamless",
-    titleAccent: "Interoperability",
-    body: "Enabling connected systems and frictionless financial exchange across ecosystems.",
-    points: [
-      { label: "Unified", accent: "Connections" },
-      { label: "Standardized", accent: "Integration" },
-      { label: "Real-Time", accent: "Data Flow" },
-      { label: "Secure", accent: "By Design" },
-      { label: "Adaptable", accent: "By Architecture" },
-    ],
-    image: "/images/carousel/seamless-interoperability.webp",
-    alt: "Data streams flowing between banking, cloud, card and mobile endpoints around a globe",
-    href: "/advisory#cross-border-payments",
-    cta: "Explore interoperability",
-    tab: {
-      label: "Seamless Interoperability",
-      body: "Standards-driven connectivity across networks and systems.",
-      icon: "nodes",
     },
   },
   {
@@ -289,10 +293,11 @@ export const carouselSlides: CarouselSlide[] = [
         detail: "Audit-ready, monitorable and accountable",
       },
     ],
-    image: "/images/carousel/tands.png",
-    /* The six controls are drawn into the plate and appear nowhere else on the
-       page, so the alt names every one of them. */
-    alt: "Security shield with a padlock above a lit globe, ringed by data privacy by design, risk and fraud protection, secure cloud infrastructure, global standards and compliance, threat detection and response, and continuous monitoring",
+    image: "/images/carousel/trust-and-security-square.webp",
+    /* Twelve controls are drawn into this plate and appear nowhere else on the
+       page — six ringing the shield and six along the foot — so the alt names
+       every one of them. */
+    alt: "Poster headed “Trust & Security, the foundation of every transaction — enterprise-grade security, compliance and resilience to protect what matters most, every time, everywhere”, over a shield and padlock above a lit globe, ringed by data privacy by design, risk and fraud protection, secure cloud infrastructure, global standards and compliance, threat detection and response, and continuous monitoring, above a row of six further controls: secure by design, strong encryption, zero trust architecture, compliance assured, resilient and reliable, and governance and transparency",
     href: "/advisory#ai-for-financial-services",
     cta: "How we build trust",
     tab: {
@@ -315,8 +320,8 @@ export const carouselSlides: CarouselSlide[] = [
       { label: "Built for", accent: "Evolution" },
       { label: "Innovate", accent: "With Confidence" },
     ],
-    image: "/images/carousel/innovation-led.webp",
-    alt: "Illuminated lightbulb formed from a network mesh above a globe, linked to emerging technology themes",
+    image: "/images/carousel/innovation-led-square.webp",
+    alt: "Poster headed “Innovation Led for Global Financial Institutions”, over a lightbulb formed from a network mesh above a lit globe, linked to emerging technologies, open architecture, cloud-native innovation, collaborate and co-create, future-ready solutions and sustainable impact",
     href: "/lab",
     cta: "Inside the Lab",
     tab: {
@@ -326,6 +331,41 @@ export const carouselSlides: CarouselSlide[] = [
     },
   },
 ];
+
+/*
+  Retired from the rotation at the client's request — the hero now runs the
+  globe plus the four latest banners, and no banner was supplied for this one.
+
+  Kept rather than deleted because this copy is the only record of what the
+  Seamless Interoperability banner said; its plate
+  (carousel/seamless-interoperability.webp) is gone from /public and its
+  original stays in source-assets/carousel/.
+
+    {
+      id: "seamless-interoperability",
+      eyebrow: "Connectivity",
+      title: "Seamless",
+      titleAccent: "Interoperability",
+      body: "Enabling connected systems and frictionless financial exchange across ecosystems.",
+      points: [
+        { label: "Unified", accent: "Connections" },
+        { label: "Standardized", accent: "Integration" },
+        { label: "Real-Time", accent: "Data Flow" },
+        { label: "Secure", accent: "By Design" },
+        { label: "Adaptable", accent: "By Architecture" },
+      ],
+      image: "/images/carousel/seamless-interoperability.webp",
+      alt: "Data streams flowing between banking, cloud, card and mobile endpoints around a globe",
+      href: "/advisory#cross-border-payments",
+      cta: "Explore interoperability",
+      tab: {
+        label: "Seamless Interoperability",
+        body: "Standards-driven connectivity across networks and systems.",
+        icon: "nodes",
+      },
+    },
+    },
+*/
 
 export const industryContext = {
   eyebrow: "Industry context",
@@ -614,13 +654,22 @@ export const whyOrbisMoneta = {
   /**
    * Supplied finished, so referenced straight from `public/images/` rather than
    * built by `scripts/prepare-assets.mjs`. next/image derives the WebP that is
-   * actually served; the 2.1MB PNG is repo weight only.
+   * actually served; the 2MB PNG is repo weight only.
    *
    * It replaces `why-orbismoneta-people.webp`, which is still in the tree and
    * still generated by the asset script — nothing else pointed at it.
+   *
+   * `-v2` because the second supply is the same scene re-rendered without the
+   * row of national flags along the table, and a changed picture under an
+   * unchanged URL is the one thing a CDN, a returning browser and next/image's
+   * own cache all get wrong together. The flagged file is deleted rather than
+   * left beside it; git holds it if it is ever wanted back.
+   *
+   * 1380x1140, which is why the frame that paints it is `aspect-[23/19]` — see
+   * the note in components/Sections.tsx. Keep the two in step.
    */
-  image: "/images/group-image.png",
-  alt: "Team reviewing a global business overview dashboard together in a boardroom, with national flags along the table and a city skyline beyond",
+  image: "/images/group-image-v2.png",
+  alt: "Team reviewing a global business overview dashboard together in a boardroom, with a city skyline beyond",
   /*
     Not rendered. This three-card row closed the "Why OrbisMoneta" section and
     came off at the client's request, replaced by the four-phase engagement

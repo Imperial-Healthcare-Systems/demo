@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { platformsPage, proprietaryPlatforms } from "@/content/platforms";
-import { Breadcrumbs } from "@/components/PageHero";
 import { Icon } from "@/components/Icon";
 import { Reveal } from "@/components/Reveal";
 import { cn } from "@/lib/utils";
@@ -79,25 +78,9 @@ export default function PlatformsPage() {
           className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(circle_at_50%_12%,rgba(11,46,154,.28)_0%,rgba(7,30,104,.08)_45%,transparent_75%)]"
         />
         <div className="shell">
-          <Reveal kind="fade">
-            {/*
-              "Home > Platforms", not "Home > Solutions > Platforms".
-
-              The trail follows the navigation, not the URL. This page used to
-              be reached only through Solutions — it was a section of that page
-              and then a column in its menu — so Solutions was a real step on
-              the way here. It is a top-level tab now, so nobody passes through
-              Solutions to arrive, and a crumb for it would offer a step back to
-              somewhere the reader has not been.
-
-              The route is still /solutions/platforms, so the trail and the path
-              no longer agree. That is the right way round: the trail is for the
-              reader, and the reader's route is Home then Platforms.
-            */}
-            <Breadcrumbs onDark items={[{ label: "Platforms" }]} />
-          </Reveal>
-
-          <div className="mt-9 flex max-w-3xl flex-col items-start gap-5">
+          {/* The breadcrumb that opened this page is gone with every other
+              one on the site, so the eyebrow starts at the section's padding. */}
+          <div className="flex max-w-3xl flex-col items-start gap-5">
             <Reveal kind="fade">
               {/* `.section-tag.emerald` from the client's stylesheet. */}
               <span className="inline-flex items-center gap-2 rounded-md border border-[rgba(0,166,81,.25)] bg-[rgba(0,166,81,.08)] px-3 py-1.5 font-mono text-[0.76rem] tracking-[0.12em] text-[#00a651] uppercase">

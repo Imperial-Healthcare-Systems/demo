@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
-import { engagementModel, industries, industriesPage } from "@/content/industries";
+import {
+  engagementModel,
+  industries,
+  industriesPage,
+} from "@/content/industries";
 import { PageHero } from "@/components/PageHero";
 import { ButtonLink } from "@/components/Button";
 import { Icon } from "@/components/Icon";
@@ -28,7 +32,6 @@ export default function IndustriesPage() {
         title={industriesPage.headline}
         accent={industriesPage.headlineAccent}
         intro={industriesPage.intro}
-        crumbs={[{ label: "Industries" }]}
         actions={
           <ButtonLink href="/contact" icon="arrowRight">
             Discuss your programme
@@ -46,13 +49,22 @@ export default function IndustriesPage() {
                   label={industry.title}
                   minHeight="min-h-[16.5rem]"
                   faceClassName={FACE}
-                  backClassName={cn(FACE, "bg-[linear-gradient(160deg,#0a1533,#002583)] ring-navy-800")}
+                  backClassName={cn(
+                    FACE,
+                    "bg-[linear-gradient(160deg,#0a1533,#002583)] ring-navy-800",
+                  )}
                   front={
                     <>
                       <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-navy-50 text-navy-600 transition-colors duration-300 group-hover/flip:bg-navy-600 group-hover/flip:text-white">
-                        <Icon name={industry.icon as never} className="h-6 w-6" strokeWidth={1.5} />
+                        <Icon
+                          name={industry.icon as never}
+                          className="h-6 w-6"
+                          strokeWidth={1.5}
+                        />
                       </span>
-                      <h2 className="mt-4 text-[1.125rem] leading-snug">{industry.title}</h2>
+                      <h2 className="mt-4 text-[1.125rem] leading-snug">
+                        {industry.title}
+                      </h2>
                       <p className="mt-2 text-[0.875rem] leading-relaxed text-ink-2">
                         {industry.body}
                       </p>
@@ -94,11 +106,17 @@ export default function IndustriesPage() {
                   We work wherever value moves at institutional scale.
                 </h2>
                 <p className="text-[0.875rem] leading-relaxed text-ink-inv-2">
-                  Tell us about your institution and the programme you are planning. We will tell
-                  you honestly whether we are the right team for it.
+                  Tell us about your institution and the programme you are
+                  planning. We will tell you honestly whether we are the right
+                  team for it.
                 </p>
               </div>
-              <ButtonLink href="/contact" tone="onDark" icon="arrowRight" className="w-fit">
+              <ButtonLink
+                href="/contact"
+                tone="onDark"
+                icon="arrowRight"
+                className="w-fit"
+              >
                 Start a conversation
               </ButtonLink>
             </Reveal>
@@ -133,7 +151,9 @@ export default function IndustriesPage() {
                   {phase.step}
                 </span>
                 <h3 className="text-[1.0625rem] text-white">{phase.title}</h3>
-                <p className="text-[0.875rem] leading-relaxed text-ink-inv-3">{phase.body}</p>
+                <p className="text-[0.875rem] leading-relaxed text-ink-inv-3">
+                  {phase.body}
+                </p>
               </Reveal>
             ))}
           </ol>

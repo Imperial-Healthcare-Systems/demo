@@ -6,7 +6,6 @@ import {
   solutionDomains,
   solutionsPage,
 } from "@/content/solutions";
-import { Breadcrumbs } from "@/components/PageHero";
 import { ButtonLink } from "@/components/Button";
 import { Icon } from "@/components/Icon";
 import { Reveal } from "@/components/Reveal";
@@ -48,56 +47,64 @@ const CARD_TONES = [
 ];
 
 /**
- * The three disciplines, one logo colour each.
+ * The three disciplines, one logo colour each: navy for strategy, sky for
+ * architecture, green for what ships.
  *
- * Three cards and three brand colours is not a coincidence worth wasting: navy
- * for strategy, sky for architecture, green for what ships. The grid used to
- * alternate two of them, which gave the third card the first card's colour and
- * made the set read as a repeating pattern rather than as three things.
+ * Rebuilt for a dark ground. These cards used to sit on their own white band
+ * below the hero; they are inside it now, so every value here changed — the
+ * panel is a translucent white wash rather than white, the rules and blooms are
+ * brighter to survive being read against near-black, and the labels take the
+ * ramp's *light* end rather than the text-safe dark end they needed on white.
+ *
+ * `edge` is new and is what the reference draws: a coloured line along the
+ * card's foot, one per discipline, which is what tells the three apart at a
+ * glance before any of them is read.
  *
  * Nothing here moves on its own. Everything is behind hover or focus, plus the
- * scroll reveal the cards already had — ambient motion on a page of six other
- * animated bands is what turns lively into restless. Each card animates three
- * things at once and no more: the rule draws, the card lifts, the tile turns.
+ * scroll reveal the cards already had. Each card animates three things and no
+ * more: the rule draws, the card lifts, the tile turns.
  *
  * Whole literal strings, because Tailwind only emits class names it can find
  * written out in the source.
  */
 const DISCIPLINE_TONES = [
   {
-    tile: "bg-[linear-gradient(140deg,var(--color-navy-500),var(--color-navy-700))] shadow-[0_10px_22px_-10px_rgba(0,46,166,.7)]",
-    rule: "bg-[linear-gradient(90deg,var(--color-navy-600),var(--color-sky-500))]",
-    dot: "bg-navy-600",
-    /* Decorative — the watermark and the marker take the logo colour itself. */
-    mark: "text-navy-600",
-    /* Read as text, so it takes the ramp's text-safe end. See globals.css. */
-    label: "text-navy-600",
+    tile: "bg-[linear-gradient(140deg,var(--color-navy-500),var(--color-navy-700))] shadow-[0_10px_22px_-10px_rgba(0,46,166,.8)]",
+    rule: "bg-[linear-gradient(90deg,var(--color-navy-400),var(--color-sky-500))]",
+    edge: "bg-[linear-gradient(90deg,rgba(0,46,166,0),var(--color-navy-400)_45%,var(--color-sky-500))]",
+    dot: "bg-sky-400",
+    /* Decorative — the watermark takes the logo colour itself. */
+    mark: "text-sky-400",
+    /* Read as text on near-black, so it takes the ramp's light end. */
+    label: "text-sky-400",
     bloom:
-      "bg-[radial-gradient(58%_52%_at_16%_0%,rgba(0,46,166,.11),transparent_72%)]",
+      "bg-[radial-gradient(62%_54%_at_14%_0%,rgba(1,110,255,.20),transparent_72%)]",
     hover:
-      "hover:ring-navy-600/25 hover:shadow-[0_2px_6px_rgba(10,21,51,.05),0_24px_46px_-24px_rgba(0,46,166,.5)]",
+      "hover:ring-sky-400/40 hover:shadow-[0_24px_50px_-26px_rgba(0,46,166,.9)]",
   },
   {
-    tile: "bg-[linear-gradient(140deg,var(--color-sky-400),var(--color-sky-600))] shadow-[0_10px_22px_-10px_rgba(1,164,255,.7)]",
-    rule: "bg-[linear-gradient(90deg,var(--color-sky-500),var(--color-green-400))]",
-    dot: "bg-sky-500",
-    mark: "text-sky-500",
-    label: "text-sky-700",
+    tile: "bg-[linear-gradient(140deg,var(--color-sky-400),var(--color-sky-600))] shadow-[0_10px_22px_-10px_rgba(1,164,255,.8)]",
+    rule: "bg-[linear-gradient(90deg,var(--color-sky-400),var(--color-green-400))]",
+    edge: "bg-[linear-gradient(90deg,rgba(1,164,255,0),var(--color-sky-400)_45%,var(--color-sky-400))]",
+    dot: "bg-sky-400",
+    mark: "text-sky-400",
+    label: "text-sky-400",
     bloom:
-      "bg-[radial-gradient(58%_52%_at_16%_0%,rgba(1,164,255,.13),transparent_72%)]",
+      "bg-[radial-gradient(62%_54%_at_14%_0%,rgba(1,164,255,.22),transparent_72%)]",
     hover:
-      "hover:ring-sky-500/30 hover:shadow-[0_2px_6px_rgba(10,21,51,.05),0_24px_46px_-24px_rgba(1,164,255,.5)]",
+      "hover:ring-sky-400/45 hover:shadow-[0_24px_50px_-26px_rgba(1,164,255,.8)]",
   },
   {
-    tile: "bg-[linear-gradient(140deg,var(--color-green-400),var(--color-green-600))] shadow-[0_10px_22px_-10px_rgba(1,172,50,.7)]",
-    rule: "bg-[linear-gradient(90deg,var(--color-green-500),var(--color-sky-500))]",
-    dot: "bg-green-500",
-    mark: "text-green-500",
-    label: "text-green-700",
+    tile: "bg-[linear-gradient(140deg,var(--color-green-400),var(--color-green-600))] shadow-[0_10px_22px_-10px_rgba(1,172,50,.8)]",
+    rule: "bg-[linear-gradient(90deg,var(--color-green-400),var(--color-sky-400))]",
+    edge: "bg-[linear-gradient(90deg,rgba(1,172,50,0),var(--color-green-400)_45%,var(--color-green-400))]",
+    dot: "bg-green-400",
+    mark: "text-green-400",
+    label: "text-green-400",
     bloom:
-      "bg-[radial-gradient(58%_52%_at_16%_0%,rgba(1,172,50,.12),transparent_72%)]",
+      "bg-[radial-gradient(62%_54%_at_14%_0%,rgba(1,172,50,.20),transparent_72%)]",
     hover:
-      "hover:ring-green-500/30 hover:shadow-[0_2px_6px_rgba(10,21,51,.05),0_24px_46px_-24px_rgba(1,172,50,.45)]",
+      "hover:ring-green-400/45 hover:shadow-[0_24px_50px_-26px_rgba(1,172,50,.75)]",
   },
 ];
 
@@ -153,21 +160,68 @@ export default function SolutionsPage() {
         more survives: 76% of the picture at 1920 against 68% at the previous
         floor, and 57% at 2560 against 51%.
       */}
-      <section className="on-dark relative isolate flex min-h-[34rem] flex-col overflow-hidden rounded-b-[2rem] pt-28 pb-14 md:min-h-[38rem] md:rounded-b-[3rem] md:pt-36 md:pb-20 lg:min-h-[51.5rem]">
-        <Image
-          src={solutionsPage.image}
-          /* Decorative here. It was the subject when it had a band of its own;
-             as a ground behind the headline it adds nothing a screen reader
-             needs, and the description would interrupt the copy it sits under. */
-          alt=""
-          aria-hidden="true"
-          fill
-          priority
-          sizes="100vw"
-          quality={82}
-          className="-z-20 object-cover object-center"
-        />
+      {/*
+        The opening, and the triad, as one block.
 
+        They were two sections — a dark hero, then the three discipline cards on
+        their own white band under it. The client's own design has them as one:
+        the cards sit inside the dark, directly under the buttons, so the page
+        opens on a single statement rather than a statement and then a separate
+        row repeating its premise. That is also why the cards are drawn on a
+        translucent wash rather than on white.
+
+        `bg-abyss-2` is the section's own ground and it is load-bearing now.
+        While the artwork filled the whole block there was nothing behind it to
+        see; the artwork is the top of the section only, so everything under it
+        would otherwise fall through to the page's white.
+
+        Top-aligned, not centred, which is what makes this read as the same page
+        family as /advisory: both open on 144px of padding and both start the
+        breadcrumb there. The padding values are `PageHero`'s own — 28/14,
+        36/20 — for the same reason. No `min-h` any more: the cards set the
+        height, and a floor tuned to a copy-only block would only fight them.
+      */}
+      <section className="on-dark relative isolate flex flex-col overflow-hidden rounded-b-[2rem] bg-abyss-2 pt-28 pb-16 md:rounded-b-[3rem] md:pt-36 md:pb-20">
+        {/*
+          The artwork holds the top right, not the whole block.
+
+          Full width was tried and it is the wrong shape twice over. The plate
+          is 1536x1024; a full-width band across a section this tall is about
+          2.1:1, so `object-cover` scales the picture to the width and throws
+          away nearly a third of its height — the bank arrives cropped and
+          enormous, its columns running behind the headline. At 64% of the
+          width and 40rem tall the box is 1.44:1 against the plate's 1.50:1, so
+          the crop is under four percent and the bank renders at a little over
+          half size.
+
+          Two masks intersected. The first fades the left, so the plate
+          dissolves into `bg-abyss-2` before it reaches the copy rather than
+          being covered by a veil there. The second fades the foot, so the
+          artwork is gone well above the first card instead of showing through
+          it.
+
+          Below lg there is no room for a side-by-side, so the plate goes back
+          to full width behind the copy and reads as texture — the veil under
+          it runs 88-94% there, which is what keeps the words legible.
+        */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-0 -z-20 h-[26rem] [mask-image:linear-gradient(180deg,#000_52%,transparent_100%)] md:h-[32rem] lg:right-0 lg:left-auto lg:h-[40rem] lg:w-[64%] lg:[mask-composite:intersect] lg:[mask-image:linear-gradient(90deg,transparent_0%,#000_38%),linear-gradient(180deg,#000_58%,transparent_100%)]"
+        >
+          <Image
+            src={solutionsPage.image}
+            /* Decorative. It was the subject when it had a band of its own; as
+               a ground behind the headline it adds nothing a screen reader
+               needs, and the description would interrupt the copy it sits
+               under. */
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            quality={82}
+            className="object-cover object-center"
+          />
+        </div>
         {/*
           Two veils, because one cannot do both jobs. The first runs across and
           is what the copy is legible against — heavy at the left where the
@@ -186,26 +240,25 @@ export default function SolutionsPage() {
         />
 
         <div className="shell">
-          <Reveal kind="fade">
-            <Breadcrumbs onDark items={[{ label: "Solutions" }]} />
-          </Reveal>
-
           {/*
-            90px from the breadcrumb, not 32.
+            58px at lg, re-measured after the breadcrumb came off.
 
-            32 is what `PageHero` gives a hero with no side column, and it is
-            what /industries and /insights measure. /advisory measures 90 — not
-            from a spacing token but as a side effect: it has an aside, and the
-            grid bottom-aligns the copy against it with `items-end`, which
-            pushes the eyebrow down. The client wants this page to match
-            /advisory, so the number is set here directly rather than inherited
-            from a layout accident it cannot reproduce.
+            The offset was 90 and every pixel of it cleared the trail plus put
+            this page's eyebrow where /advisory's sits. With no trail on either
+            page /advisory did not rise as far as this one did: it has an aside,
+            and the grid bottom-aligns the copy against it with `items-end`, so
+            its copy is positioned by the artwork's height rather than by the
+            section's padding. That left it at 240 and this page at 182.
 
-            `lg:` only. Advisory's aside stacks below `lg` and its own gap falls
-            back to 32 there, so matching it above the breakpoint is matching it
-            everywhere it differs.
+            58 is the difference, and it is held for the same reason the 90 was:
+            the client wants these two pages to open alike, and this page cannot
+            reproduce /advisory's alignment because its artwork is a background
+            rather than a grid column.
+
+            `lg:` only — /advisory's aside stacks below lg and its own copy
+            starts at the padding there, which is where this one already is.
           */}
-          <div className="mt-8 flex max-w-2xl flex-col gap-5 lg:mt-[5.625rem]">
+          <div className="flex max-w-2xl flex-col gap-5 lg:mt-[3.625rem]">
             <Reveal kind="fade">
               <Eyebrow onDark>{solutionsPage.eyebrow}</Eyebrow>
             </Reveal>
@@ -237,21 +290,25 @@ export default function SolutionsPage() {
               </ButtonLink>
             </Reveal>
           </div>
-        </div>
-      </section>
+          {/*
+            The triad, inside the opening rather than under it. Advisory,
+            architecture and engineering are one engagement in the client's
+            telling — "we combine" — so they are three columns of one block,
+            and they read as the proof of the sentence directly above them.
 
-      {/*
-        The triad. Advisory, architecture and engineering are one engagement in
-        the client's telling — "we combine" — so they are three columns of one
-        band rather than three sections, and the band leads because it is what
-        the domains below are delivered by.
-      */}
-      <section id="disciplines" className="section ground-soft bg-canvas">
-        <div className="shell">
-          {/* No heading. The hero above carries it, and this band ran straight
-              from that heading to these three cards with nothing in between —
-              so a second copy of the same three lines was the only thing here. */}
-          <ul className="grid gap-5 lg:grid-cols-3">
+            No heading of its own: the hero carries it, and a second copy of
+            the same three lines is exactly what this band used to hold.
+
+            80px off the buttons at lg, and it had to be measured rather than
+            left alone: merging the two sections took the gap to exactly 0 —
+            the card row began on the pixel the button row ended — because the
+            80px of hero padding and the 126px of band padding that used to
+            separate them both went with the section boundary. 80 is the hero's
+            own bottom padding, so the copy is spaced from the cards by what it
+            used to be spaced from the band by. 56 and 64 below, where the row
+            is stacked and a desktop gap reads as a hole.
+          */}
+          <ul className="mt-14 grid gap-5 md:mt-16 lg:mt-20 lg:grid-cols-3">
             {disciplines.map((d, i) => {
               const tone = DISCIPLINE_TONES[i];
               return (
@@ -274,7 +331,15 @@ export default function SolutionsPage() {
                   */}
                   <div
                     className={cn(
-                      "group/disc relative isolate flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] bg-white p-7 ring-1 ring-line md:p-8",
+                      /*
+                       An opaque panel, not a translucent wash. A 4% white
+                       over the section let the artwork behind read straight
+                       through the first two cards, and a card you can see a
+                       building through is not a card. These two stops are
+                       the section's own ground lifted a little, so the panel
+                       still belongs to the block it sits in.
+                    */
+                      "group/disc relative isolate flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] bg-[linear-gradient(180deg,#0c1c3e_0%,#091734_100%)] p-7 ring-1 ring-white/12 md:p-8",
                       /* `translate`, not `transform`. Tailwind v4 emits
                          translate, scale and rotate as their own CSS
                          properties, so a transition list naming only
@@ -324,7 +389,7 @@ export default function SolutionsPage() {
                     <span
                       aria-hidden="true"
                       className={cn(
-                        "pointer-events-none absolute top-6 right-5 -z-10 font-mono text-[4.5rem] leading-none font-bold tabular-nums opacity-[0.07] transition-opacity duration-500 group-hover/disc:opacity-[0.13]",
+                        "pointer-events-none absolute top-6 right-5 -z-10 font-mono text-[4.5rem] leading-none font-bold tabular-nums opacity-[0.13] transition-opacity duration-500 group-hover/disc:opacity-[0.22]",
                         tone.mark,
                       )}
                     >
@@ -355,10 +420,10 @@ export default function SolutionsPage() {
                     >
                       {d.tag}
                     </p>
-                    <h3 className="mt-2 text-[1.25rem] leading-snug">
+                    <h3 className="mt-2 text-[1.25rem] leading-snug text-white">
                       {d.title}
                     </h3>
-                    <p className="mt-3 text-[0.9375rem] leading-relaxed text-ink-2">
+                    <p className="mt-3 text-[0.9375rem] leading-relaxed text-ink-inv-2">
                       {d.body}
                     </p>
 
@@ -366,11 +431,11 @@ export default function SolutionsPage() {
                       rather than bulleted — they are peers, not a sequence. The
                       markers carry the card's colour so the list belongs to it
                       rather than to the page. */}
-                    <ul className="mt-6 flex flex-col border-t border-line">
+                    <ul className="mt-6 flex flex-col border-t border-white/10">
                       {d.points.map((p) => (
                         <li
                           key={p}
-                          className="flex items-start gap-2.5 border-b border-line py-2.5 text-[0.875rem] leading-snug text-ink-2 last:border-b-0"
+                          className="flex items-start gap-2.5 border-b border-white/10 py-2.5 text-[0.875rem] leading-snug text-ink-inv-2 last:border-b-0"
                         >
                           <span
                             aria-hidden="true"
@@ -383,6 +448,17 @@ export default function SolutionsPage() {
                         </li>
                       ))}
                     </ul>
+
+                    {/* The coloured foot. It is what tells the three apart
+                        before any of them is read, and on a dark ground it
+                        does the job the white panel's own edge used to do. */}
+                    <span
+                      aria-hidden="true"
+                      className={cn(
+                        "absolute inset-x-0 bottom-0 h-[3px]",
+                        tone.edge,
+                      )}
+                    />
                   </div>
                 </Reveal>
               );

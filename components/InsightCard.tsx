@@ -4,6 +4,7 @@ import { estimateReadingTime, type Insight } from "@/content/insights";
 import { cn } from "@/lib/utils";
 import { BrandMark } from "@/components/BrandMark";
 import { Icon } from "@/components/Icon";
+import { TimeAgo } from "@/components/TimeAgo";
 
 const TONES = {
   navy: {
@@ -129,11 +130,27 @@ export function InsightCard({
       <InsightCover
         insight={insight}
         priority={priority}
-        sizes={layout === "row" ? "(max-width: 640px) 100vw, 320px" : "(max-width: 768px) 100vw, 33vw"}
+        sizes={
+          layout === "row"
+            ? "(max-width: 640px) 100vw, 320px"
+            : "(max-width: 768px) 100vw, 33vw"
+        }
+        /*
+          16:9 on the stacked card, which is the one a supplied cover reaches —
+          related articles at the foot of a piece, and the grid below the
+          featured slot. It matches the ratio the artwork arrives in, so a
+          designed cover is not cropped into.
+
+          The row card still stretches its cover to the card's own height above
+          sm, because there the image is a fixed-width column beside the copy
+          and there is no ratio it could hold that would not leave a gap. Only
+          the nine generated grounds render there today, and those have nothing
+          in them to cut.
+        */
         className={cn(
           layout === "stacked"
-            ? "aspect-[16/10] w-full shrink-0"
-            : "aspect-[16/10] w-full shrink-0 sm:aspect-auto sm:w-[16rem] lg:w-[19rem]",
+            ? "aspect-[16/9] w-full shrink-0"
+            : "aspect-[16/9] w-full shrink-0 sm:aspect-auto sm:w-[16rem] lg:w-[19rem]",
         )}
       />
 
@@ -148,7 +165,10 @@ export function InsightCard({
         </div>
 
         <h3 className="text-[1.0625rem] leading-snug text-ink transition-colors group-hover/card:text-navy-600">
-          <Link href={`/insights/${insight.slug}`} className="after:absolute after:inset-0">
+          <Link
+            href={`/insights/${insight.slug}`}
+            className="after:absolute after:inset-0"
+          >
             {insight.title}
           </Link>
         </h3>
@@ -161,10 +181,26 @@ export function InsightCard({
           <div className="flex items-center gap-3 text-[0.6875rem] text-ink-3">
             <span className="flex items-center gap-1.5">
               <Icon name="clock" className="h-3.5 w-3.5" />
-              <span className="tabular">{minutes} min</span>
+              <span className="tabular">{minutes} min read</span>
             </span>
-            <span aria-hidden="true" className="h-2.5 w-px bg-line-strong" />
-            <span>{insight.topic}</span>
+            {/* "3 min" alone was being read as "3 minutes ago" — it is the
+                reading time. It says so now, and the date beside it is the
+                thing that answers when. */}
+            {insight.publishedAt && (
+              <>
+                <span
+                  aria-hidden="true"
+                  className="h-2.5 w-px bg-line-strong"
+                />
+                <TimeAgo date={insight.publishedAt} />
+              </>
+            )}
+            {/* The topic used to close this row. With a date in it as well,
+                four items would not sit on one line in a 404px card — "3 min
+                read" and "2 weeks ago" both broke over two. The topic is the
+                one that can go: the category chip at the head of the card
+                already classifies the piece, and the detail page prints the
+                topic in full. */}
           </div>
           <span className="flex h-8 w-8 items-center justify-center rounded-full text-navy-600 ring-1 ring-line transition-all duration-200 group-hover/card:bg-navy-600 group-hover/card:text-white group-hover/card:ring-navy-600">
             <Icon name="arrowRight" className="h-3.5 w-3.5" strokeWidth={2} />

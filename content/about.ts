@@ -3,6 +3,12 @@ export const aboutPage = {
   headline: "Engineering the Future of Finance",
   intro:
     "OrbisMoneta is a financial technology company helping banks, financial institutions, fintechs and market infrastructures modernize payments, digital assets and AI-powered financial services. We combine deep industry expertise, enterprise-grade engineering and innovative products to accelerate the transition toward the future of money.",
+  /**
+   * NOT RENDERED. The dark positioning band this fed came off /about at the
+   * client's request — the wordmark, this tagline and this statement with it.
+   * Kept because it is the company's own positioning line, written by them,
+   * and it is the sort of copy a footer or an about-us card asks for next.
+   */
   brandPanel: {
     name: "OrbisMoneta",
     positioning: "Financial Infrastructure • AI • Digital Money",
@@ -10,6 +16,10 @@ export const aboutPage = {
       "Building secure, intelligent and interoperable financial platforms for the next generation of global finance.",
   },
   /**
+   * NOT RENDERED either, and for the same reason: `CapabilityDeck` was the
+   * right half of that band and went with it. The component is untouched in
+   * components/, so this is a one-line re-mount wherever it belongs next.
+   *
    * The nine capability labels are the client's, unchanged to the character.
    * `icon` and `tone` are presentation only — they carry nothing the label does
    * not already say, which is why they live beside the copy rather than in it.
@@ -53,7 +63,17 @@ export const aboutPage = {
     quote:
       "True innovation is not about adopting the latest technology — it is about solving tomorrow's financial challenges before they become today's business problems. Every product we build begins with understanding how financial markets are evolving, where institutions are heading, and what capabilities they will need to succeed in the future.",
   },
-  /** Rotating slideshow — "Leadership & Payment Experience". */
+  /**
+   * NOT RENDERED. Nothing mounts these figures now.
+   *
+   * `ExperienceSlider` — the rotating panel they were written for — was
+   * unmounted when the capability deck took its place on /about, and the three
+   * stat tiles that printed the first three slides under every leadership
+   * profile came off at the client's request. Both consumers are gone; the
+   * component and this copy are intact.
+   *
+   * Rotating slideshow — "Leadership & Payment Experience".
+   */
   experience: {
     eyebrow: "Leadership & payment experience",
     slides: [
@@ -98,6 +118,39 @@ export const aboutPage = {
       icon: "nodes",
     },
   ],
+  /**
+   * The ticker that closes /about.
+   *
+   * Six labels, the client's own and to the word — including "Cross-Border
+   * Modernization" and "ISO 20022 Modernization", which are their phrasing
+   * rather than the "Infrastructure" and "Transformation" the nine-card deck
+   * used for the same two things.
+   *
+   * `lead` names the six. It is pinned to the left of the band rather than
+   * scrolling with them — the eyebrow that used to say what this strip was
+   * showing came off with the "Explore our services" link beside it, and six
+   * unattributed phrases going past need something standing still that says
+   * what they are.
+   */
+  capabilities: {
+    lead: "Core Capabilities",
+    items: [
+      "Digital Currency",
+      "Tokenization",
+      "Digital Assets",
+      "Cross-Border Modernization",
+      "AI for Financial Services",
+      "ISO 20022 Modernization",
+    ],
+  },
+  /**
+   * NOT RENDERED. The twelve areas of expertise this ticker used to run, and
+   * the eyebrow over them. Replaced by the six above at the client's request.
+   *
+   * Kept because it is their own list, and a longer one — it is the natural
+   * source for an expertise page or a services index, neither of which exists
+   * yet.
+   */
   expertise: {
     eyebrow: "Area of expertise",
     areas: [
@@ -216,26 +269,33 @@ export const partnersPage = {
         ground: "bg-[#eef1f8]",
       },
       {
-        src: "/images/partners-carousal/8f35f0b0-6c97-4b8b-9f95-ae7263f909d2.png",
-        label: "Connected institutions",
-        alt: "A lit network core linking a bank, an office tower, data terminals, laptops and a mobile device across an isometric grid",
-        fit: "object-cover",
-        ground: "bg-[#000811]",
-      },
-      {
-        src: "/images/partners-carousal/d9b17b0f-f52b-49ff-bab5-29a0f1849f38.png",
-        label: "Security and compliance",
-        alt: "A shield on a lit platform surrounded by server racks, a padlock, certified documents, an identity card and a globe",
-        fit: "object-cover",
-        ground: "bg-[#04101f]",
+        /*
+          The only other slide. The two renders that used to sit here — a lit
+          network core and a security shield — came off at the client's
+          request; their files stay in public/images/partners-carousal/.
+
+          1536x1024 against a 16/15 frame, so `object-cover` keeps the middle
+          71% of the width. Centred, that holds the handshake and the three
+          faces around it whole, and trims the outermost figure at each edge.
+          It is a candid scene rather than a diagram, so a crop costs it
+          nothing the way one would cost the ecosystem chart beside it.
+
+          `ground` is the median colour of the plate's own border, sampled, so
+          the frame does not flash a wrong tone while the image decodes.
+        */
+        src: "/images/partner-handshake.webp",
+        label: "Partnership in practice",
+        alt: "Five colleagues around a boardroom table, two of them shaking hands over printed charts and a laptop, a city skyline beyond the glass",
+        fit: "object-cover object-center",
+        ground: "bg-[#313131]",
       },
     ],
-    proof: [
-      { icon: "cloud", label: "Integrated", body: "End-to-end ecosystem" },
-      { icon: "shield", label: "Certified", body: "Trusted & compliant" },
-      { icon: "nodes", label: "Collaborative", body: "Co-engineer for impact" },
-      { icon: "bars", label: "Scalable", body: "Future-ready technologies" },
-    ],
+    /*
+      A four-up proof strip — Integrated / Certified / Collaborative / Scalable
+      — sat here under the copy. Removed at the client's request. The hero is
+      now headline, standfirst, one button and the gallery; `PageHero` takes no
+      `footer` on this page.
+    */
   },
   /**
    * `image` and `icon` are presentation, not copy. The three renders carry
@@ -255,6 +315,12 @@ export const partnersPage = {
    * remove them — an overlay would simply sit under a second, visible tile.
    * `icon` is the glyph to use when one has to be drawn.
    */
+  /*
+    `body` on each tier is NOT RENDERED. The descriptions under the headings
+    came off at the client's request — the cards now carry the render, the tier
+    label, the name and the "Become a partner" link. Kept because the copy is
+    the client's own and restoring it is one <p> in app/partners/page.tsx.
+  */
   tiers: [
     {
       tier: "Tier 01",
@@ -370,6 +436,9 @@ export const labPage = {
     ],
   },
   process: {
+    /* `heading` and `headingAccent` are NOT RENDERED — the panel title above
+       the five steps came off at the client's request. Kept because the steps
+       themselves still read from this object. */
     heading: "How we innovate",
     headingAccent: "innovate",
     steps: [
@@ -385,7 +454,7 @@ export const labPage = {
       },
       {
         title: "Collaborate",
-        body: "Engage with banks, fintechs, partners, academia and industry experts.",
+        body: "Engage with financial institutions, fintechs, partners and industry experts.",
         icon: "user",
       },
       {
@@ -402,8 +471,16 @@ export const labPage = {
   },
   coInnovation: {
     heading: "Co-innovation is at our core",
+    /* It heads the section now rather than a panel inside it, so it takes an
+       accent phrase like every other section heading on the page. */
+    headingAccent: "Co-innovation",
     body: "We believe the future of finance is built together. Our Innovation Lab collaborates with forward-thinking institutions, regulators, technology providers and academic partners to co-create what's next.",
     /**
+     * NOT RENDERED. The strip of four that closed the co-innovation block came
+     * off at the client's request. Kept because these are the design's own
+     * categories and the section may want them back; re-mounting is one map()
+     * in app/lab/page.tsx.
+     *
      * Kinds of collaborator, not named ones. The design names no organisation
      * and neither does this — these are the categories it lists.
      */
@@ -430,42 +507,66 @@ export const labPage = {
     headingAccent: "Business Value",
     intro:
       "Engineered to solve latency, fragmentation, and regulatory friction across mission-critical financial systems.",
+    /*
+      Each card carries a plate on its front, behind the numeral and the name;
+      the sentence is on the back and the card turns to show it. They are the
+      client's own six, `enterprise-impact/impact-0N.webp`, built from
+      source-assets by scripts/prepare-assets.mjs at 900px — twice the ~408px a
+      card is ever painted at, which is what a 2x screen needs and no more.
+
+      `alt` describes each plate rather than repeating the card, because the
+      title and body beside it already say what the card is about. They are not
+      decorative: a reader who cannot see them would otherwise get six cards
+      that are visually distinct and textually identical in framing.
+    */
     items: [
       {
         num: "01",
         title: "Modernize",
         body: "Modernize legacy payment and RTGS infrastructure with high-throughput, ISO 20022-native event-driven microservices.",
         icon: "refresh",
+        image: "/images/enterprise-impact/impact-01.webp",
+        alt: "A classical bank building wired into a lattice of data nodes and a cloud, lit blue and green",
       },
       {
         num: "02",
         title: "Connect",
         body: "Connect existing core banking and ledger systems to emerging digital-money networks and instant clearing switches.",
         icon: "nodes",
+        image: "/images/enterprise-impact/impact-02.webp",
+        alt: "Two people at a trading desk of monitors, a network map on the wall screen behind them",
       },
       {
         num: "03",
         title: "Integrate",
         body: "Simplify enterprise and partner integration across lending, core banking, credit, and digital channels.",
         icon: "layers",
+        image: "/images/enterprise-impact/impact-03.webp",
+        alt: "A team at a glass wall of system diagrams, one person tracing a connection between them",
       },
       {
         num: "04",
         title: "Innovate",
         body: "Develop and deploy new digital financial capabilities, including retail CBDC and programmable money workflows.",
         icon: "spark",
+        image: "/images/enterprise-impact/impact-04.webp",
+        alt: "A phone, a card terminal and a smartwatch ringed around a lit disc, all linked into one network",
       },
       {
         num: "05",
         title: "Scale",
         body: "Build scalable and modular technology platforms engineered for high throughput and sub-second deterministic finality.",
         icon: "bars",
+        image: "/images/enterprise-impact/impact-05.webp",
+        alt: "A tiered operations floor of workstations under a wall of dashboards",
       },
       {
         num: "06",
         title: "Evolve",
         body: "Prepare financial technology for emerging market needs, regulatory frameworks, and tokenized financial ecosystems.",
         icon: "rocket",
+        image: "/images/enterprise-impact/impact-06.webp",
+        alt: "Institutions, a globe and a city linked around a central bank on a lit platform",
       },
     ],
   },
@@ -478,10 +579,24 @@ export const labPage = {
    * fill this slot and was cut; this is deliberately plainer, and it points at
    * the contact page rather than an anchor that does not exist.
    */
+  /**
+   * The band the page closes on, and it is the client's own — the `final-cta`
+   * block from `source-assets/Solution-page-contents.html`, to the character.
+   *
+   * It replaced a shorter bar that read "Connect with OrbisMoneta / Tell us
+   * what you are building." That copy was ours; this is theirs, and it is the
+   * same ask made at more length, so there was no reason to keep both.
+   *
+   * One action, not the design's two. The second was "Explore Platforms",
+   * which on this page would send a reader who has reached the end of the Lab
+   * sideways into the product pages rather than into a conversation.
+   */
   connect: {
-    heading: "Connect with OrbisMoneta",
-    body: "Tell us what you are building. We will bring the domain knowledge and the engineering.",
-    cta: "Contact Us",
+    eyebrow: "Start a Conversation",
+    heading: "Let's Build the Future of Finance",
+    subhead: "Partnering With Financial Institutions Through Change",
+    body: "Whether modernizing an existing financial platform, integrating new ecosystems or developing a new digital financial capability, OrbisMoneta brings together strategy, domain expertise and technology execution.",
+    cta: "Contact OrbisMoneta",
     href: "/contact",
   },
   /**

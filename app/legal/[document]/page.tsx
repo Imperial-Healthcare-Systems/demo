@@ -34,7 +34,8 @@ const documents = {
   },
   terms: {
     title: "Terms of Use",
-    intro: "The terms governing your access to and use of the OrbisMoneta website.",
+    intro:
+      "The terms governing your access to and use of the OrbisMoneta website.",
     sections: [
       "Acceptance of terms",
       "Permitted use",
@@ -63,7 +64,9 @@ type DocumentKey = keyof typeof documents;
 type Params = { params: Promise<{ document: string }> };
 
 export function generateStaticParams() {
-  return (Object.keys(documents) as DocumentKey[]).map((document) => ({ document }));
+  return (Object.keys(documents) as DocumentKey[]).map((document) => ({
+    document,
+  }));
 }
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
@@ -85,24 +88,23 @@ export default async function LegalPage({ params }: Params) {
 
   return (
     <>
-      <PageHero
-        eyebrow="Legal"
-        title={doc.title}
-        intro={doc.intro}
-        crumbs={[{ label: "Legal" }, { label: doc.title }]}
-      />
+      <PageHero eyebrow="Legal" title={doc.title} intro={doc.intro} />
 
       <section className="section bg-canvas">
         <div className="shell grid gap-12 lg:grid-cols-12 lg:gap-16">
           <div className="flex flex-col gap-8 lg:col-span-8">
             <Reveal className="flex gap-4 rounded-[var(--radius-card)] border border-dashed border-line-strong bg-surface/60 p-6">
-              <Icon name="document" className="h-5 w-5 shrink-0 text-navy-600" strokeWidth={1.6} />
+              <Icon
+                name="document"
+                className="h-5 w-5 shrink-0 text-navy-600"
+                strokeWidth={1.6}
+              />
               <div className="flex flex-col gap-1.5">
                 <h2 className="text-[1rem]">Approved copy pending</h2>
                 <p className="text-[0.9375rem] leading-relaxed text-ink-2">
-                  The final wording of this {doc.title.toLowerCase()} is being prepared by{" "}
-                  {site.legalEntity}. The structure below reflects the sections the published
-                  document will cover.
+                  The final wording of this {doc.title.toLowerCase()} is being
+                  prepared by {site.legalEntity}. The structure below reflects
+                  the sections the published document will cover.
                 </p>
               </div>
             </Reveal>
@@ -129,8 +131,8 @@ export default async function LegalPage({ params }: Params) {
             <div className="sticky top-28 flex flex-col gap-4 rounded-[var(--radius-card)] bg-surface p-7 ring-1 ring-line">
               <Eyebrow>Questions?</Eyebrow>
               <p className="text-[0.9375rem] leading-relaxed text-ink-2">
-                For any question about how we handle your information, contact us directly and we
-                will respond within one business day.
+                For any question about how we handle your information, contact
+                us directly and we will respond within one business day.
               </p>
               <ButtonLink href="/contact" icon="arrowRight" className="w-fit">
                 Contact us

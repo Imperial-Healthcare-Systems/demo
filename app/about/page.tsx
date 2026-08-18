@@ -1,25 +1,12 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { aboutPage, leadershipPage } from "@/content/about";
-import { Breadcrumbs } from "@/components/PageHero";
 import { BrandMark } from "@/components/BrandMark";
-import { CapabilityDeck } from "@/components/CapabilityDeck";
-import { ButtonLink, TextLink } from "@/components/Button";
+import { ButtonLink } from "@/components/Button";
 import { Icon } from "@/components/Icon";
 import { Marquee } from "@/components/Marquee";
 import { Reveal } from "@/components/Reveal";
-import { DarkSection, Eyebrow, SectionHeading } from "@/components/Section";
-
-/**
- * The wordmark splits the way the logo does — "Orbis" plain, "Moneta" in the
- * brand blue. Derived from the name rather than hard-coded, so it cannot drift
- * from `brandPanel.name`.
- */
-const BRAND_TAIL = aboutPage.brandPanel.name.slice(
-  aboutPage.brandPanel.name.toLowerCase().indexOf("moneta"),
-);
-const BRAND_LEAD = aboutPage.brandPanel.name.slice(0, aboutPage.brandPanel.name.length - BRAND_TAIL.length);
+import { Eyebrow, SectionHeading } from "@/components/Section";
 
 export const metadata: Metadata = {
   title: "About OrbisMoneta",
@@ -43,8 +30,7 @@ export default function AboutPage() {
         Built here rather than through `PageHero`, because this is the one page
         whose opening is a two-column editorial spread; bending the shared hero
         to take a pull-quote would push that shape onto seven other pages that
-        do not want it. `Breadcrumbs` is imported from the same module, so the
-        crumb markup and its `aria-label` stay identical across the site.
+        do not want it.
       */}
       <section className="relative isolate overflow-hidden rounded-b-[2rem] border-b border-line bg-canvas pt-28 pb-20 md:rounded-b-[3rem] md:pt-36 md:pb-28">
         {/*
@@ -66,7 +52,14 @@ export default function AboutPage() {
           className="anim-breathe pointer-events-none absolute -top-40 -right-40 -z-10 hidden h-[46rem] w-[46rem] text-navy-600/[0.055] motion-reduce:animate-none lg:block"
         >
           {[150, 210, 270, 330].map((r) => (
-            <circle key={r} cx="300" cy="300" r={r} stroke="currentColor" strokeWidth="1" />
+            <circle
+              key={r}
+              cx="300"
+              cy="300"
+              r={r}
+              stroke="currentColor"
+              strokeWidth="1"
+            />
           ))}
         </svg>
 
@@ -81,10 +74,6 @@ export default function AboutPage() {
           <div className="grid items-center gap-14 lg:grid-cols-12 lg:gap-0">
             {/* ── Left: the company ─────────────────────────────────────── */}
             <div className="flex flex-col items-start gap-6 lg:col-span-6 lg:pr-14 xl:pr-16">
-              <Reveal kind="fade">
-                <Breadcrumbs items={[{ label: "About" }]} />
-              </Reveal>
-
               <Reveal delay={60}>
                 <Eyebrow>{aboutPage.eyebrow}</Eyebrow>
               </Reveal>
@@ -102,13 +91,21 @@ export default function AboutPage() {
                 </p>
               </Reveal>
 
-              <Reveal delay={230} className="mt-2 flex flex-wrap items-center gap-3">
-                <ButtonLink href="/about/leadership" icon="arrowRight" size="lg" shape="soft">
+              <Reveal
+                delay={230}
+                className="mt-2 flex flex-wrap items-center gap-3"
+              >
+                <ButtonLink
+                  href="/about/leadership"
+                  icon="arrowRight"
+                  size="lg"
+                  shape="soft"
+                >
                   Meet the leadership
                 </ButtonLink>
-                <ButtonLink href="/about/careers" tone="secondary" size="lg" shape="soft">
-                  Careers
-                </ButtonLink>
+                {/* A "Careers" button stood beside this one. Careers has come
+                    off the site at the client's request and its page is parked,
+                    unrouted, at app/about/_careers. */}
               </Reveal>
             </div>
 
@@ -148,7 +145,25 @@ export default function AboutPage() {
                 &ldquo;
               </span>
 
-              <blockquote className="relative font-serif text-[1.4375rem] leading-[1.44] font-light text-ink italic md:text-[1.625rem] xl:text-[1.8125rem]">
+              {/*
+                Weight 400, not 300, and that is what makes this read darker.
+
+                The colour was never the problem: it was `text-ink`, #0a1533,
+                which is 18.1:1 on white — the darkest type token the site has,
+                and about as far from grey as a colour gets. What read as pale
+                was the 300 weight of a 29px italic serif, whose strokes are
+                thin enough that the line averages out light however black the
+                ink is. Measured over the quote's own box, 400 puts 10.9% of
+                those pixels below mid-grey against 300's 6.8% — 60% more ink
+                on the page. 400 is also as heavy as this face goes here; only
+                300 and 400 are loaded, and 500 silently rendered as 400.
+
+                `text-navy-950` (#050f28) on top of that, which is a real
+                darkening but a small one — 19.6:1. Worth taking since it was
+                asked for and costs nothing, but it is the weight doing the
+                work.
+              */}
+              <blockquote className="relative font-serif text-[1.4375rem] leading-[1.44] font-normal text-navy-950 italic md:text-[1.625rem] xl:text-[1.8125rem]">
                 {aboutPage.philosophy.quote}
               </blockquote>
 
@@ -170,68 +185,95 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Brand panel + experience */}
-      <DarkSection>
-        {/*
-          The network globe already used by the home hero, reused here as the
-          ground rather than a new asset. Pushed right and heavily veiled so it
-          sits behind the experience panel without ever competing with type —
-          the two gradients below are what keep the left column readable.
-        */}
-        <Image
-          src="/images/hero-network-globe.webp"
-          alt=""
-          aria-hidden="true"
-          fill
-          sizes="100vw"
-          quality={80}
-          className="pointer-events-none -z-10 object-cover object-right opacity-45"
-        />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(3,13,34,.97)_0%,rgba(3,13,34,.86)_42%,rgba(3,13,34,.55)_100%)]"
-        />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgba(3,13,34,.75)_0%,transparent_28%,transparent_72%,rgba(3,13,34,.8)_100%)]"
-        />
+      {/*
+        The dark band that stood here is gone at the client's request.
 
-        <div className="shell section grid gap-10 lg:grid-cols-12 lg:gap-14">
-          <div className="flex flex-col gap-6 lg:col-span-4">
-            <Eyebrow onDark>Positioning</Eyebrow>
-            <div className="flex flex-col gap-3">
-              {/*
-                One word, two weights of emphasis — the same split the logo
-                makes. `tracking-[0.04em]` is positive here because the
-                wordmark is set in caps, where letters need opening up, not
-                closing down.
-              */}
-              <p className="font-display text-[2rem] leading-none font-bold tracking-[0.04em] text-white uppercase md:text-[2.75rem]">
-                {BRAND_LEAD}
-                <span className="text-sky-400">{BRAND_TAIL}</span>
-              </p>
-              <p className="font-mono text-[0.6875rem] tracking-[0.18em] text-ink-inv-2 uppercase">
-                {aboutPage.brandPanel.positioning}
-              </p>
-            </div>
-            <div className="rule-brand" aria-hidden="true" />
-            <p className="max-w-xl text-[1.0625rem] leading-relaxed text-ink-inv-2 md:text-lg">
-              {aboutPage.brandPanel.statement}
-            </p>
+        It was one section carrying two things: a POSITIONING column — the
+        ORBISMONETA wordmark, "Financial Infrastructure • AI • Digital Money"
+        and the platform statement — and the nine CORE CAPABILITIES cards
+        beside it. Both went; the instruction was the section, not a column of
+        it.
 
-            {/*
-              The capability chips that used to close this column are gone. The
-              deck alongside now names the same nine things, and printing them
-              twice inside one section made the panel read as a list repeated
-              rather than a statement supported.
-            */}
-          </div>
+        What that costs, so it is on the record: this was the page's only dark
+        surface, so /about now runs light from the masthead to the foot, and
+        the nine capabilities are no longer named on this page. Areas of
+        Expertise, the marquee at the bottom, is the nearest thing left to
+        them, and Advisory names the service lines in full.
 
-          <div className="lg:col-span-8">
-            <CapabilityDeck />
-          </div>
+        Nothing was deleted to make it happen. `CapabilityDeck` is intact in
+        components/, `aboutPage.brandPanel` and `aboutPage.coreCapabilities`
+        are intact in content/about.ts, and re-mounting the band is this
+        comment replaced by the section it describes.
+      */}
+
+      {/*
+        The capability ticker, directly under the opening statement.
+
+        It closed the page until the client moved it here, and here is the
+        better place for it: it now reads as the line under "About OrbisMoneta"
+        rather than as a strip of leftovers above the footer, and the six things
+        the company does arrive before the story of why it exists rather than
+        after it.
+
+        The label is pinned and the list runs past it — a fixed thing and a
+        moving one, which is what a ticker is. It sat in the sequence before,
+        scrolling past once per loop; pinned, it is on screen the whole time,
+        which is what a label naming six unattributed phrases has to be.
+
+        It is not in the `.shell`. The band is full-bleed, and a label indented
+        to the content column would leave 328px of empty navy before the first
+        word at 1920. It takes the shell's padding without the shell's
+        centring, so it hugs the gutter the way a ticker's channel label does.
+
+        Below 640px the label sits above the strip instead of beside it. In a
+        row it takes 185px of a 390px screen, which would leave the scrolling
+        half about 144px — one short phrase at a time, behind a fade at each
+        end.
+
+        Dark blue and white, as asked. Nothing sits under it now but a light
+        section, so the colour has no adjacency to negotiate; navy-900 into
+        navy-800 and back is brightest in the middle where the type runs and
+        falls away at the ends, which is where the marquee's own mask fades the
+        text out anyway. White on the lightest of it is 18.2:1, and the green
+        label on the darkest is 8.7:1.
+      */}
+      <section
+        id="core-capabilities"
+        className="on-dark bg-[linear-gradient(90deg,var(--color-navy-900)_0%,var(--color-navy-800)_50%,var(--color-navy-900)_100%)] py-6 md:py-7"
+      >
+        <div className="flex flex-col gap-3 pl-5 sm:flex-row sm:items-center sm:gap-6 md:pl-8 xl:pl-10">
+          {/*
+            Green, and it is the logo's own — `green-400`, the on-dark green
+            this site already uses for the Innovation Lab tagline and the
+            eyebrow on the closing bands. It is the only coloured thing in the
+            strip: the six labels stay white, so the colour marks what names
+            the list rather than competing with it.
+
+            Set larger than the six it introduces — 17px against their 12px —
+            at the client's request, and the tracking eases from .16em to .14em
+            to go with it: letterspacing that opens up 12px type starts to pull
+            17px type apart. 15px below the md breakpoint, where the label sits
+            on its own line above the strip.
+          */}
+          <p className="shrink-0 font-mono text-[0.9375rem] font-semibold tracking-[0.14em] text-green-400 uppercase md:text-[1.0625rem]">
+            {aboutPage.capabilities.lead}
+          </p>
+          {/* The join between the fixed half and the moving one. Hidden while
+              they are stacked, where the line break already makes it. */}
+          <span
+            aria-hidden="true"
+            className="hidden h-5 w-px shrink-0 bg-white/20 sm:block"
+          />
+          <Marquee
+            items={aboutPage.capabilities.items}
+            duration={38}
+            copies={4}
+            onDark
+            itemClassName="text-white"
+            className="min-w-0 flex-1"
+          />
         </div>
-      </DarkSection>
+      </section>
 
       {/* Story */}
       <section className="section ground-soft bg-canvas">
@@ -243,12 +285,18 @@ export default function AboutPage() {
           />
           <div className="grid gap-x-14 gap-y-12 md:grid-cols-2">
             {aboutPage.story.map((block, i) => (
-              <Reveal key={block.title} delay={i * 70} className="flex flex-col gap-3">
+              <Reveal
+                key={block.title}
+                delay={i * 70}
+                className="flex flex-col gap-3"
+              >
                 <span className="font-mono text-[0.6875rem] tabular text-navy-600">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <h3 className="text-[1.25rem] leading-snug">{block.title}</h3>
-                <p className="text-[0.9375rem] leading-relaxed text-ink-2">{block.body}</p>
+                <p className="text-[0.9375rem] leading-relaxed text-ink-2">
+                  {block.body}
+                </p>
               </Reveal>
             ))}
           </div>
@@ -310,14 +358,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Expertise ticker */}
-      <section className="border-y border-line bg-surface py-10" id="expertise">
-        <div className="shell mb-6 flex flex-wrap items-end justify-between gap-4">
-          <Eyebrow>{aboutPage.expertise.eyebrow}</Eyebrow>
-          <TextLink href="/advisory">Explore our services</TextLink>
-        </div>
-        <Marquee items={aboutPage.expertise.areas} duration={70} />
-      </section>
     </>
   );
 }

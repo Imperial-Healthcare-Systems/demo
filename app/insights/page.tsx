@@ -10,6 +10,7 @@ import { PageHero } from "@/components/PageHero";
 import { InsightCover } from "@/components/InsightCard";
 import { InsightsExplorer } from "@/components/InsightsExplorer";
 import { Icon } from "@/components/Icon";
+import { TimeAgo } from "@/components/TimeAgo";
 import { Reveal } from "@/components/Reveal";
 import { Eyebrow } from "@/components/Section";
 
@@ -23,7 +24,6 @@ export const metadata: Metadata = {
 export default function InsightsPage() {
   const insights = getAllInsights();
   const featured = getFeaturedInsight();
-  const rest = insights.filter((i) => i.slug !== featured.slug);
 
   return (
     <>
@@ -32,7 +32,6 @@ export default function InsightsPage() {
         title={insightsPage.headline}
         accent={insightsPage.headlineAccent}
         intro={insightsPage.intro}
-        crumbs={[{ label: "Insights" }]}
       />
 
       {/* Featured */}
@@ -44,7 +43,18 @@ export default function InsightsPage() {
                 insight={featured}
                 priority
                 sizes="(max-width: 1024px) 100vw, 45vw"
-                className="aspect-[16/9] w-full lg:col-span-5 lg:aspect-auto"
+                /*
+                  16:9 at every width, where it used to stretch to the row
+                  height above lg. Covers are supplied artwork now, not
+                  generated grounds, and the first one is a designed card with
+                  its title, its five marks and its footer line all running to
+                  the edges. Stretched to the row it was cropped 5% either side
+                  — enough to take the I off "ISO" and the F off "Faster". Held
+                  at the source's own ratio nothing is cut, and the shorter
+                  image is centred against the copy instead of filling behind
+                  it.
+                */
+                className="aspect-[16/9] w-full self-center lg:col-span-5"
               />
               <div className="flex flex-col gap-4 p-8 lg:col-span-7 lg:p-10">
                 <div className="flex flex-wrap items-center gap-3">
@@ -60,7 +70,10 @@ export default function InsightsPage() {
                 </div>
 
                 <h2 className="max-w-2xl h-display-4 leading-snug transition-colors group-hover/card:text-navy-600">
-                  <Link href={`/insights/${featured.slug}`} className="after:absolute after:inset-0">
+                  <Link
+                    href={`/insights/${featured.slug}`}
+                    className="after:absolute after:inset-0"
+                  >
                     {featured.title}
                   </Link>
                 </h2>
@@ -71,12 +84,29 @@ export default function InsightsPage() {
 
                 <div className="mt-auto flex flex-wrap items-center gap-x-5 gap-y-2 pt-4 text-[0.75rem] text-ink-3">
                   <span>{featured.author}</span>
-                  <span aria-hidden="true" className="h-2.5 w-px bg-line-strong" />
+                  <span
+                    aria-hidden="true"
+                    className="h-2.5 w-px bg-line-strong"
+                  />
                   <span className="flex items-center gap-1.5">
                     <Icon name="clock" className="h-3.5 w-3.5" />
-                    <span className="tabular">{estimateReadingTime(featured)} min read</span>
+                    <span className="tabular">
+                      {estimateReadingTime(featured)} min read
+                    </span>
                   </span>
-                  <span aria-hidden="true" className="h-2.5 w-px bg-line-strong" />
+                  {featured.publishedAt && (
+                    <>
+                      <span
+                        aria-hidden="true"
+                        className="h-2.5 w-px bg-line-strong"
+                      />
+                      <TimeAgo date={featured.publishedAt} />
+                    </>
+                  )}
+                  <span
+                    aria-hidden="true"
+                    className="h-2.5 w-px bg-line-strong"
+                  />
                   <span>{featured.topic}</span>
                 </div>
               </div>
@@ -91,10 +121,21 @@ export default function InsightsPage() {
           <div className="mb-8 flex flex-col gap-2">
             <Eyebrow>All insights</Eyebrow>
             <p className="max-w-2xl text-[0.9375rem] text-ink-2">
-              Filter by theme, format or keyword. Open any piece to read it in full.
+              Filter by theme, format or keyword. Open any piece to read it in
+              full.
             </p>
           </div>
-          <InsightsExplorer insights={rest} />
+          {/*
+            Every insight, the featured one included.
+
+            It used to be `rest` — the full list minus whatever the featured
+            slot was showing — on the reasoning that printing it twice on one
+            screen was a duplicate. It is not: the slot above is a highlight,
+            and this is the index. Filtering to ISO 20022 returned a single
+            older draft and no sign of the piece whose headline was six inches
+            up the page, which reads as the filter being broken.
+          */}
+          <InsightsExplorer insights={insights} />
         </div>
       </section>
     </>

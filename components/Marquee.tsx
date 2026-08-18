@@ -1,9 +1,11 @@
+import { Fragment } from "react";
 import { cn } from "@/lib/utils";
 
 /**
- * Infinite capability ticker. The list is rendered twice and translated -50%,
- * which gives a seamless loop with no JS. The duplicate is hidden from the
- * accessibility tree, and the whole strip pauses on hover or keyboard focus.
+ * Infinite capability ticker. The list is rendered `copies` times and travels
+ * the width of one copy, which gives a seamless loop with no JS. The duplicates
+ * are hidden from the accessibility tree, and the whole strip pauses on hover
+ * or keyboard focus.
  */
 export function Marquee({
   items,
@@ -12,6 +14,7 @@ export function Marquee({
   itemClassName,
   separator = true,
   onDark = false,
+  copies = 2,
 }: {
   items: readonly string[];
   duration?: number;
@@ -19,6 +22,21 @@ export function Marquee({
   itemClassName?: string;
   separator?: boolean;
   onDark?: boolean;
+  /**
+   * How many times the row is repeated in the track.
+   *
+   * Two is enough only while one row is wider than the window: the track
+   * travels one row per cycle, so it needs at least a row's width of content
+   * standing to the right of the viewport at all times. Six short labels come
+   * to 1582px, which is under a 1920px screen, and at two copies the strip ran
+   * out mid-cycle and swept a band of empty space across itself.
+   *
+   * Four covers a 4746px window, which is past any real one. The cost is three
+   * extra copies of seven spans, all `aria-hidden`; the speed is unchanged,
+   * because a cycle is still exactly one row of travel however many rows stand
+   * behind it.
+   */
+  copies?: number;
 }) {
   const row = (ariaHidden: boolean) => (
     <ul
@@ -61,10 +79,16 @@ export function Marquee({
     >
       <div
         className="marquee-track flex w-max"
-        style={{ "--marquee-duration": `${duration}s` } as React.CSSProperties}
+        style={
+          {
+            "--marquee-duration": `${duration}s`,
+            "--marquee-copies": copies,
+          } as React.CSSProperties
+        }
       >
-        {row(false)}
-        {row(true)}
+        {Array.from({ length: Math.max(2, copies) }, (_, i) => (
+          <Fragment key={i}>{row(i > 0)}</Fragment>
+        ))}
       </div>
     </div>
   );

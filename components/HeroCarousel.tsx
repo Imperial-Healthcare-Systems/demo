@@ -67,61 +67,77 @@ type Frame = {
    */
   bleed?: boolean;
   /**
-   * The plate's own width/height. Setting the box to it means `object-cover`
-   * is an exact fit — no crop, no letterbox — which is what lets the mask below
-   * be measured against the artwork. Under `object-contain` the painted image
-   * sits *inside* its element, so a mask on the element lands in the empty
-   * margin and never touches the picture at all.
+   * The plate's own width/height, straight off the encoded file. The box is
+   * given this ratio, so it has to stay measured — a number that drifts from
+   * the file is the one way a plate could still lose an edge.
    */
   ratio?: number;
-  /**
-   * The plate's dissolve, as a full literal class string — Tailwind only
-   * generates the class names it can find written out in the source, so these
-   * are constants rather than anything composed.
-   */
-  mask?: string;
 };
 
 /**
- * The plate's feather.
+ * How tall a plate may get.
  *
- * Top and bottom get the room they need — 8% and 4% — because these plates
- * carry nothing but ambient texture there. The sides get 1.5%, enough to take
- * the hard corner off, and the ground pool behind the plate does the rest.
+ * The stage is the hero's 47rem less the 3rem the capability ticker owns, so
+ * 44rem, and a plate is centred in it. Three of the four posters are square, and
+ * a square plate in a box sized only by width overflows that: at 1920 the box
+ * takes its 49rem cap, 784px, and a 784px-tall plate in a 704px stage loses 40px
+ * off the top and the bottom to `overflow-hidden`. Which is a cut, and cuts are
+ * exactly what this round is not to have.
+ *
+ * So the box carries a second cap, in width, derived from this: `ratio × 34rem`.
+ *
+ * 34 and not 42, and the header is why. It is 72px and fixed, and the stage
+ * starts under it at the very top of the section — so a plate centred in 704px
+ * of stage puts its own top edge at (704 − height) / 2. At 42rem that is 21px,
+ * which ran "TRUST & SECURITY" straight through the nav: two headlines, one on
+ * top of the other. At 34rem it is 80px, clear of the header with 8px spare,
+ * and each poster's own margin holds another 18px before its type starts.
+ *
+ * It also lands the square plates at 544px, within twenty pixels of the height
+ * the plates had before the posters were shown whole — so this is the size the
+ * rest of the hero was tuned around, not a new one.
+ *
+ * Written as a CSS variable rather than an inline `max-width` because it must
+ * apply from lg only: below that the plate is the full-bleed backdrop behind
+ * the copy, and a max-width there would pull it off centre.
+ */
+const PLATE_MAX_HEIGHT_REM = 35;
+
+/**
+ * The plate's feather, re-measured for the square set.
+ *
+ * Each file was scanned for its first sustained run of lit subject — six or
+ * more bright pixels holding across four rows or columns — from each edge:
+ *
+ *              top      bottom   left     right
+ *   global     21.37%    16.99%   8.53%    5.74%
+ *   intellig.   6.70%     1.20%   9.09%    9.49%
+ *   trust       3.51%     0.96%   5.98%    5.90%
+ *   innovation  6.30%     5.18%   4.63%    6.06%
+ *
+ * The holds sit inside the tightest of each column: 3% top, under trust's
+ * 3.51%, so no headline is touched; 4% at the sides, inside innovation's 4.63%
+ * and the widest the set allows; and 2.5% at the foot. That last one is the
+ * only edge where the fade meets drawing — trust and intelligent both run their
+ * globe off the bottom of the frame — and it is meant to: the alternative there
+ * is a hard horizontal line cut through a lit sphere.
  */
 const PLATE_MASK =
-  "lg:[mask-composite:intersect] lg:[mask-image:linear-gradient(180deg,transparent_0%,#000_8%,#000_96%,transparent_100%),linear-gradient(90deg,transparent_0%,#000_1.5%,#000_98.5%,transparent_100%)]";
+  "lg:[mask-composite:intersect] lg:[mask-image:linear-gradient(180deg,transparent_0%,#000_3%,#000_97.5%,transparent_100%),linear-gradient(90deg,transparent_0%,#000_4%,#000_96%,transparent_100%)]";
 
 /**
- * The same feather, asymmetric: 2.6% on the left, 0.8% on the right.
+ * One ratio for the set. The client re-cut all four posters to 1254x1254, so
+ * the box that carries the picture's shape is square for every slide — where
+ * before this map held 1.500 for the global one and 1.000 for the other three.
  *
- * Trust & Security is the only plate whose two sides can take different
- * amounts, so it is the only one that gets its own. Measured at the type rather
- * than at the glow around it, its right-hand labels sit 1.17% off the edge and
- * its left-hand ones 2.86% — so the shared 1.5% hold would start fading "GLOBAL
- * COMPLIANCE" and "THREAT DETECTION & RESPONSE" before they end, while leaving
- * the left with less fade than it could have had. 0.8% clears the right with
- * about six pixels to spare; 2.6% gives the left seventeen, which is what the
- * globe arc running off that edge needs.
- */
-const PLATE_MASK_TIGHT_SIDES =
-  "lg:[mask-composite:intersect] lg:[mask-image:linear-gradient(180deg,transparent_0%,#000_8%,#000_96%,transparent_100%),linear-gradient(90deg,transparent_0%,#000_2.6%,#000_99.2%,transparent_100%)]";
-
-/**
- * Measured from the files, not assumed: these five were exported at four
- * different sizes.
+ * Kept as a map rather than folded into a constant because it is keyed off the
+ * slide id, and the next poster to arrive may well not be square.
  */
 const PLATE_RATIO: Record<string, number> = {
-  "global-solution-platform": 1400 / 1120,
-  // Cut out of a square poster rather than exported at this size — the numbers
-  // are the crop box in prepare-assets.mjs, and the two have to stay in step or
-  // the box stops matching the picture and `object-cover` starts cropping it.
-  "intelligent-platform": 774 / 605,
-  "seamless-interoperability": 1400 / 1078,
-  // Replaced by a wider export — 1.500 against the 1.241 of the file before it,
-  // which is why this one comes out shorter than its four neighbours.
-  "trust-and-security": 1536 / 1024,
-  "innovation-led": 1400 / 1120,
+  "global-solution-platform": 1254 / 1254,
+  "intelligent-platform": 1254 / 1254,
+  "trust-and-security": 1254 / 1254,
+  "innovation-led": 1254 / 1254,
 };
 
 const FRAMES: Frame[] = [
@@ -139,27 +155,21 @@ const FRAMES: Frame[] = [
     src: slide.image,
     alt: slide.alt,
     label: `${slide.title} ${slide.titleAccent}`,
-    /*
-      Covers below lg, contains from lg.
-
-      Below lg the plate is full-bleed behind the copy and reads as texture —
-      the veil there runs top to bottom at 88–95% opacity, so almost none of it
-      is legible anyway and fitting it whole into a tall, narrow viewport would
-      only make a small picture behind text. From lg it moves into its own
-      column beside the copy, and there it contains: every label present, no
-      crop.
-    */
     ratio: PLATE_RATIO[slide.id],
-    mask:
-      slide.id === "trust-and-security" ? PLATE_MASK_TIGHT_SIDES : PLATE_MASK,
-    /* Covers at every width. Below lg that fills the stage behind the copy,
-       where the veil runs at 88–95% and the plate is texture. From lg the box
-       carries the plate's own ratio, so covering it crops nothing. */
-    imageClass: "object-cover object-center",
+    /*
+      Contains, at every width.
+
+      The box already carries the plate's own ratio, so `cover` would fit it
+      exactly too — but only while the two agree to the pixel. `contain` is the
+      one that cannot cut: if a ratio ever drifts from its file, the plate
+      letterboxes inside its box instead of losing an edge, and a hairline of
+      ground is a far cheaper failure than a trimmed poster.
+    */
+    imageClass: "object-contain object-center",
     // 1023, not 1024: the `lg:` styles that give the plate its own width start
     // *at* 1024, so a `max-width: 1024px` condition would still be asking for a
     // full-viewport asset on the first width that no longer needs one. Above
-    // that the plate is height-bound at 810px, so 860 covers it with margin.
+    // that the plate is capped at 42rem tall, so 860 covers its widest.
     sizes: "(max-width: 1023px) 100vw, 860px",
   })),
 ];
@@ -269,25 +279,28 @@ export function HeroCarousel() {
             >
               <div className="absolute inset-0">
                 {/*
-                  The ground, then the light — in that order, both behind the
-                  plate.
+                  The light behind the plate — and only the light now.
 
-                  The pool has to be wider than the plate and sit outside it,
-                  which is the whole point: the plates are drawn on ~#000212 and
-                  the hero reaches #0a1f45 in this corner, so if the darkening
-                  stopped at the plate's own edge it would draw the very line it
-                  is there to remove. Spanning from 34% to past the right edge,
-                  it takes the section to the plates' own ground well before
-                  either meets the other.
+                  A dark pool used to sit under this, spanning from 34% to past
+                  the right edge, taking the hero down to the plates' own
+                  near-black before the two met. It existed to kill a seam: the
+                  posters are drawn on ~#000412 and the hero reaches #0a1f45 in
+                  this corner, and unequal grounds meeting on a straight line is
+                  what makes a raster read as pasted on.
+
+                  The blend on the plate removes that seam at the cause, so the
+                  pool has nothing left to do — and worse, it would undo the
+                  blend: `lighten` keeps whichever of plate and backdrop is
+                  brighter, so darkening the backdrop to the plate's own ground
+                  is precisely how you get the plate's ground back.
+
+                  This layer is the opposite and it stays. Sky into green, low
+                  and wide, breathing — under the blend it comes up *through*
+                  the poster's dark field, so the artwork sits in the hero's own
+                  light rather than on top of it.
                 */}
                 {!frame.bleed && (
-                  <>
-                    <div
-                      aria-hidden="true"
-                      className="absolute inset-y-[-12%] right-[-12%] left-[34%] hidden rounded-[50%] bg-[radial-gradient(closest-side,#00040f_52%,rgba(0,4,15,0)_100%)] blur-3xl lg:block"
-                    />
-                    <div className="anim-breathe absolute inset-y-[8%] right-0 left-[38%] hidden rounded-full bg-[radial-gradient(closest-side,rgba(1,164,255,.20),rgba(1,172,50,.07)_55%,transparent_78%)] blur-2xl lg:block" />
-                  </>
+                  <div className="anim-breathe absolute inset-y-[8%] right-0 left-[38%] hidden rounded-full bg-[radial-gradient(closest-side,rgba(1,164,255,.20),rgba(1,172,50,.07)_55%,transparent_78%)] blur-2xl lg:block" />
                 )}
 
                 {/*
@@ -325,41 +338,104 @@ export function HeroCarousel() {
                   plate that already covers the section.
                 */}
                 {/*
-                  The dissolve, sized from the artwork rather than picked.
+                  The plate's box, and both of its limits are data.
 
-                  Each plate was scanned for how far its own drawing sits from
-                  each edge, and the answer is lopsided. Every one of the five
-                  leaves 9–16% blank across the top, so the top can take a
-                  generous fade. None of them leaves anything at the sides:
-                  even at a high luminance gate the labels run flush to both
-                  left and right — "SECURE CLOUD INFRASTRUCTURE" is already
-                  clipped in the supplied file — so a symmetric feather would
-                  have dissolved the very words this change exists to show. The
-                  sides get 1.5%, enough to take the hard corner off, and the
-                  pool behind does the rest of the work there.
+                  `aspectRatio` is the poster's own — three different ratios
+                  across the four files — so the box is the shape of the
+                  picture and the picture fills it without losing an edge.
 
-                  Two gradients intersected rather than one radial: a radial
-                  soft enough to hide the corners takes the mid-edges with it,
-                  and the mid-edges are where the labels are.
+                  `--plate-max` caps the height at 35rem, and that number is
+                  the clear space rather than the stage: measured, a 560px plate
+                  lands its top exactly on the header's foot and leaves 20px
+                  above the carousel controls. Any taller and the controls bar
+                  crosses the bottom of the poster — which is a trim, whatever
+                  the mask says. It is a variable rather than an inline
+                  `max-width` because it must apply from lg only: below that the
+                  plate is the backdrop and a cap would pull it off centre.
 
-                  `aspectRatio` is inline because it is data — four different
-                  ratios across the five files. Below lg it is inert: `inset-0`
-                  makes both dimensions definite, so there is nothing for a
-                  ratio to decide.
+                  The wider 46% starts at 2xl rather than xl, and that is
+                  measured too. At 1280 the 46% plate puts its leftmost artwork
+                  24px inside where the live paragraph ends — the poster's own
+                  labels running under the copy. At 38% the same width leaves
+                  46px of clear air, and every step above 1366 has 50px or
+                  more.
+
+                  The right offset is `max(2%, (100vw - 84rem)/2 - 3rem)`, which
+                  is the shell's own gutter minus a 3rem bleed. Below 1440 the
+                  bracket is negative or small and the 2% wins, so every width
+                  this was measured at is untouched. Above it the plate follows
+                  the content column in rather than staying pinned near the
+                  viewport edge — at 1920 the 2% left it 250px outside the
+                  column, which is what read as "pushed too far right"; it now
+                  ends 48px past it.
+                */}
+                {/*
+                  `mix-blend-mode: lighten`, and it is what makes the poster
+                  part of the banner rather than a picture sitting on it.
+
+                  The blend keeps, channel by channel, whichever of the plate
+                  and the hero behind it is brighter. These posters are
+                  glow-on-black: the headline, the nodes, the labels and the
+                  globe are all far brighter than the hero, and everything
+                  around them is far darker. So the field drops out and the
+                  drawing stays, sitting directly on the hero's own ground with
+                  no edge anywhere — which is the whole of the "no trims, but it
+                  should look like one banner" problem, solved at the cause
+                  rather than feathered around.
+
+                  Nothing is cropped to achieve it. The box carries the poster's
+                  own 1:1 and the picture fills it whole.
+
+                  It is on this wrapper rather than on the image because
+                  `anim-float` and `anim-art-in` run inside it: an animation
+                  creates a stacking context while it runs, which isolates any
+                  blend applied underneath it, and the plate would flicker
+                  between blended and not as each slide came in.
                 */}
                 <div
-                  style={frame.bleed ? undefined : { aspectRatio: frame.ratio }}
+                  style={
+                    frame.bleed
+                      ? undefined
+                      : ({
+                          aspectRatio: frame.ratio,
+                          "--plate-max": `${(frame.ratio ?? 1) * PLATE_MAX_HEIGHT_REM}rem`,
+                        } as React.CSSProperties)
+                  }
                   className={cn(
                     "absolute inset-0",
                     !frame.bleed &&
-                      "lg:inset-auto lg:top-1/2 lg:right-[2%] lg:left-auto lg:h-auto lg:w-[38%] lg:-translate-y-1/2 xl:w-[46%] xl:max-w-[49rem]",
+                      "lg:inset-auto lg:top-1/2 lg:right-[max(2%,calc((100vw-84rem)/2-3rem))] lg:left-auto lg:h-auto lg:w-[38%] lg:max-w-[var(--plate-max)] lg:-translate-y-1/2 lg:[mix-blend-mode:lighten] 2xl:w-[46%]",
                     isActive && "anim-art-in",
                   )}
                 >
+                  {/*
+                    The halo, and it is inside the blend rather than behind it.
+
+                    Measured, each poster's field sits 5 to 12 levels above the
+                    hero once the blend has keyed out its darkest parts — the
+                    artwork's own atmosphere, not a seam, but it stops dead on
+                    the frame's edge and 11px of feather is not enough to hide a
+                    straight 550px line. This spreads the same step across about
+                    a hundred: a soft radial in the field's own tone, reaching
+                    12% past the plate on each side, blended as part of the same
+                    source so it lifts the hero outside the picture to meet the
+                    picture's own ground.
+
+                    It is the mirror of the dark pool this hero used to carry.
+                    That one took the section down to the plate; this takes it
+                    up. Which direction is needed is a property of the artwork,
+                    and this set is the brighter of the two.
+                  */}
+                  {!frame.bleed && (
+                    <div
+                      aria-hidden="true"
+                      className="pointer-events-none absolute -inset-x-[12%] -inset-y-[9%] hidden rounded-[50%] bg-[radial-gradient(closest-side,rgba(4,26,50,.92),rgba(4,26,50,.42)_58%,transparent_100%)] blur-3xl lg:block"
+                    />
+                  )}
                   <div
                     className={cn(
                       "absolute inset-0",
-                      !frame.bleed && frame.mask,
+                      !frame.bleed && PLATE_MASK,
                     )}
                   >
                     <div className="anim-float absolute inset-0">

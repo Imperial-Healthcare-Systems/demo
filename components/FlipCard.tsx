@@ -55,6 +55,7 @@ export function FlipCard({
   faceClassName,
   backClassName,
   minHeight = "min-h-[19rem]",
+  clickOnly = false,
 }: {
   front: React.ReactNode;
   back: React.ReactNode;
@@ -64,6 +65,19 @@ export function FlipCard({
   faceClassName?: string;
   backClassName?: string;
   minHeight?: string;
+  /**
+   * Turn on click alone — no hover, no focus.
+   *
+   * The default is that a card opens as the pointer crosses it and shuts as it
+   * leaves, which suits a grid a reader sweeps across. It does not suit a card
+   * a reader means to open and keep open: with hover bound, the card closes the
+   * moment the pointer moves off it, so the back can never be read at leisure
+   * and a wide grid flickers as the cursor travels.
+   *
+   * The button, its `aria-expanded` and Enter/Space are unaffected — a click is
+   * what a keyboard activation fires, so the keyboard path is the same one.
+   */
+  clickOnly?: boolean;
 }) {
   const [flipped, setFlipped] = useState(false);
   const reduced = useMedia("(prefers-reduced-motion: reduce)");
@@ -73,14 +87,21 @@ export function FlipCard({
    * together flipped the card open and immediately shut again — the card
    * looked completely dead to touch. Gating on the media query lets pointer
    * users hover and touch users tap, without the two cancelling out.
+   *
+   * `clickOnly` unbinds them everywhere, which is the same protection by a
+   * different route: a card that only ever turns on click cannot be caught by
+   * that pair either.
    */
-  const canHover = useMedia("(hover: hover) and (pointer: fine)");
+  const pointer = useMedia("(hover: hover) and (pointer: fine)");
+  const canHover = pointer && !clickOnly;
 
   return (
     <button
       type="button"
       aria-expanded={flipped}
-      aria-label={flipped ? `${label} — hide details` : `${label} — show details`}
+      aria-label={
+        flipped ? `${label} — hide details` : `${label} — show details`
+      }
       onClick={() => setFlipped((v) => !v)}
       onMouseEnter={canHover ? () => setFlipped(true) : undefined}
       onMouseLeave={canHover ? () => setFlipped(false) : undefined}
@@ -95,7 +116,22 @@ export function FlipCard({
     >
       <span
         className={cn(
-          "relative block h-full w-full transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] [transform-style:preserve-3d]",
+          /*
+           1000ms, and an even curve rather than the site's usual
+           ease-out.
+
+           cubic-bezier(0.22,1,0.36,1) is the standard easing here and it
+           is the right one for a thing that arrives — it front-loads
+           hard. Measured on this card it turned 62 degrees in the first
+           80ms and 156 of 180 by 300ms, so lengthening the duration
+           bought almost nothing: the flip still snapped and then crawled
+           the last two degrees for most of a second.
+
+           A flip is not an arrival, it is a rotation the eye follows all
+           the way round, so it takes a symmetric ease-in-out and spends
+           the whole second doing it.
+        */
+          "relative block h-full w-full transition-transform duration-1000 ease-[cubic-bezier(0.65,0,0.35,1)] [transform-style:preserve-3d]",
           flipped && !reduced && "[transform:rotateY(180deg)]",
           reduced && "transition-none",
         )}
@@ -121,7 +157,9 @@ export function FlipCard({
           style={{ position: "absolute", inset: 0 }}
           className={cn(
             "flex h-full w-full flex-col [backface-visibility:hidden]",
-            reduced ? "transition-opacity duration-200" : "[transform:rotateY(180deg)]",
+            reduced
+              ? "transition-opacity duration-200"
+              : "[transform:rotateY(180deg)]",
             reduced && !flipped && "pointer-events-none opacity-0",
             backClassName,
           )}
@@ -152,7 +190,7 @@ export function FlipHint({ onDark = false }: { onDark?: boolean }) {
       Details
       <Icon
         name="refresh"
-        className="h-3 w-3 transition-transform duration-500 group-hover/flip:rotate-180"
+        className="h-3 w-3 transition-transform duration-1000 group-hover/flip:rotate-180"
         strokeWidth={2}
       />
     </span>

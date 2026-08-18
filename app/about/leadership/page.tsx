@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
-import { aboutPage, leadershipPage } from "@/content/about";
+import { leadershipPage } from "@/content/about";
 import { PageHero } from "@/components/PageHero";
-import { ButtonLink } from "@/components/Button";
 import { Icon } from "@/components/Icon";
 import { Reveal } from "@/components/Reveal";
-import { DarkSection, Eyebrow } from "@/components/Section";
 
 export const metadata: Metadata = {
   title: "Leadership Team",
@@ -21,7 +19,6 @@ export default function LeadershipPage() {
         title={leadershipPage.headline}
         accent={leadershipPage.headlineAccent}
         intro={leadershipPage.intro}
-        crumbs={[{ label: "About", href: "/about" }, { label: "Leadership" }]}
       />
 
       <section className="section ground-soft bg-canvas">
@@ -48,25 +45,39 @@ export default function LeadershipPage() {
                 </div>
                 <div className="flex flex-col gap-1">
                   <h2 className="text-[1.375rem]">{person.name}</h2>
-                  <p className="text-[0.9375rem] text-navy-600">{person.role}</p>
+                  <p className="text-[0.9375rem] text-navy-600">
+                    {person.role}
+                  </p>
                 </div>
               </div>
 
-              <div className="flex flex-col gap-5 lg:col-span-8">
+              {/*
+                Centred against the portrait at lg, where it used to sit to the
+                top. With the three stat tiles gone the bio ends about 220px
+                short of the photograph, and top-aligned that pooled as one
+                block of white under the text. Centred, the same space falls
+                either side of the bio and the column reads as set against the
+                portrait rather than as running out. A bio longer than the
+                portrait column fills it, and this does nothing.
+              */}
+              <div className="flex flex-col justify-center gap-5 lg:col-span-8">
                 <div className="rule-brand" aria-hidden="true" />
-                <p className="text-[1.0625rem] leading-relaxed text-ink-2">{person.bio}</p>
-                <ul className="mt-2 grid gap-px overflow-hidden rounded-xl bg-line ring-1 ring-line sm:grid-cols-3">
-                  {aboutPage.experience.slides.slice(0, 3).map((slide) => (
-                    <li key={slide.label} className="flex flex-col gap-1 bg-surface px-5 py-4">
-                      <span className="font-mono text-[0.5625rem] uppercase tracking-[0.18em] text-ink-3">
-                        {slide.label}
-                      </span>
-                      <span className="stat-value text-[0.9375rem] font-semibold text-ink">
-                        {slide.value}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
+                <p className="text-[1.0625rem] leading-relaxed text-ink-2">
+                  {person.bio}
+                </p>
+                {/*
+                  The three figures that stood here — Experience 30+, Delivered
+                  75+, Expertise Multiple Payment Schemes — came off at the
+                  client's request.
+
+                  They were the first three slides of `aboutPage.experience`,
+                  printed under every profile. That was their weakest form: the
+                  figures are one person's, drawn from the company's own
+                  experience panel, and repeating a fixed row under each new
+                  profile the client adds would have claimed the same 30 years
+                  and 75 banks for all of them. The bio above already says both,
+                  in the sentence they belong to.
+                */}
               </div>
             </Reveal>
           ))}
@@ -87,7 +98,9 @@ export default function LeadershipPage() {
                   <p className="text-[0.9375rem] font-medium text-ink-2">
                     {leadershipPage.pendingLabel}
                   </p>
-                  <p className="text-[0.8125rem] text-ink-3">{leadershipPage.pendingNote}</p>
+                  <p className="text-[0.8125rem] text-ink-3">
+                    {leadershipPage.pendingNote}
+                  </p>
                 </div>
               </Reveal>
             ))}
@@ -95,19 +108,13 @@ export default function LeadershipPage() {
         </div>
       </section>
 
-      <DarkSection>
-        <div className="shell section-tight flex flex-col items-start gap-5 md:flex-row md:items-center md:justify-between">
-          <div className="flex flex-col gap-2">
-            <Eyebrow onDark>Careers</Eyebrow>
-            <h2 className="h-display-4 text-white">
-              Want to build financial infrastructure with this team?
-            </h2>
-          </div>
-          <ButtonLink href="/about/careers" tone="onDark" icon="arrowRight" className="shrink-0">
-            View careers
-          </ButtonLink>
-        </div>
-      </DarkSection>
+      {/*
+        A dark Careers band closed this page — "Want to build financial
+        infrastructure with this team?" against a "View careers" button. It came
+        off with the rest of Careers at the client's request. It was that ask and
+        nothing else, so there is nothing here to repoint; the page now ends on
+        the profiles.
+      */}
     </>
   );
 }

@@ -4,6 +4,12 @@ import { Icon, type IconName } from "@/components/Icon";
 import { Reveal } from "@/components/Reveal";
 
 /**
+ * PARKED. Nothing mounts this.
+ *
+ * It was the right half of the dark positioning band on /about, and that whole
+ * band came off at the client's request. Held here, built and working, on the
+ * same terms as components/ParkedSections.tsx — do not delete without asking.
+ *
  * The nine core capabilities, as illustrated cards.
  *
  * This replaces the experience slider that stood here — the rotating 30+ Years

@@ -61,7 +61,9 @@ if (SRC) {
   // the foot of this file. Left in place because this block is the record of
   // what the first round of artwork was, and it only runs with a media dir.
   // await cropRight("image5.png", "carousel/intelligent-platform.webp", 0.52);
-  await cropRight("image4.png", "carousel/seamless-interoperability.webp", 0.54);
+  // Retired with the slide it fed — the hero runs four plates now, and this
+  // one has no banner in the current round.
+  // await cropRight("image4.png", "carousel/seamless-interoperability.webp", 0.54);
   await cropRight("image7.png", "carousel/trust-and-security.webp", 0.53);
   await cropRight("image6.png", "carousel/innovation-led.webp", 0.5);
 
@@ -94,8 +96,42 @@ const POSTER_SRC = path.join(CAROUSEL_SRC, "intelligent-platform-poster.jpeg");
 // band came off at the client's request, so it is only a source again and
 // belongs here with the rest of them — nothing renders it, and a 1.7MB JPEG
 // that ships to nobody has no business in /public.
+/*
+  The current round: four full posters, one per hero plate, shipped whole.
+
+  They were cropped at first — each cut at the dark band under its baked-in
+  headline, so the plate carried the diagram alone and the hero's own headline
+  was the only one on screen. That came off at the client's request: they want
+  these incorporated complete, no cuts and no trims, headline block and all.
+
+  So there is no crop entry for any of them below. They go through the plain
+  banner pass, which re-encodes each PNG whole and caps the long edge at 1400.
+  What that costs is worth naming: the poster headline now sits beside the
+  hero's own, and each poster's own body paragraph renders at about 6px in the
+  plate. What it buys is the client's artwork intact, which is what was asked
+  for.
+
+  Their native ratios — 1.500 for the landscape one, 1.000 for the three square
+  ones — are what PLATE_RATIO in HeroCarousel carries, and the square ones are
+  why the plate box there gained a height cap.
+*/
+/* The rows each crop used, kept in case the cropped treatment is ever wanted
+   back. Found by scanning each file for runs of rows whose brightest pixel is
+   under 40, not by eye:
+     global-solution-platform-banner.png  top 359  -> 1536x665 (2.310)
+     intelligent-platform-banner.png      top 340  -> 1254x914 (1.372)
+     trust-and-security-banner.png        top 263  -> 1254x991 (1.265)
+     innovation-led-banner.png            top 257  -> 1254x997 (1.258)
+   No side or bottom cut in any of them: the artwork runs to all three of those
+   edges in all four files. */
 const CAROUSEL_CROPS = [
+  /*
+    Superseded by intelligent-platform-banner.webp above. Kept as the record of
+    what the slide used to carry; nothing renders its output any more, so it no
+    longer runs.
+  */
   {
+    disabled: true,
     from: POSTER_SRC,
     // A new name, not a new file under the old one. This artwork replaces
     // intelligent-platform.webp at a different aspect ratio, and the ratio is
@@ -135,9 +171,52 @@ if (existsSync(CAROUSEL_SRC)) {
   // The originals a crop replaces stay in source-assets as the record of what
   // the slide used to be, but they must not still be encoded into /public — the
   // slide no longer points at them and shipping both is dead weight.
-  const superseded = new Set(CAROUSEL_CROPS.map((c) => c.supersedes).filter(Boolean));
+  const crops = CAROUSEL_CROPS.filter((c) => !c.disabled);
+  /*
+    Two kinds of file are skipped here. A crop's own source, because it is
+    encoded by the crop pass below and shipping it whole as well would put the
+    baked-in copy block into /public under a second name. And anything a crop
+    supersedes, because the slide no longer points at it — those stay in
+    source-assets as the record of what the plate used to be, but they must
+    stop being built.
+  */
+  const skip = new Set([
+    ...crops.map((c) => path.basename(c.from)),
+    ...CAROUSEL_CROPS.map((c) => c.supersedes).filter(Boolean),
+    /*
+      The first round of banners, one per plate. Each was replaced by the
+      poster of the same name with `-banner` appended, and the slides point at
+      those — so these stay in source-assets as the record and stop being
+      built. They were skipped through a crop's `supersedes` until the crops
+      came off; naming them here is what keeps them out now.
+    */
+    "global-solution-platform.png",
+    "intelligent-platform.png",
+    "trust-and-security.png",
+    "innovation-led.png",
+    // The wide Trust & Security export that lived in /public unprocessed. It is
+    // a source now like the rest of them, and its plate comes from the poster.
+    "trust-and-security-wide.png",
+    // The slide it fed was removed from the carousel at the client's request.
+    "seamless-interoperability.png",
+    /*
+      The round before this one. The client re-cut all four posters to a single
+      1254x1254 and re-supplied them, which is what `-square.png` is — same
+      artwork, same baked headline block, one shape across the set where before
+      the global one was 1536x1024 and the other three were square.
+
+      New names rather than new bytes under the old ones, for the reason this
+      project has hit twice: Next's image optimizer keys its cache on the URL,
+      so changed bytes at an unchanged path serve stale from CDN edges,
+      browsers and .next/cache/images alike.
+    */
+    "global-solution-platform-banner.png",
+    "intelligent-platform-banner.png",
+    "trust-and-security-banner.png",
+    "innovation-led-banner.png",
+  ]);
   const banners = (await readdir(CAROUSEL_SRC)).filter(
-    (f) => /\.png$/i.test(f) && !superseded.has(f),
+    (f) => /\.png$/i.test(f) && !skip.has(f),
   );
   for (const file of banners) {
     await sharp(path.join(CAROUSEL_SRC, file))
@@ -147,7 +226,7 @@ if (existsSync(CAROUSEL_SRC)) {
   }
   if (banners.length) console.log(`→ carousel/ (${banners.length} banners)`);
 
-  for (const { from, out, box } of CAROUSEL_CROPS) {
+  for (const { from, out, box } of crops) {
     if (!existsSync(from)) continue;
     await sharp(from)
       .extract(box)
@@ -169,9 +248,43 @@ const SECTIONS = [
   ["globe_image.png", "industry-globe.webp", 1600],
   ["people.png", "why-orbismoneta-people.webp", 1500],
   // Page bands and the platform architecture visual, from the client prototype.
+  /*
+    The Solutions opening. It replaced page-solutions.jpg, which is still built
+    below because nothing else has claimed its slot yet — the two are one
+    swapped line in content/solutions.ts apart.
+  */
+  ["solution-landing.png", "solution-landing.webp", 1600],
   ["page-solutions.jpg", "page-solutions.webp", 1600],
+  // The second slide of the Partners hero gallery. 1400 is twice the ~640px
+  // the frame is ever painted at.
+  // The Innovation Lab masthead plate. 1400 covers a ~662px column at 2x.
+  ["innovation-lab.png", "innovation-lab.webp", 1400],
+  ["partner-handshake.png", "partner-handshake.webp", 1400],
   ["vis-architecture.jpg", "platform-architecture.webp", 1400],
 ];
+
+// ---------------------------------------------------------------------------
+// Enterprise Impact card artwork.
+//
+// Six 1536x1024 plates, one per card on /lab. They render as the front face of
+// a card about 408px wide, so 900 is the widest they are ever asked for — twice
+// the CSS width, which is what a 2x screen needs and nothing more. At source
+// they are 12MB between them; at 900/q78 they are a fraction of that, and the
+// scrim over them on the page means the extra fidelity would not survive
+// anyway.
+const IMPACT_SRC = path.join(process.cwd(), "source-assets", "enterprise-impact");
+
+if (existsSync(IMPACT_SRC)) {
+  await mkdir(path.join(OUT, "enterprise-impact"), { recursive: true });
+  const plates = (await readdir(IMPACT_SRC)).filter((f) => /\.png$/i.test(f));
+  for (const file of plates) {
+    await sharp(path.join(IMPACT_SRC, file))
+      .resize({ width: 900, withoutEnlargement: true })
+      .webp({ quality: 78, effort: 6 })
+      .toFile(path.join(OUT, "enterprise-impact", file.replace(/\.png$/i, ".webp")));
+  }
+  if (plates.length) console.log(`→ enterprise-impact/ (${plates.length} plates)`);
+}
 
 if (existsSync(SECTION_SRC)) {
   for (const [from, to, width] of SECTIONS) {
@@ -181,6 +294,28 @@ if (existsSync(SECTION_SRC)) {
       .webp({ quality: 82, effort: 6 })
       .toFile(path.join(OUT, to));
     console.log("→", to);
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Insight cover artwork.
+//
+// One per published article, into /public/images/insights. The width is the
+// source's own — 1279px — because that is already the ceiling: the detail hero
+// paints the cover at 42vw, which is 806px on a 1920 screen, so a 2x screen
+// would want 1612 and cannot have it. Nothing is upscaled to pretend
+// otherwise; `withoutEnlargement` holds the line.
+const INSIGHT_SRC = path.join(process.cwd(), "source-assets", "insights");
+
+if (existsSync(INSIGHT_SRC)) {
+  await mkdir(path.join(OUT, "insights"), { recursive: true });
+  const covers = (await readdir(INSIGHT_SRC)).filter((f) => /\.(png|jpe?g)$/i.test(f));
+  for (const file of covers) {
+    await sharp(path.join(INSIGHT_SRC, file))
+      .resize({ width: 1280, withoutEnlargement: true })
+      .webp({ quality: 82, effort: 6 })
+      .toFile(path.join(OUT, "insights", file.replace(/\.(png|jpe?g)$/i, ".webp")));
+    console.log("→ insights/" + file.replace(/\.(png|jpe?g)$/i, ".webp"));
   }
 }
 

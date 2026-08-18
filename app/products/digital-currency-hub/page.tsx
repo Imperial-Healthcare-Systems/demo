@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { digitalCurrencyHub as dch } from "@/content/product";
 import { site } from "@/content/site";
 import Image from "next/image";
-import { Breadcrumbs } from "@/components/PageHero";
 import { ButtonLink } from "@/components/Button";
 import { Icon, type IconName } from "@/components/Icon";
 import { Reveal } from "@/components/Reveal";
@@ -338,24 +337,6 @@ export default function DigitalCurrencyHubPage() {
         />
 
         <div className="shell flex flex-1 flex-col justify-center">
-          <Reveal kind="fade">
-            {/*
-              The middle crumb pointed at "Products" — with this page's own href
-              on it, so the step back landed on the page the reader was already
-              standing on. It names Platforms now, which is both a real
-              destination and the true parent: Platforms is a top-level tab, its
-              page carries the card that links here, and it is the route a
-              reader takes to arrive.
-            */}
-            <Breadcrumbs
-              onDark
-              items={[
-                { label: "Platforms", href: "/solutions/platforms" },
-                { label: dch.name },
-              ]}
-            />
-          </Reveal>
-
           {/*
             Seven columns to the plate and five to the copy, from `xl` — the
             Lab masthead's split, matched deliberately.

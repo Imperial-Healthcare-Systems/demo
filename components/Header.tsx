@@ -226,13 +226,16 @@ export function SiteHeader() {
                 return (
                   <li
                     key={item.label}
-                    className="group/nav"
+                    /* `relative` because the dropdown is positioned against
+                       this item rather than against the bar — it sits under the
+                       word it belongs to. */
+                    className="group/nav relative"
                     onMouseEnter={() => {
                       cancelClose();
-                      setOpenPanel(item.panel ? item.label : null);
+                      setOpenPanel(item.menu ? item.label : null);
                     }}
                   >
-                    {item.panel ? (
+                    {item.menu ? (
                       <button
                         type="button"
                         aria-expanded={expanded}
@@ -241,7 +244,7 @@ export function SiteHeader() {
                           setOpenPanel(expanded ? null : item.label)
                         }
                         className={cn(
-                          "relative flex cursor-pointer items-center gap-1.5 rounded-full px-3.5 py-2 text-[0.875rem] font-medium transition-colors",
+                          "relative flex cursor-pointer items-center gap-1.5 rounded-full px-3.5 py-2 text-[0.875rem] font-medium whitespace-nowrap transition-colors",
                           overlay
                             ? "text-white/85 hover:text-white"
                             : "text-ink-2 hover:text-navy-600",
@@ -267,7 +270,7 @@ export function SiteHeader() {
                       <Link
                         href={item.href}
                         className={cn(
-                          "relative flex items-center rounded-full px-3.5 py-2 text-[0.875rem] font-medium transition-colors",
+                          "relative flex items-center rounded-full px-3.5 py-2 text-[0.875rem] font-medium whitespace-nowrap transition-colors",
                           overlay
                             ? "text-white/85 hover:text-white"
                             : "text-ink-2 hover:text-navy-600",
@@ -278,6 +281,16 @@ export function SiteHeader() {
                         {item.label}
                         <NavUnderline show={active} overlay={overlay} />
                       </Link>
+                    )}
+
+                    {item.menu && (
+                      <NavMenu
+                        item={item}
+                        open={expanded}
+                        onEnter={cancelClose}
+                        onLeave={scheduleClose}
+                        onRequestClose={() => setOpenPanel(null)}
+                      />
                     )}
                   </li>
                 );
@@ -317,19 +330,9 @@ export function SiteHeader() {
           </div>
         </div>
 
-        {/* Mega menu */}
-        {primaryNav.map((item) =>
-          item.panel ? (
-            <MegaPanel
-              key={item.label}
-              item={item}
-              open={openPanel === item.label}
-              onEnter={cancelClose}
-              onLeave={scheduleClose}
-              onRequestClose={() => setOpenPanel(null)}
-            />
-          ) : null,
-        )}
+        {/* The mega-menu used to mount here, as a child of the header rather
+            than of the item, because it spanned the full bar. The dropdown that
+            replaced it is anchored to its own item and mounts up in the list. */}
       </header>
 
       {/*
@@ -349,7 +352,7 @@ export function SiteHeader() {
           <ul className="flex flex-col divide-y divide-line">
             {primaryNav.map((item) => (
               <li key={item.label} className="py-1">
-                {item.panel ? (
+                {item.menu ? (
                   <>
                     <button
                       type="button"
@@ -367,30 +370,26 @@ export function SiteHeader() {
                         className="h-4.5 w-4.5 text-navy-600"
                       />
                     </button>
+                    {/* Flat, with no column heading over it. The heading said
+                        "Company" above a list that is two links long and sits
+                        under a control that already says About. */}
                     {mobileSection === item.label && (
-                      <div className="anim-rise flex flex-col gap-5 pb-5">
-                        {item.panel.columns.map((col) => (
-                          <div key={col.title} className="flex flex-col gap-1">
-                            <p className="font-mono text-[0.625rem] uppercase tracking-[0.18em] text-ink-3">
-                              {col.title}
-                            </p>
-                            {col.links.map((link) => (
-                              <Link
-                                key={link.label + link.href}
-                                href={link.href}
-                                className="flex flex-col rounded-lg px-3 py-2.5 -mx-3 text-[0.9375rem] text-ink-2 transition-colors hover:bg-surface hover:text-navy-600"
-                              >
-                                <span className="font-medium text-ink">
-                                  {link.label}
-                                </span>
-                                {link.description && (
-                                  <span className="text-[0.8125rem] text-ink-3">
-                                    {link.description}
-                                  </span>
-                                )}
-                              </Link>
-                            ))}
-                          </div>
+                      <div className="anim-rise flex flex-col gap-1 pb-5">
+                        {item.menu.map((link) => (
+                          <Link
+                            key={link.label + link.href}
+                            href={link.href}
+                            className="flex flex-col rounded-lg px-3 py-2.5 -mx-3 text-[0.9375rem] text-ink-2 transition-colors hover:bg-surface hover:text-navy-600"
+                          >
+                            <span className="font-medium text-ink">
+                              {link.label}
+                            </span>
+                            {link.description && (
+                              <span className="text-[0.8125rem] text-ink-3">
+                                {link.description}
+                              </span>
+                            )}
+                          </Link>
                         ))}
                       </div>
                     )}
@@ -453,7 +452,109 @@ function NavUnderline({ show, overlay }: { show: boolean; overlay: boolean }) {
   );
 }
 
-function MegaPanel({
+/**
+ * The dropdown under a nav item that carries a `menu`.
+ *
+ * A card sized to its own contents, anchored to the item so it opens under the
+ * word it belongs to. It replaced the mega-menu below for About, which is down
+ * to two links — that panel draws a full-bar sheet with a standfirst column and
+ * a nine-column grid, and two rows in it left most of a 1472px card empty.
+ *
+ * The link rows are the panel's own, unchanged: icon tile, label, description,
+ * chevron. Nothing about the menu should look like a different site.
+ *
+ * `transition-[opacity,translate]`, not `transform` — Tailwind v4 compiles
+ * `-translate-y-*` to the standalone `translate` property, so a transition list
+ * naming `transform` animates nothing and the card jumps into place.
+ *
+ * `inert` when closed does the work three attributes used to: it takes the
+ * links out of the tab order, out of the accessibility tree and out of
+ * find-in-page, so a closed menu cannot be reached by anything.
+ */
+function NavMenu({
+  item,
+  open,
+  onEnter,
+  onLeave,
+  onRequestClose,
+}: {
+  item: NavItem;
+  open: boolean;
+  onEnter: () => void;
+  onLeave: () => void;
+  onRequestClose: () => void;
+}) {
+  return (
+    <div
+      onMouseEnter={onEnter}
+      onMouseLeave={onLeave}
+      className={cn(
+        // `pt-7` is the gap, and it is padding rather than margin so the
+        // pointer can cross it without the menu closing under the cursor. The
+        // item is centred in the bar rather than flush to its foot, so most of
+        // that 28px is spent clearing the bar itself: measured, the card lands
+        // 11px below it.
+        "absolute top-full left-1/2 z-40 hidden w-[19.5rem] -translate-x-1/2 pt-7 lg:block",
+        "transition-[opacity,translate] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
+        open
+          ? "pointer-events-auto translate-y-0 opacity-100"
+          : "pointer-events-none -translate-y-1 opacity-0",
+      )}
+      aria-hidden={!open}
+      inert={!open}
+    >
+      <div className="flex flex-col rounded-[1.25rem] bg-white p-2 shadow-[0_28px_64px_-28px_rgba(10,21,51,.34)] ring-1 ring-line">
+        {(item.menu ?? []).map((link) => (
+          <Link
+            key={link.label + link.href}
+            href={link.href}
+            onClick={onRequestClose}
+            className="group/item flex items-start gap-3.5 rounded-xl p-3 transition-colors duration-200 hover:bg-surface"
+          >
+            {link.icon && (
+              <span
+                aria-hidden="true"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-navy-50 text-navy-600 transition-colors duration-200 group-hover/item:bg-navy-600 group-hover/item:text-white"
+              >
+                <Icon name={link.icon} className="h-5 w-5" strokeWidth={1.6} />
+              </span>
+            )}
+            <span className="flex min-w-0 flex-col gap-1 pt-0.5">
+              <span className="text-[0.875rem] leading-snug font-semibold text-ink transition-colors duration-200 group-hover/item:text-navy-600">
+                {link.label}
+              </span>
+              {link.description && (
+                <span className="text-[0.75rem] leading-snug text-ink-3">
+                  {link.description}
+                </span>
+              )}
+            </span>
+            <Icon
+              name="chevronRight"
+              className="mt-2.5 ml-auto h-4 w-4 shrink-0 text-ink-3 transition-[transform,color] duration-200 group-hover/item:translate-x-0.5 group-hover/item:text-navy-600"
+              strokeWidth={2}
+            />
+          </Link>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * PARKED. Nothing mounts this — no nav item carries a `panel` any more.
+ *
+ * It is the full-bar mega-menu: a standfirst with its own "View all", up to
+ * three columns of described links, and an optional feature card. Solutions
+ * had one, then Advisory, then About; all three came off at the client's
+ * request, the last of them replaced by `NavMenu` above.
+ *
+ * Kept, not deleted, on the same terms as components/ParkedSections.tsx — it
+ * is a complete and accessible implementation of a pattern this site may well
+ * want back, and giving any item a `panel` again is all it takes. Exported so
+ * that being unmounted does not read as an unused local.
+ */
+export function MegaPanel({
   item,
   open,
   onEnter,

@@ -9,9 +9,10 @@
  *  1. Advisory's heading, route (/advisory) and page title all agree with the
  *     client's own page title, "Strategic Advisory & Engineering Services".
  *     /services is a permanent redirect.
- *  2. A single Contact entry — the duplicate header "Contact" was removed and
- *     Careers moved under About ("Contact Us should be just one…", "Career page
- *     to be added on the About").
+ *  2. A single Contact entry — the duplicate header "Contact" was removed
+ *     ("Contact Us should be just one…"). Careers moved under About on the same
+ *     brief ("Career page to be added on the About") and has since come off the
+ *     site altogether; the page is parked at app/about/_careers.
  *  3. One master list of names per section. Where a menu and a page disagreed,
  *     the page wins — those are the entries carrying descriptions and focus
  *     areas. The footer mirrors the same lists rather than keeping its own.
@@ -49,7 +50,19 @@ export type NavItem = {
    * that page too and two tabs come up underlined at once.
    */
   excludes?: string[];
-  /** Rendered as a mega-menu panel when present. */
+  /**
+   * A dropdown under the item. Two links or so — this is a menu, not a panel.
+   */
+  menu?: MenuLink[];
+  /**
+   * PARKED. Nothing sets this any more.
+   *
+   * The mega-menu went the way of the three panels that fed it: Solutions'
+   * came off, then Advisory's, and About's is now the two-link `menu` above.
+   * The shape is kept, with `MegaPanel` in components/Header.tsx, because it
+   * is a working implementation of a pattern a growing site tends to want
+   * back, and re-mounting it is a matter of giving an item a `panel` again.
+   */
   panel?: {
     eyebrow: string;
     heading: string;
@@ -103,69 +116,20 @@ export const primaryNav: NavItem[] = [
     matches: ["/products"],
   },
   {
+    /*
+      A plain link, like Solutions and Platforms.
+
+      It carried a mega-menu of the six service lines with an approach panel
+      beside them. Removed at the client's request: clicking Advisory lands on
+      /advisory and the reader explores the six from the page itself, which is
+      where they are set out in full rather than as a list of names.
+
+      Nothing became unreachable. Every service line is still anchored on that
+      page — #payment-modernization, #payment-systems-fmi and the rest — and
+      the footer's Advisory column still deep links to all six.
+    */
     label: "Advisory",
     href: "/advisory",
-    panel: {
-      eyebrow: "Strategic Advisory & Engineering Services",
-      heading: "Advise. Architect. Build.",
-      blurb:
-        "Six service lines covering the modern financial infrastructure stack.",
-      columns: [
-        {
-          title: "Payments",
-          links: [
-            {
-              label: "Payment Modernization",
-              href: "/advisory#payment-modernization",
-              icon: "transfer",
-              description: "Real-time, interoperable, cloud-ready",
-            },
-            {
-              label: "Payment Systems & FMI",
-              href: "/advisory#payment-systems-fmi",
-              icon: "bank",
-              description: "National systems & high-value infrastructure",
-            },
-            {
-              label: "Cross-Border Payments",
-              href: "/advisory#cross-border-payments",
-              icon: "globe",
-              description: "Interoperable corridors & settlement",
-            },
-          ],
-        },
-        {
-          title: "Digital money & intelligence",
-          links: [
-            {
-              label: "Digital Money & CBDCs",
-              href: "/advisory#digital-money-cbdcs",
-              icon: "coin",
-              description: "Design, pilot and operate",
-            },
-            {
-              label: "AI for Financial Services",
-              href: "/advisory#ai-for-financial-services",
-              icon: "spark",
-              description: "Strategy, models & governance",
-            },
-            {
-              label: "Cloud-Native Platform Engineering",
-              href: "/advisory#cloud-native-platform-engineering",
-              icon: "cloud",
-              description: "API-first financial platforms",
-            },
-          ],
-        },
-      ],
-      feature: {
-        eyebrow: "Our approach",
-        title: "One accountable team, boardroom to production.",
-        body: "Advise, architect and build — no handoff gaps between strategy and delivery.",
-        href: "/advisory#approach",
-        cta: "See how we work",
-      },
-    },
   },
   /*
     Products used to sit here as the third top-level item, with a panel of its
@@ -179,55 +143,39 @@ export const primaryNav: NavItem[] = [
     links into its sections. Nothing here claims `/industries` as a `matches`
     prefix, because with no item to light there is nothing to mark current.
   */
-  { label: "Lab", href: "/lab" },
+  { label: "Innovation Lab", href: "/lab" },
   { label: "Partners", href: "/partners" },
   { label: "Insights", href: "/insights" },
   {
+    /*
+      Two links, and they are the two pages that are actually about the
+      company: the company, and the people running it.
+
+      It was a mega-menu of five in two columns — Company (About, Leadership,
+      Careers) and Proof (Areas of Expertise, Ecosystem & Partners, Insights) —
+      with a standfirst and a "View all". The client has cut it to these two.
+
+      Nothing became unreachable. Areas of Expertise is a section of /about,
+      which is the first link here; Partners and Insights are top-level tabs of
+      their own, two inches to the left. Careers is the exception and it is
+      deliberate — it has come off the site entirely since, page and all.
+    */
     label: "About",
     href: "/about",
-    panel: {
-      eyebrow: "About OrbisMoneta",
-      heading: "Where product engineering meets financial expertise.",
-      blurb:
-        "A financial technology company built to close the gap between the ambition to modernize and the capability to execute.",
-      columns: [
-        {
-          title: "Company",
-          links: [
-            {
-              label: "About OrbisMoneta",
-              href: "/about",
-              icon: "building",
-              description: "Story, vision and philosophy",
-            },
-            {
-              label: "Leadership Team",
-              href: "/about/leadership",
-              icon: "user",
-              description: "The people building OrbisMoneta",
-            },
-            {
-              label: "Careers",
-              href: "/about/careers",
-              icon: "target",
-              description: "Join the team",
-            },
-          ],
-        },
-        {
-          title: "Proof",
-          links: [
-            {
-              label: "Areas of Expertise",
-              href: "/about#expertise",
-              icon: "layers",
-            },
-            { label: "Ecosystem & Partners", href: "/partners", icon: "nodes" },
-            { label: "Insights", href: "/insights", icon: "document" },
-          ],
-        },
-      ],
-    },
+    menu: [
+      {
+        label: "About OrbisMoneta",
+        href: "/about",
+        icon: "building",
+        description: "Story, vision and philosophy",
+      },
+      {
+        label: "Leadership Team",
+        href: "/about/leadership",
+        icon: "user",
+        description: "The people building OrbisMoneta",
+      },
+    ],
   },
 ];
 
@@ -313,7 +261,7 @@ export const footerNav = [
     title: "Explore",
     links: [
       { label: "Industries", href: "/industries" },
-      { label: "Lab", href: "/lab" },
+      { label: "Innovation Lab", href: "/lab" },
       { label: "Partners", href: "/partners" },
       { label: "Insights", href: "/insights" },
     ],
@@ -323,7 +271,9 @@ export const footerNav = [
     links: [
       { label: "About OrbisMoneta", href: "/about" },
       { label: "Leadership", href: "/about/leadership" },
-      { label: "Careers", href: "/about/careers" },
+      /* Careers came off the site at the client's request. The page is parked,
+         unrouted, at app/about/_careers — so this is not a link waiting to be
+         uncommented, it is a link that would 404 until that folder is renamed. */
       { label: "Contact", href: "/contact" },
     ],
   },

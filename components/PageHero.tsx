@@ -7,7 +7,23 @@ import { Reveal } from "@/components/Reveal";
 
 export type Crumb = { label: string; href?: string };
 
-export function Breadcrumbs({ items, onDark = false }: { items: Crumb[]; onDark?: boolean }) {
+/**
+ * Parked. Nothing renders this any more — the trail came off every page at the
+ * client's request, so `PageHero` no longer takes a `crumbs` prop and the four
+ * pages that drew their own stopped too.
+ *
+ * Kept rather than deleted because it is a complete, accessible implementation
+ * — `aria-label`, `aria-current`, the last item never a link — and because the
+ * decision it answers is a presentational one that could be taken back. Same
+ * convention as components/ParkedSections.tsx.
+ */
+export function Breadcrumbs({
+  items,
+  onDark = false,
+}: {
+  items: Crumb[];
+  onDark?: boolean;
+}) {
   return (
     <nav aria-label="Breadcrumb">
       <ol className="flex flex-wrap items-center gap-1.5 text-[0.75rem]">
@@ -16,7 +32,9 @@ export function Breadcrumbs({ items, onDark = false }: { items: Crumb[]; onDark?
             href="/"
             className={cn(
               "transition-colors",
-              onDark ? "text-ink-inv-3 hover:text-white" : "text-ink-3 hover:text-navy-600",
+              onDark
+                ? "text-ink-inv-3 hover:text-white"
+                : "text-ink-3 hover:text-navy-600",
             )}
           >
             Home
@@ -26,7 +44,10 @@ export function Breadcrumbs({ items, onDark = false }: { items: Crumb[]; onDark?
           <li key={item.label} className="flex items-center gap-1.5">
             <Icon
               name="chevronRight"
-              className={cn("h-3 w-3", onDark ? "text-ink-inv-3/60" : "text-ink-3/60")}
+              className={cn(
+                "h-3 w-3",
+                onDark ? "text-ink-inv-3/60" : "text-ink-3/60",
+              )}
               strokeWidth={2}
             />
             {item.href && i < items.length - 1 ? (
@@ -34,7 +55,9 @@ export function Breadcrumbs({ items, onDark = false }: { items: Crumb[]; onDark?
                 href={item.href}
                 className={cn(
                   "transition-colors",
-                  onDark ? "text-ink-inv-3 hover:text-white" : "text-ink-3 hover:text-navy-600",
+                  onDark
+                    ? "text-ink-inv-3 hover:text-white"
+                    : "text-ink-3 hover:text-navy-600",
                 )}
               >
                 {item.label}
@@ -83,7 +106,6 @@ export function PageHero({
   title,
   accent,
   intro,
-  crumbs,
   aside,
   actions,
   footer,
@@ -95,7 +117,6 @@ export function PageHero({
   /** A phrase inside `title` to paint in the brand gradient. String titles only. */
   accent?: string;
   intro?: React.ReactNode;
-  crumbs: Crumb[];
   aside?: React.ReactNode;
   actions?: React.ReactNode;
   /** Proof points, stats, a capability strip. Where it lands depends on `split`. */
@@ -109,10 +130,10 @@ export function PageHero({
    * `showcase` — centred, tighter gutter, `footer` tucked under the copy with
    * no rule. For a hero whose artwork carries as much weight as the headline:
    * a full-width footer would otherwise run underneath the artwork rather than
-   * reading as part of the copy. The columns stay 7/5 — an even split starves
-   * a four-up proof strip, which needs about 180px an item before the labels
-   * start breaking mid-word. The artwork makes its size up by bleeding past
-   * the shell instead, which is the caller's business, not this component's.
+   * reading as part of the copy. The columns stay 7/5 rather than even, so the
+   * copy keeps a measure the headline can break on its own terms; the artwork
+   * makes its size up by bleeding past the shell instead, which is the
+   * caller's business, not this component's.
    */
   split?: "default" | "showcase";
   className?: string;
@@ -178,7 +199,14 @@ export function PageHero({
         fill="none"
       >
         {[150, 210, 270].map((r) => (
-          <circle key={r} cx="300" cy="300" r={r} stroke="currentColor" strokeWidth="1" />
+          <circle
+            key={r}
+            cx="300"
+            cy="300"
+            r={r}
+            stroke="currentColor"
+            strokeWidth="1"
+          />
         ))}
         <circle
           cx="300"
@@ -200,14 +228,22 @@ export function PageHero({
         className="pointer-events-none absolute -top-10 -right-16 -z-10 hidden h-[26rem] opacity-[0.045] select-none lg:block"
       />
       <div className="shell">
-        <Reveal kind="fade">
-          <Breadcrumbs items={crumbs} />
-        </Reveal>
+        {/*
+          No `mt` on this grid, and that is the whole of what the breadcrumb's
+          removal changed here. The 32px was the gap between the trail and the
+          copy; with no trail it would be 32px of nothing under the section's
+          own padding. The eyebrow now starts where the trail used to, so the
+          air above the first line of the page is unchanged — 144px of padding,
+          72 of it behind the fixed header, 72 of it visible.
+        */}
         <div
           className={cn(
-            "mt-8 grid gap-10",
+            "grid gap-10",
             aside && "lg:grid-cols-12",
-            aside && (showcase ? "lg:items-center lg:gap-10" : "lg:items-end lg:gap-16"),
+            aside &&
+              (showcase
+                ? "lg:items-center lg:gap-10"
+                : "lg:items-end lg:gap-16"),
           )}
         >
           <div className={cn("flex flex-col gap-5", aside && "lg:col-span-7")}>
@@ -216,7 +252,11 @@ export function PageHero({
             </Reveal>
             <Reveal delay={60}>
               <h1 className="max-w-4xl h-display-2">
-                {accent && typeof title === "string" ? <AccentedTitle title={title} accent={accent} /> : title}
+                {accent && typeof title === "string" ? (
+                  <AccentedTitle title={title} accent={accent} />
+                ) : (
+                  title
+                )}
               </h1>
             </Reveal>
             {intro && (
@@ -227,7 +267,10 @@ export function PageHero({
               </Reveal>
             )}
             {actions && (
-              <Reveal delay={180} className="mt-2 flex flex-wrap items-center gap-3">
+              <Reveal
+                delay={180}
+                className="mt-2 flex flex-wrap items-center gap-3"
+              >
                 {actions}
               </Reveal>
             )}

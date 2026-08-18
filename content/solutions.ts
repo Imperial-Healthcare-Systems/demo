@@ -56,7 +56,10 @@ export const solutionsPage = {
   headlineAccent: "Modern Financial Institutions",
   intro:
     "We combine financial-domain advisory, enterprise architecture, and specialized engineering to deliver resilient, scalable financial infrastructure solutions.",
-  image: "/images/page-solutions.webp",
+  /* The bank on its lit disc, which is the opening's ground now rather than a
+     band under it. It replaced page-solutions.webp; that file is still built by
+     the asset script and nothing else points at it. */
+  image: "/images/solution-landing.webp",
   alt: "A bank at the centre of a connected network of institutions, data stores and payment nodes",
 };
 

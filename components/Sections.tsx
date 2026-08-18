@@ -560,8 +560,12 @@ export function WhyOrbisMoneta() {
           <Reveal kind="left" delay={80} className="lg:col-span-5">
             <div>
               {/*
-                6:5, matching the photograph's own 1.212 so the crop is about
-                one percent.
+                23:19 — the photograph's own 1380x1140 reduced, so `cover` fits
+                it exactly and crops nothing. It was 6:5, which is 1.200 against
+                the picture's 1.2105 and took a hair under 1% off the width; a
+                percent is not much, but the brief on the hero artwork this
+                round was no cuts and no trims, and there is no reason this
+                frame should be the exception.
 
                 This frame used to be `lg:aspect-[5/6]` — portrait, to stand
                 beside the four reason cards. The photograph that replaced the
@@ -572,7 +576,7 @@ export function WhyOrbisMoneta() {
                 next to a taller list is the smaller cost, and the column is
                 sticky, so the height difference is not read as a gap.
               */}
-              <div className="relative aspect-[6/5] overflow-hidden rounded-[var(--radius-card)] shadow-[var(--shadow-card)]">
+              <div className="relative aspect-[23/19] overflow-hidden rounded-[var(--radius-card)] shadow-[var(--shadow-card)]">
                 <Image
                   src={whyOrbisMoneta.image}
                   alt={whyOrbisMoneta.alt}

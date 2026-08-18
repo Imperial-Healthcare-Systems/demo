@@ -30,8 +30,8 @@ export default function NotFound() {
           That page isn&apos;t part of our infrastructure.
         </h1>
         <p className="max-w-xl text-[1.0625rem] leading-relaxed text-ink-inv-2">
-          The address may have changed, or the page may never have existed. Here is where most
-          people are heading.
+          The address may have changed, or the page may never have existed. Here
+          is where most people are heading.
         </p>
 
         <ul className="flex flex-wrap gap-2 pt-1">

@@ -8,12 +8,12 @@ import {
   getRelatedInsights,
 } from "@/content/insights";
 import { site } from "@/content/site";
-import { Breadcrumbs } from "@/components/PageHero";
 import { InsightBody } from "@/components/InsightBody";
 import { InsightCard, InsightCover } from "@/components/InsightCard";
 import { ShareLinks } from "@/components/ShareLinks";
 import { ButtonLink, TextLink } from "@/components/Button";
 import { Icon } from "@/components/Icon";
+import { TimeAgo } from "@/components/TimeAgo";
 import { Reveal } from "@/components/Reveal";
 import { DarkSection, Eyebrow } from "@/components/Section";
 
@@ -40,7 +40,11 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
       ...(insight.publishedAt ? { publishedTime: insight.publishedAt } : {}),
       authors: [insight.author],
     },
-    twitter: { card: "summary_large_image", title: insight.title, description: insight.excerpt },
+    twitter: {
+      card: "summary_large_image",
+      title: insight.title,
+      description: insight.excerpt,
+    },
   };
 }
 
@@ -63,7 +67,10 @@ export default async function InsightPage({ params }: Params) {
     publisher: {
       "@type": "Organization",
       name: site.legalEntity,
-      logo: { "@type": "ImageObject", url: `${site.url}/images/brand/orbismoneta-logo.png` },
+      logo: {
+        "@type": "ImageObject",
+        url: `${site.url}/images/brand/orbismoneta-logo.png`,
+      },
     },
     mainEntityOfPage: url,
     ...(insight.publishedAt ? { datePublished: insight.publishedAt } : {}),
@@ -84,11 +91,7 @@ export default async function InsightPage({ params }: Params) {
             className="pointer-events-none absolute inset-0 -z-10 opacity-50 [background-image:linear-gradient(to_right,rgba(0,46,166,.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,46,166,.05)_1px,transparent_1px)] [background-size:76px_76px] [mask-image:radial-gradient(70%_60%_at_50%_0%,#000,transparent)]"
           />
           <div className="shell">
-            <Breadcrumbs
-              items={[{ label: "Insights", href: "/insights" }, { label: insight.category }]}
-            />
-
-            <div className="mt-8 grid gap-10 lg:grid-cols-12 lg:gap-14">
+            <div className="grid gap-10 lg:grid-cols-12 lg:gap-14">
               <div className="flex flex-col gap-6 lg:col-span-7">
                 <div className="flex flex-wrap items-center gap-2.5">
                   <span className="rounded-full bg-navy-600 px-3 py-1 font-mono text-[0.625rem] uppercase tracking-[0.14em] text-white">
@@ -102,9 +105,7 @@ export default async function InsightPage({ params }: Params) {
                   </span>
                 </div>
 
-                <h1 className="h-display-2 leading-[1.1]">
-                  {insight.title}
-                </h1>
+                <h1 className="h-display-2 leading-[1.1]">{insight.title}</h1>
 
                 <p className="max-w-2xl text-[1.125rem] leading-relaxed text-ink-2">
                   {insight.excerpt}
@@ -112,33 +113,67 @@ export default async function InsightPage({ params }: Params) {
 
                 <div className="flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-line pt-6">
                   <div className="flex items-center gap-3">
-                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-navy-600 font-display text-[0.6875rem] font-bold text-white">
-                      OM
+                    {/* The author's own initials, not a hard-coded "OM".
+                        Nine of these are bylined to OrbisMoneta and read the
+                        same either way; the tenth is bylined to a person, and
+                        an "OM" disc beside "Sanjay Bhoite" was simply wrong. */}
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-navy-600 font-display text-[0.6875rem] font-bold text-white">
+                      {insight.author
+                        .split(/\s+/)
+                        .map((word) => word[0])
+                        .join("")
+                        .slice(0, 2)
+                        .toUpperCase()}
                     </span>
                     <span className="flex flex-col">
-                      <span className="text-[0.875rem] font-medium text-ink">{insight.author}</span>
-                      <span className="text-[0.75rem] text-ink-3">{insight.authorRole}</span>
+                      <span className="text-[0.875rem] font-medium text-ink">
+                        {insight.author}
+                      </span>
+                      <span className="text-[0.75rem] text-ink-3">
+                        {insight.authorRole}
+                      </span>
                     </span>
                   </div>
-                  <span aria-hidden="true" className="hidden h-8 w-px bg-line sm:block" />
+                  <span
+                    aria-hidden="true"
+                    className="hidden h-8 w-px bg-line sm:block"
+                  />
                   <span className="flex items-center gap-2 text-[0.8125rem] text-ink-2">
                     <Icon name="clock" className="h-4 w-4 text-ink-3" />
                     <span className="tabular">{minutes} min read</span>
                   </span>
                   {insight.publishedAt ? (
+                    /* The date, and how long ago that was. `TimeAgo` renders
+                       the absolute date on the server and swaps to a live
+                       relative one on the client, so the pair reads "6 August
+                       2026 · 12 days ago" and stays true however long this
+                       build has been deployed. */
                     <span className="flex items-center gap-2 text-[0.8125rem] text-ink-2">
                       <Icon name="calendar" className="h-4 w-4 text-ink-3" />
                       <time dateTime={insight.publishedAt}>
-                        {new Date(insight.publishedAt).toLocaleDateString("en-GB", {
-                          day: "numeric",
-                          month: "long",
-                          year: "numeric",
-                        })}
+                        {new Date(insight.publishedAt).toLocaleDateString(
+                          "en-GB",
+                          {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          },
+                        )}
                       </time>
+                      <span aria-hidden="true" className="text-ink-3">
+                        ·
+                      </span>
+                      <TimeAgo
+                        date={insight.publishedAt}
+                        className="text-ink-3"
+                      />
                     </span>
                   ) : (
                     <span className="flex items-center gap-2 rounded-full bg-gold-400/12 px-3 py-1 text-[0.75rem] font-medium text-gold-600">
-                      <span className="h-1.5 w-1.5 rounded-full bg-gold-500" aria-hidden="true" />
+                      <span
+                        className="h-1.5 w-1.5 rounded-full bg-gold-500"
+                        aria-hidden="true"
+                      />
                       Draft outline — full copy in preparation
                     </span>
                   )}
@@ -150,7 +185,9 @@ export default async function InsightPage({ params }: Params) {
                   insight={insight}
                   priority
                   sizes="(max-width: 1024px) 100vw, 42vw"
-                  className="aspect-[16/10] w-full overflow-hidden rounded-[var(--radius-card)] shadow-[var(--shadow-card)]"
+                  /* 16:9, the ratio supplied covers arrive in. At 16:10 this
+                     box cropped 5% off each side of the artwork. */
+                  className="aspect-[16/9] w-full overflow-hidden rounded-[var(--radius-card)] shadow-[var(--shadow-card)]"
                 />
               </div>
             </div>
@@ -165,7 +202,9 @@ export default async function InsightPage({ params }: Params) {
                 <InsightBody blocks={insight.body} />
               ) : (
                 <div className="flex flex-col gap-8">
-                  <p className="text-[1.125rem] leading-[1.75] text-ink-2">{insight.excerpt}</p>
+                  <p className="text-[1.125rem] leading-[1.75] text-ink-2">
+                    {insight.excerpt}
+                  </p>
 
                   <div className="flex flex-col gap-5">
                     <h2 className="h-display-4">What this piece covers</h2>
@@ -191,11 +230,14 @@ export default async function InsightPage({ params }: Params) {
                       strokeWidth={1.6}
                     />
                     <div className="flex flex-col gap-1.5">
-                      <h3 className="text-[1rem]">Full article in preparation</h3>
+                      <h3 className="text-[1rem]">
+                        Full article in preparation
+                      </h3>
                       <p className="text-[0.9375rem] leading-relaxed text-ink-2">
-                        The body copy, photography and video for this piece are being finalised
-                        with the OrbisMoneta team. In the meantime, speak to a practitioner
-                        directly about the subject.
+                        The body copy, photography and video for this piece are
+                        being finalised with the OrbisMoneta team. In the
+                        meantime, speak to a practitioner directly about the
+                        subject.
                       </p>
                     </div>
                   </aside>
@@ -225,8 +267,8 @@ export default async function InsightPage({ params }: Params) {
                       {insight.relatedService.label}
                     </h2>
                     <p className="text-[0.875rem] leading-relaxed text-ink-inv-2">
-                      Talk to the practitioners who build and operate this capability for
-                      financial institutions.
+                      Talk to the practitioners who build and operate this
+                      capability for financial institutions.
                     </p>
                     <div className="flex flex-col gap-2.5">
                       <ButtonLink
@@ -249,7 +291,9 @@ export default async function InsightPage({ params }: Params) {
                   <dl className="flex flex-col gap-3 text-[0.8125rem]">
                     <div className="flex items-baseline justify-between gap-4 border-b border-line pb-3">
                       <dt className="text-ink-3">Category</dt>
-                      <dd className="text-right font-medium text-ink">{insight.category}</dd>
+                      <dd className="text-right font-medium text-ink">
+                        {insight.category}
+                      </dd>
                     </div>
                     <div className="flex items-baseline justify-between gap-4 border-b border-line pb-3">
                       <dt className="text-ink-3">Format</dt>
@@ -257,7 +301,9 @@ export default async function InsightPage({ params }: Params) {
                     </div>
                     <div className="flex items-baseline justify-between gap-4">
                       <dt className="text-ink-3">Reading time</dt>
-                      <dd className="tabular font-medium text-ink">{minutes} min</dd>
+                      <dd className="tabular font-medium text-ink">
+                        {minutes} min
+                      </dd>
                     </div>
                   </dl>
                 </div>
