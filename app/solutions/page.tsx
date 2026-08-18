@@ -589,39 +589,26 @@ export default function SolutionsPage() {
             })}
 
             {/*
-              The sixth cell. Five cards in a three-up grid leave one empty, and
-              an empty cell reads as something missing — so the gap carries the
-              page's next step instead. It is a plain card, not a flip card:
-              nothing to turn over, and a card that looked like the others but
-              did not behave like them would be worse than one that plainly does
-              not match.
+              The sixth cell, left empty on purpose.
+
+              Five cards in a three-up grid leave one gap, and the client wants
+              it held rather than filled — a placeholder for the domain that
+              goes there next. It is a plain outline, no copy and no control,
+              `aria-hidden` because there is nothing in it to announce.
+
+              Hidden on a single column, where it would be a blank box under the
+              last card rather than a gap in a row. It only appears from `sm`,
+              which is where the grid starts leaving one.
+
+              Note what left with it: this cell used to carry the pointer to
+              Proprietary Platforms. That is now reachable from the masthead's
+              "Explore Platforms" button, the header menu and the footer, so no
+              route is orphaned — but it is one fewer way in from this section.
             */}
-            <Reveal
-              as="li"
-              delay={solutionDomains.length * 70}
-              className="flex h-full flex-col justify-between gap-6 rounded-[var(--radius-card)] bg-[linear-gradient(160deg,#0a1533,#002583)] p-7 ring-1 ring-navy-800 md:p-8"
-            >
-              <div>
-                <p className="font-mono text-[0.625rem] tracking-[0.18em] text-sky-400 uppercase">
-                  Proprietary Platforms
-                </p>
-                <h3 className="mt-3 text-[1.25rem] leading-snug text-white">
-                  Modular platforms for financial institutions
-                </h3>
-                <p className="mt-3 text-[0.875rem] leading-relaxed text-ink-inv-2">
-                  Purpose-built platforms that the domains above are delivered
-                  on — Digital Currency Hub™ and the Lending Integration Hub.
-                </p>
-              </div>
-              <ButtonLink
-                href="/solutions/platforms"
-                tone="onDarkGhost"
-                icon="arrowRight"
-                className="self-start"
-              >
-                Explore Platforms
-              </ButtonLink>
-            </Reveal>
+            <li
+              aria-hidden="true"
+              className="hidden rounded-[var(--radius-card)] border border-dashed border-line-strong/50 bg-white/30 sm:block"
+            />
           </ul>
         </div>
       </section>

@@ -72,8 +72,8 @@ export const primaryNav: NavItem[] = [
           title: "Functional domains",
           links: [
             {
-              label: "Payment & Rail Infrastructure",
-              href: "/solutions#payment-rail-infrastructure",
+              label: "Payment Infrastructure Modernization",
+              href: "/solutions#payment-infrastructure-modernization",
               icon: "transfer",
               description: "RTGS, payment hubs, ISO 20022, instant rails",
             },
@@ -258,15 +258,34 @@ export const primaryNav: NavItem[] = [
         {
           title: "Company",
           links: [
-            { label: "About OrbisMoneta", href: "/about", icon: "building", description: "Story, vision and philosophy" },
-            { label: "Leadership Team", href: "/about/leadership", icon: "user", description: "The people building OrbisMoneta" },
-            { label: "Careers", href: "/about/careers", icon: "target", description: "Join the team" },
+            {
+              label: "About OrbisMoneta",
+              href: "/about",
+              icon: "building",
+              description: "Story, vision and philosophy",
+            },
+            {
+              label: "Leadership Team",
+              href: "/about/leadership",
+              icon: "user",
+              description: "The people building OrbisMoneta",
+            },
+            {
+              label: "Careers",
+              href: "/about/careers",
+              icon: "target",
+              description: "Join the team",
+            },
           ],
         },
         {
           title: "Proof",
           links: [
-            { label: "Areas of Expertise", href: "/about#expertise", icon: "layers" },
+            {
+              label: "Areas of Expertise",
+              href: "/about#expertise",
+              icon: "layers",
+            },
             { label: "Ecosystem & Partners", href: "/partners", icon: "nodes" },
             { label: "Insights", href: "/insights", icon: "document" },
           ],
@@ -297,10 +316,19 @@ export const footerNav = [
     title: "Solutions",
     links: [
       { label: "All solutions", href: "/solutions" },
-      { label: "Payment & Rail Infrastructure", href: "/solutions#payment-rail-infrastructure" },
-      { label: "Digital Banking & Channels", href: "/solutions#digital-banking-channels" },
+      {
+        label: "Payment Infrastructure Modernization",
+        href: "/solutions#payment-infrastructure-modernization",
+      },
+      {
+        label: "Digital Banking & Channels",
+        href: "/solutions#digital-banking-channels",
+      },
       { label: "Digital Money & CBDC", href: "/solutions#digital-money-cbdc" },
-      { label: "Open Banking & Open Finance", href: "/solutions#open-banking-open-finance" },
+      {
+        label: "Open Banking & Open Finance",
+        href: "/solutions#open-banking-open-finance",
+      },
       {
         label: "Digital Value Interoperability",
         href: "/solutions#digital-value-interoperability",
@@ -311,11 +339,20 @@ export const footerNav = [
     title: "Advisory",
     links: [
       { label: "All services", href: "/advisory" },
-      { label: "Payment Modernization", href: "/advisory#payment-modernization" },
+      {
+        label: "Payment Modernization",
+        href: "/advisory#payment-modernization",
+      },
       { label: "Payment Systems & FMI", href: "/advisory#payment-systems-fmi" },
-      { label: "Cross-Border Payments", href: "/advisory#cross-border-payments" },
+      {
+        label: "Cross-Border Payments",
+        href: "/advisory#cross-border-payments",
+      },
       { label: "Digital Money & CBDCs", href: "/advisory#digital-money-cbdcs" },
-      { label: "AI for Financial Services", href: "/advisory#ai-for-financial-services" },
+      {
+        label: "AI for Financial Services",
+        href: "/advisory#ai-for-financial-services",
+      },
       {
         label: "Cloud-Native Platform Engineering",
         href: "/advisory#cloud-native-platform-engineering",
@@ -330,7 +367,10 @@ export const footerNav = [
         label: "Lending Integration Hub",
         href: "/solutions/platforms#lending-integration-hub",
       },
-      { label: "Digital Currency Hub™", href: "/products/digital-currency-hub" },
+      {
+        label: "Digital Currency Hub™",
+        href: "/products/digital-currency-hub",
+      },
     ],
   },
   {

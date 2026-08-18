@@ -107,38 +107,27 @@ export const disciplines: Discipline[] = [
 /**
  * The functional domains. Five, not the source file's six — see amendment 2.
  *
- * The plates are the ones the previous cards used, re-matched to what each new
- * card is about rather than left in their old order: the dashboard render goes
- * to Channels, the coin to Digital Money, the tokenization cube to Digital
- * Value. They are decorative either way.
+ * The order is the client's, and it is not the source file's: digital money
+ * leads, then the two ecosystem domains, then payments and channels. Array
+ * order is render order, so this is the only place it is set.
+ *
+ * "Payment & Rail Infrastructure" is set here as "Payment Infrastructure
+ * Modernization" at the client's request. Its anchor changed with it —
+ * `#payment-infrastructure-modernization` — and the header menu and footer both
+ * point at the new one.
+ *
+ * The plates are the ones the previous cards used, matched to what each card is
+ * about rather than left in their old order: the dashboard render goes to
+ * Channels, the coin to Digital Money, the tokenization cube to Digital Value.
+ * They are decorative either way.
  */
 export const solutionDomains: SolutionDomain[] = [
-  {
-    id: "payment-rail-infrastructure",
-    tag: "Payments",
-    title: "Payment & Rail Infrastructure",
-    body: "Modernize payment infrastructure with high-throughput ISO 20022 transformation and RTGS hub modernization.",
-    tags: ["RTGS", "Payment Hubs", "ISO 20022", "Instant Rails"],
-    icon: "transfer",
-    image: "/images/solution-playcard/solution-playcard-1.png",
-    cta: { label: "Discuss Payments", href: "/contact" },
-  },
-  {
-    id: "digital-banking-channels",
-    tag: "Channels",
-    title: "Digital Banking & Channels",
-    body: "Transform customer and corporate digital touchpoints through domain-led mobile, web, and API banking engineering.",
-    tags: ["Corporate Cash", "Mobile Banking", "Onboarding", "API Banking"],
-    icon: "phone",
-    image: "/images/solution-playcard/solution-playcard-5.png",
-    cta: { label: "Discuss Channels", href: "/contact" },
-  },
   {
     id: "digital-money-cbdc",
     tag: "Digital Money",
     title: "Digital Money & CBDC",
     body: "Enable commercial banks to participate in retail CBDC and digital-money ecosystems with institutional wallets and token tracking.",
-    tags: ["CBDC Engine", "Wallets", "Token Lifecycle", "HSM Key Mgmt"],
+    tags: ["CBDC Engine", "Wallets", "Token Lifecycle", "HSM Key Management"],
     icon: "coin",
     image: "/images/solution-playcard/solution-playcard-2.png",
     /* The source file points this at its own `#platforms` anchor. The platform
@@ -169,6 +158,26 @@ export const solutionDomains: SolutionDomain[] = [
     icon: "globe",
     image: "/images/solution-playcard/solution-playcard-3.png",
     cta: { label: "Discuss Interoperability", href: "/contact" },
+  },
+  {
+    id: "payment-infrastructure-modernization",
+    tag: "Payments",
+    title: "Payment Infrastructure Modernization",
+    body: "Modernize payment infrastructure with high-throughput ISO 20022 transformation and RTGS hub modernization.",
+    tags: ["RTGS", "Payment Hubs", "ISO 20022", "Instant Rails"],
+    icon: "transfer",
+    image: "/images/solution-playcard/solution-playcard-1.png",
+    cta: { label: "Discuss Payments", href: "/contact" },
+  },
+  {
+    id: "digital-banking-channels",
+    tag: "Channels",
+    title: "Digital Banking & Channels",
+    body: "Transform customer and corporate digital touchpoints through domain-led mobile, web, and API banking engineering.",
+    tags: ["Corporate Cash", "Mobile Banking", "Onboarding", "API Banking"],
+    icon: "phone",
+    image: "/images/solution-playcard/solution-playcard-5.png",
+    cta: { label: "Discuss Channels", href: "/contact" },
   },
 ];
 
