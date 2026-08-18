@@ -57,14 +57,28 @@ export const aboutPage = {
   experience: {
     eyebrow: "Leadership & payment experience",
     slides: [
-      { label: "Experience", value: "30+", unit: "Years", detail: "In payments and financial technology" },
-      { label: "Delivered", value: "75+", unit: "Banks", detail: "Financial institutions and national payment organizations" },
+      {
+        label: "Experience",
+        value: "30+",
+        unit: "Years",
+        detail: "In payments and financial technology",
+      },
+      {
+        label: "Delivered",
+        value: "75+",
+        unit: "Banks",
+        detail: "Financial institutions and national payment organizations",
+      },
       {
         label: "Expertise",
         value: "Multiple Payment Schemes",
         detail: "CBDC, RTGS, EFT, ACH, RTP, UPI, SWIFT, Payment Hub",
       },
-      { label: "Leadership", value: "Global Payment Infrastructure", detail: "Mission-critical systems at enterprise scale" },
+      {
+        label: "Leadership",
+        value: "Global Payment Infrastructure",
+        detail: "Mission-critical systems at enterprise scale",
+      },
     ],
   },
   /**
@@ -73,8 +87,16 @@ export const aboutPage = {
    */
   credentials: [
     { value: "Global", label: "Countries Served", icon: "globe" },
-    { value: "Payments · AI · Digital Assets", label: "Enterprise Platforms", icon: "layers" },
-    { value: "Advisory + Products + Engineering", label: "Delivery Model", icon: "nodes" },
+    {
+      value: "Payments · AI · Digital Assets",
+      label: "Enterprise Platforms",
+      icon: "layers",
+    },
+    {
+      value: "Advisory + Products + Engineering",
+      label: "Delivery Model",
+      icon: "nodes",
+    },
   ],
   expertise: {
     eyebrow: "Area of expertise",
@@ -286,6 +308,9 @@ export const partnersPage = {
  * foot of this object rather than deleted.
  */
 export const labPage = {
+  /* Not rendered. It set "ORBISMONETA" above the headline, which the header
+     lockup and the breadcrumb already say — kept in case the masthead ever
+     wants a label there that is not the brand name again. */
   eyebrow: "OrbisMoneta",
   headline: "Innovation Lab",
   /** The painted word. "Innovation" sets the category, "Lab" is the thing. */
@@ -388,6 +413,76 @@ export const labPage = {
       { title: "Technology Partners", icon: "chip" },
       { title: "Universities & Research Labs", icon: "graduation" },
     ],
+  },
+  /**
+   * Enterprise Impact — the client's own "Customer Value" section, lifted from
+   * `source-assets/Solution-page-contents.html` to the character.
+   *
+   * It closes the Lab page because it is the answer to the question the three
+   * sections above it raise: the Lab researches, prototypes and co-innovates,
+   * and this is what an institution gets out of that. Six verbs, numbered, in
+   * the client's order.
+   */
+  impact: {
+    eyebrow: "Enterprise Impact",
+    heading: "Technology That Creates Business Value",
+    /** The painted phrase. */
+    headingAccent: "Business Value",
+    intro:
+      "Engineered to solve latency, fragmentation, and regulatory friction across mission-critical financial systems.",
+    items: [
+      {
+        num: "01",
+        title: "Modernize",
+        body: "Modernize legacy payment and RTGS infrastructure with high-throughput, ISO 20022-native event-driven microservices.",
+        icon: "refresh",
+      },
+      {
+        num: "02",
+        title: "Connect",
+        body: "Connect existing core banking and ledger systems to emerging digital-money networks and instant clearing switches.",
+        icon: "nodes",
+      },
+      {
+        num: "03",
+        title: "Integrate",
+        body: "Simplify enterprise and partner integration across lending, core banking, credit, and digital channels.",
+        icon: "layers",
+      },
+      {
+        num: "04",
+        title: "Innovate",
+        body: "Develop and deploy new digital financial capabilities, including retail CBDC and programmable money workflows.",
+        icon: "spark",
+      },
+      {
+        num: "05",
+        title: "Scale",
+        body: "Build scalable and modular technology platforms engineered for high throughput and sub-second deterministic finality.",
+        icon: "bars",
+      },
+      {
+        num: "06",
+        title: "Evolve",
+        body: "Prepare financial technology for emerging market needs, regulatory frameworks, and tokenized financial ecosystems.",
+        icon: "rocket",
+      },
+    ],
+  },
+  /**
+   * The bar the page now closes on.
+   *
+   * The Lab had no call to action of its own — every other page ends on one,
+   * and a reader who has just read six reasons to work with the Lab had
+   * nowhere to go but the header. `closing` below is the wording that used to
+   * fill this slot and was cut; this is deliberately plainer, and it points at
+   * the contact page rather than an anchor that does not exist.
+   */
+  connect: {
+    heading: "Connect with OrbisMoneta",
+    body: "Tell us what you are building. We will bring the domain knowledge and the engineering.",
+    cta: "Contact Us",
+    href: "/contact",
   },
   /**
    * The line the design closes on, above its footer bar.

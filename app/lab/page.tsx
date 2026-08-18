@@ -6,6 +6,7 @@ import Image from "next/image";
 import { FlipCard, FlipHint } from "@/components/FlipCard";
 import { PointerSpotlight } from "@/components/PointerSpotlight";
 import { Reveal } from "@/components/Reveal";
+import { ButtonLink } from "@/components/Button";
 
 export const metadata: Metadata = {
   title: "Innovation Lab — Exploring. Experimenting. Engineering the Future.",
@@ -215,20 +216,23 @@ export default function LabPage() {
           */}
           <div className="mt-5 grid gap-8 lg:grid-cols-12 lg:items-center lg:gap-10">
             <div className="lg:col-span-6 xl:col-span-5">
-              <Reveal delay={60}>
-                <p className="font-mono text-[0.75rem] tracking-[0.2em] text-ink-inv-2 uppercase">
-                  {labPage.eyebrow}
-                </p>
-              </Reveal>
+              {/* No eyebrow. It read "ORBISMONETA", which the header's own
+                  lockup says two inches above it and the breadcrumb says again
+                  in between — three statements of the brand before the page
+                  names itself. `labPage.eyebrow` stays in content/about.ts,
+                  unused. The headline takes the top margin the eyebrow was
+                  holding so the block does not shift up. */}
               <Reveal delay={90}>
                 {/*
                   Painted the way the home hero and the product page paint
                   theirs: white above, `text-brand-gradient-inv` on the word that
                   carries the weight — sky-400 into #35d3c0 into green-400.
                 */}
-                <h1 className="h-display-1 mt-2 leading-[1.05] text-white">
+                <h1 className="h-display-1 leading-[1.05] text-white">
                   Innovation{" "}
-                  <span className="text-brand-gradient-inv">{labPage.headlineAccent}</span>
+                  <span className="text-brand-gradient-inv">
+                    {labPage.headlineAccent}
+                  </span>
                 </h1>
               </Reveal>
               <Reveal delay={130}>
@@ -255,7 +259,11 @@ export default function LabPage() {
               enough to lose the corners takes the mid-edges with it, and the
               mid-edges are where every one of this plate's labels sits.
             */}
-            <Reveal delay={220} kind="right" className="lg:col-span-6 xl:col-span-7">
+            <Reveal
+              delay={220}
+              kind="right"
+              className="lg:col-span-6 xl:col-span-7"
+            >
               <Image
                 src="/images/lab_image.png"
                 alt="The Innovation Lab's fields of work as one scene — a CBDC hub ringed by tokenization, programmable money, digital wallets, tokenized assets, financial institutions and API infrastructure"
@@ -330,7 +338,12 @@ export default function LabPage() {
             {labPage.explore.items.map((item, i) => {
               const tone = TONES[i % TONES.length];
               return (
-                <Reveal as="li" key={item.title} delay={i * 60} className="h-full">
+                <Reveal
+                  as="li"
+                  key={item.title}
+                  delay={i * 60}
+                  className="h-full"
+                >
                   <FlipCard
                     label={item.title}
                     minHeight="min-h-[12.5rem]"
@@ -373,10 +386,16 @@ export default function LabPage() {
                         <span
                           className={`flex h-12 w-12 items-center justify-center rounded-xl ring-1 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/flip:scale-110 ${tone.tile} ${tone.hoverTile}`}
                         >
-                          <Icon name={item.icon as IconName} className="h-5 w-5" strokeWidth={1.6} />
+                          <Icon
+                            name={item.icon as IconName}
+                            className="h-5 w-5"
+                            strokeWidth={1.6}
+                          />
                         </span>
 
-                        <h3 className="mt-3.5 text-[1rem] leading-snug">{item.title}</h3>
+                        <h3 className="mt-3.5 text-[1rem] leading-snug">
+                          {item.title}
+                        </h3>
 
                         <span
                           aria-hidden="true"
@@ -406,8 +425,116 @@ export default function LabPage() {
       </section>
 
       {/*
-        The foot of the page, as the design pairs it: the process running wide
-        on the left, co-innovation held in a narrower panel beside it.
+        Enterprise Impact.
+
+        Between what the Lab explores and how it works, at the client's
+        placement — so the page answers "what do we get out of this" while the
+        reader still has the seven fields in mind, and then goes on to how the
+        work is actually done. Six verbs, in the client's own order and words.
+
+        Dark, between two light bands. That is the reason it sits well here as
+        well as the reason it can paint its numerals in the brand gradient,
+        which it could not on canvas: light-dark-light gives the page a rhythm
+        where the previous order ran two light bands together and then went
+        dark only at the very foot.
+      */}
+      <section className="on-dark surface-deep grid-veil section-tight relative isolate overflow-hidden">
+        <div className="shell">
+          <Reveal>
+            <div className="flex flex-col items-center gap-3 text-center">
+              <p className="font-mono text-[0.6875rem] tracking-[0.18em] text-sky-400 uppercase">
+                {labPage.impact.eyebrow}
+              </p>
+              <h2 className="h-display-3 text-white">
+                {labPage.impact.heading.split(labPage.impact.headingAccent)[0]}
+                <span className="text-brand-gradient-inv">
+                  {labPage.impact.headingAccent}
+                </span>
+              </h2>
+              <p className="max-w-3xl text-[0.9375rem] leading-relaxed text-ink-inv-2 md:text-[1rem]">
+                {labPage.impact.intro}
+              </p>
+              <span
+                aria-hidden="true"
+                className="block h-[3px] w-20 rounded-full bg-[linear-gradient(90deg,var(--color-sky-500),var(--color-green-500))]"
+              />
+            </div>
+          </Reveal>
+
+          {/*
+            Six cards, three up.
+
+            The numeral opens the card and the icon closes the row opposite it,
+            rather than the two sitting shoulder to shoulder on the left — that
+            gave the card two marks competing an inch apart and left the top
+            right corner empty. Split, the row frames the card's head.
+          */}
+          <ol className="mt-12 grid auto-rows-fr gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {labPage.impact.items.map((item, i) => (
+              <Reveal
+                as="li"
+                key={item.num}
+                delay={i * 70}
+                className="group/impact relative isolate flex h-full flex-col overflow-hidden rounded-[var(--radius-card)] bg-white/[0.04] p-6 ring-1 ring-white/10 transition-[background-color,translate,--tw-ring-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 hover:bg-white/[0.07] hover:ring-sky-400/35 motion-reduce:hover:translate-y-0 md:p-7"
+              >
+                {/* Draws across the card's head on hover, the same gesture the
+                    disciplines on /solutions use. Under reduced motion it is
+                    simply already drawn. */}
+                <span
+                  aria-hidden="true"
+                  className="absolute inset-x-0 top-0 h-[3px] origin-left scale-x-0 bg-[linear-gradient(90deg,var(--color-sky-500),var(--color-green-400))] transition-[scale] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/impact:scale-x-100 motion-reduce:transition-none motion-reduce:group-hover/impact:scale-x-100"
+                />
+                {/* Colour washing in behind the head — depth, not movement, so
+                    it costs nothing under reduced motion. */}
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(62%_54%_at_14%_0%,rgba(1,164,255,.16),transparent_72%)] opacity-0 transition-opacity duration-500 group-hover/impact:opacity-100"
+                />
+
+                <div className="flex items-center justify-between gap-3">
+                  {/*
+                    `leading-[1.4]`, and it is load-bearing.
+
+                    `text-brand-gradient-inv` paints through `background-clip:
+                    text` with `background-size: auto`, so the gradient only
+                    covers the element's own box. At `leading-none` that box was
+                    28px tall while the glyphs measured 37 — 5px of each numeral
+                    above it and 4px below fell outside the painted area and, with
+                    `-webkit-text-fill-color: transparent` under them, rendered as
+                    nothing at all. The tops looked sliced off. 1.4 gives the box
+                    39px, which contains the ink with room to spare.
+                  */}
+                  <span className="text-brand-gradient-inv font-mono text-[2.125rem] leading-[1.4] font-bold tabular-nums transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/impact:-translate-y-0.5 motion-reduce:transition-none motion-reduce:group-hover/impact:translate-y-0">
+                    {item.num}
+                  </span>
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white/8 text-sky-400 ring-1 ring-white/15 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/impact:bg-sky-500 group-hover/impact:text-white group-hover/impact:ring-sky-500 group-hover/impact:[transform:perspective(520px)_rotateY(-16deg)_scale(1.08)] motion-reduce:transition-none motion-reduce:group-hover/impact:transform-none">
+                    <Icon
+                      name={item.icon as IconName}
+                      className="h-5 w-5"
+                      strokeWidth={1.6}
+                    />
+                  </span>
+                </div>
+
+                <h3 className="mt-4 text-[1.125rem] leading-snug text-white">
+                  {item.title}
+                </h3>
+                <span
+                  aria-hidden="true"
+                  className="mt-2.5 block h-[2px] w-8 rounded-full bg-[linear-gradient(90deg,var(--color-sky-500),var(--color-green-400))] transition-[width] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/impact:w-14"
+                />
+                <p className="mt-3 text-[0.875rem] leading-relaxed text-ink-inv-2">
+                  {item.body}
+                </p>
+              </Reveal>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      {/*
+        The pair, as the design has it: the process running wide on the left,
+        co-innovation held in a narrower panel beside it.
 
         Seven to five of twelve, which is what puts five steps at about 135px
         each and four collaborators at 117px — the proportions the design uses.
@@ -492,7 +619,10 @@ export default function LabPage() {
                               headings in a row read as five categories rather
                               than one sequence. */}
                           <h3 className="text-[0.875rem] leading-snug">
-                            <span className={`tabular ${tone.text}`}>{i + 1}.</span> {step.title}
+                            <span className={`tabular ${tone.text}`}>
+                              {i + 1}.
+                            </span>{" "}
+                            {step.title}
                           </h3>
                           <p className="text-[0.8125rem] leading-relaxed text-ink-2">
                             {step.body}
@@ -554,6 +684,37 @@ export default function LabPage() {
         </div>
       </section>
 
+      {/*
+        The bar the page closes on.
+
+        The Lab was the one page on the site with no ask of its own — a reader
+        who had read the whole thing had nowhere to go but back to the header.
+        It points at /contact rather than at an anchor, because there is no form
+        on this page to jump to.
+      */}
+      <section className="ground-soft bg-surface py-10 md:py-12">
+        <div className="shell">
+          <Reveal className="flex flex-col items-start gap-5 rounded-[2rem] bg-[linear-gradient(100deg,#0a1533,#002583)] px-7 py-8 ring-1 ring-navy-800 md:flex-row md:items-center md:justify-between md:gap-8 md:px-10 md:py-9">
+            <div className="flex flex-col gap-1.5">
+              <h2 className="text-[1.375rem] leading-snug text-white md:text-[1.625rem]">
+                {labPage.connect.heading}
+              </h2>
+              <p className="text-[0.9375rem] leading-relaxed text-ink-inv-2">
+                {labPage.connect.body}
+              </p>
+            </div>
+            <ButtonLink
+              href={labPage.connect.href}
+              tone="onDark"
+              size="lg"
+              icon="arrowRight"
+              className="shrink-0"
+            >
+              {labPage.connect.cta}
+            </ButtonLink>
+          </Reveal>
+        </div>
+      </section>
     </>
   );
 }

@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 /**
  * This page follows the client's product one-pager section for section, in its
  * order, and takes only its wording, including its three-column band —
- * Technology Stack, Deployment Options and Deployment Models sit side by side,
+ * Technology Stack, Deployment Models and Commercial Models sit side by side,
  * each running as its own vertical list, and drop to one column under lg where
  * three tracks would leave about 200px apiece.
  *
@@ -76,7 +76,15 @@ const TONES = [
  * the navy/sky/green ladder resumes on the icon tile beside it. It also keeps
  * white above 4.5:1 on all three, which a solid sky-500 chip (2.6:1) would not.
  */
-const MODEL_NUMERAL = ["bg-navy-600", "bg-navy-600", "bg-green-600"];
+/*
+  One per card, and each has to be the same colour its card already is. This
+  ran navy / navy / green while TONES beneath it runs navy / sky / green — so
+  card 02 wore a navy numeral above a sky icon, a sky label and a sky rule. That
+  was the one place on the page where a card's heading and its line disagreed.
+*/
+const MODEL_NUMERAL = ["bg-navy-600", "bg-sky-500", "bg-green-600"];
+/** Paired with the cards in order: a vault, a hyperscaler, a bank's own floor. */
+const MODEL_ART = ["private", "public", "onprem"] as const;
 
 const productSchema = {
   "@context": "https://schema.org",
@@ -97,26 +105,42 @@ const productSchema = {
  * The banded head above each of the three columns.
  *
  * The design puts the column's opening line inside the navy band rather than in
- * the white below it — for two of the three, anyway; Deployment Options has a
- * head of title alone, which is why `intro` is optional and the bands come out
- * three different heights. Indented past the icon so the line hangs off the
- * title rather than off the band's edge.
+ * the white below it. All three columns now do — the commercial column used to
+ * carry a title alone and keep its opening line in the white underneath, which
+ * left the three navy bands at three different heights and was the only part of
+ * this row that stretching could not square up. `intro` stays optional for a
+ * caller that genuinely has nothing to say. Indented past the icon so the line
+ * hangs off the title rather than off the band's edge.
  *
  * Caps and letterspaced, as the design sets them, but in the site's display
  * face — the mono face is this site's label voice, what `Eyebrow` uses, and
  * these are section titles.
  */
-function PanelHead({ icon, title, intro }: { icon: IconName; title: string; intro?: string }) {
+function PanelHead({
+  icon,
+  title,
+  intro,
+}: {
+  icon: IconName;
+  title: string;
+  intro?: string;
+}) {
   return (
     <div className="bg-[linear-gradient(100deg,var(--color-navy-700),var(--color-navy-600))] px-5 py-4 md:px-6">
       <div className="flex items-center gap-3">
-        <Icon name={icon} className="h-5 w-5 shrink-0 text-sky-400" strokeWidth={1.7} />
+        <Icon
+          name={icon}
+          className="h-5 w-5 shrink-0 text-sky-400"
+          strokeWidth={1.7}
+        />
         <h2 className="text-[0.9375rem] leading-none font-bold tracking-[0.06em] text-white uppercase md:text-[1rem]">
           {title}
         </h2>
       </div>
       {intro && (
-        <p className="mt-2.5 pl-8 text-[0.8125rem] leading-relaxed text-ink-inv-2">{intro}</p>
+        <p className="mt-2.5 pl-8 text-[0.8125rem] leading-relaxed text-ink-inv-2">
+          {intro}
+        </p>
       )}
     </div>
   );
@@ -163,6 +187,97 @@ function EditionArt({ kind }: { kind: "skyline" | "stack" }) {
           <rect x="64" y="92" width="84" height="22" rx="5" />
           <rect x="64" y="121" width="84" height="22" rx="5" />
           <rect x="64" y="150" width="84" height="22" rx="5" />
+        </g>
+      )}
+    </svg>
+  );
+}
+
+/**
+ * The spot illustration each deployment-model card carries, matching the pair
+ * the commercial cards already have.
+ *
+ * Same treatment as `EditionArt`, and for the same reason: the design tucks a
+ * shape into the corner the copy leaves empty, at a tenth of an opacity in the
+ * card's own tone, so it reads as texture and not as a picture. The three model
+ * cards had none, which is what made that column look flatter than the one
+ * beside it once both were squared to the same height.
+ *
+ * Drawn here rather than imported — generic massing shapes carrying no mark, so
+ * nothing of anyone's is being approximated.
+ */
+function ModelArt({ kind }: { kind: "private" | "public" | "onprem" }) {
+  return (
+    <svg
+      viewBox="0 0 200 175"
+      fill="currentColor"
+      aria-hidden="true"
+      /* Smaller and fainter than `EditionArt`, and bled off the corner.
+
+         Those cards are tall and leave their bottom-right genuinely empty; a
+         shape at 13% sits in white space there. These are compact — the copy
+         reaches the corner on all three — so the same treatment put a padlock
+         legibly on top of a sentence. At 6%, cropped by the card's own rounded
+         edge, it is the texture it was meant to be rather than an object
+         competing with the words in front of it. */
+      className="pointer-events-none absolute -right-3 -bottom-3 h-[58%] w-auto max-w-[30%] opacity-[0.06]"
+    >
+      {kind === "private" && (
+        <g>
+          <g opacity="0.5">
+            <circle cx="78" cy="50" r="19" />
+            <circle cx="106" cy="41" r="25" />
+            <circle cx="134" cy="53" r="17" />
+            <rect x="59" y="50" width="92" height="20" rx="10" />
+          </g>
+          <path
+            d="M88 112v-12a17 17 0 0 1 34 0v12"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="9"
+          />
+          <rect x="76" y="110" width="58" height="46" rx="8" />
+        </g>
+      )}
+      {kind === "public" && (
+        <g>
+          <g opacity="0.5">
+            <circle cx="70" cy="54" r="18" />
+            <circle cx="100" cy="44" r="24" />
+            <circle cx="130" cy="56" r="16" />
+            <rect x="52" y="54" width="96" height="20" rx="10" />
+          </g>
+          <rect x="97" y="80" width="6" height="46" rx="3" />
+          <rect
+            x="66"
+            y="92"
+            width="6"
+            height="34"
+            rx="3"
+            transform="rotate(-38 69 109)"
+          />
+          <rect
+            x="128"
+            y="92"
+            width="6"
+            height="34"
+            rx="3"
+            transform="rotate(38 131 109)"
+          />
+          <circle cx="56" cy="140" r="12" />
+          <circle cx="100" cy="140" r="12" />
+          <circle cx="144" cy="140" r="12" />
+        </g>
+      )}
+      {kind === "onprem" && (
+        <g>
+          <g opacity="0.5">
+            <path d="M100 20 182 58H18z" />
+            <rect x="26" y="64" width="148" height="10" rx="3" />
+          </g>
+          <rect x="46" y="88" width="108" height="20" rx="4" />
+          <rect x="46" y="116" width="108" height="20" rx="4" />
+          <rect x="46" y="144" width="108" height="20" rx="4" />
         </g>
       )}
     </svg>
@@ -233,8 +348,24 @@ export default function DigitalCurrencyHubPage() {
             />
           </Reveal>
 
+          {/*
+            Seven columns to the plate and five to the copy, from `xl` — the
+            Lab masthead's split, matched deliberately.
+
+            Measured against it, this hero was placing its artwork at 36% of the
+            section's height where the Lab places its at 53%, and six-and-six
+            was most of the reason. Seven columns plus the bleed below brings it
+            to 41% at 1440 and 54% at 1920, which is the Lab's proportion.
+
+            It costs the headline a line. "Digital Currency Hub" needs about
+            600px to stay on one and five columns of a 1264px shell is 503px, so
+            from `xl` it sets on two. That is a real trade and it is the one
+            being asked for: the Lab's own headline stays on one line only
+            because "Innovation Lab" is short enough to, not because five
+            columns is wide enough for a headline.
+          */}
           <div className="mt-5 grid gap-5 lg:grid-cols-12 lg:items-center lg:gap-8">
-            <div className="lg:col-span-6">
+            <div className="lg:col-span-6 xl:col-span-5">
               <Reveal delay={60}>
                 {/*
                   Painted the way the home hero paints its second line: white
@@ -251,7 +382,8 @@ export default function DigitalCurrencyHubPage() {
                   mid-ramp on a glyph six pixels tall.
                 */}
                 <h1 className="h-display-1 leading-[1.05] text-white">
-                  Digital Currency <span className="text-brand-gradient-inv">Hub</span>
+                  Digital Currency{" "}
+                  <span className="text-brand-gradient-inv">Hub</span>
                   <span className="align-super text-[0.45em]">™</span>
                 </h1>
               </Reveal>
@@ -274,31 +406,95 @@ export default function DigitalCurrencyHubPage() {
               bottom and about 11% each side, so a 9% hold on every edge dissolves
               the box without touching the bank or any of its four labels.
             */}
-            <Reveal delay={200} kind="right" className="lg:col-span-6">
+            <Reveal
+              delay={200}
+              kind="right"
+              className="lg:col-span-6 xl:col-span-7"
+            >
               {/*
-                Sized to the space, now that there is a fixed amount of it.
+                The client's banner, in the masthead's right column.
 
-                While the masthead ended at its content, every pixel of render
-                was a pixel of section, so this was capped tight to the copy's
-                own height to stop it opening a gap. With `min-h-svh` the
-                arithmetic inverts: the height is a full screen either way, and a
-                small render does not shorten the section, it only leaves the
-                surplus as air around the copy. So the cap goes back up — it
-                fills the space that was empty, and the four labels in the render
-                gain cap height in the process — 7.9px when it was sized to the
-                copy, 12.3px now that the pillar strip has given back 75px of the
-                screen it was using.
+                It is a landscape plate — 1824x862, against the 1402x1122 render
+                that stood here before — so it is given the column's full width
+                and takes its own height from that rather than being capped to
+                the copy's.
+
+                What it costs is worth stating plainly: its six labels are 20px
+                glyph runs across 1824px, so at the ~736px this column can give
+                them they paint near 8px. They are texture here, not reading
+                matter. The render they replaced set its four labels at 12.3px.
+                Nothing about the column can fix that — the plate needs about
+                1000px before that type clears 11px, which is a full-width band
+                and not a half of one. The page still names all six fields in
+                text further down, so nothing is only in the picture.
+
+                The feather is the plate's own, not the old one's: this artwork
+                is drawn to its edges with 27px clear on the left and 31px on
+                the right, so the hold is 2%. The 9% the render used would have
+                dissolved a label.
               */}
-              <div className="mx-auto w-full max-w-[20rem] animate-[om-float_11s_var(--ease-in-out-soft)_infinite] motion-reduce:animate-none sm:max-w-[28rem] lg:max-w-[32rem] xl:max-w-[40rem]">
+              <div className="relative mx-auto w-full animate-[om-float_11s_var(--ease-in-out-soft)_infinite] motion-reduce:animate-none min-[1424px]:w-[calc(100%+(100vw-1264px)/2-1.5rem)]">
+                {/*
+                  The plate runs past the shell, into the margin a wide screen
+                  leaves empty.
+
+                  Its column is 616px and its labels are 20px glyph runs across
+                  1824px, so in-column they paint at 6.8px. The room to fix that
+                  is not inside the grid — it is the gutter either side of a
+                  1264px shell, which on a 1920px screen is 328px of nothing.
+
+                  `(100vw - 1264px) / 2` is exactly that gutter, the shell being
+                  centred and capped at 1264px of content from 1424px up; less
+                  1.5rem so the plate stops short of the screen edge instead of
+                  touching it. It scales with the display — 680px at 1440, 920px
+                  at 1920, 1240px at 2560, where the labels finally clear 13px.
+                  Below 1424 the cap no longer holds and the arithmetic would be
+                  wrong, so the bleed does not apply there.
+                */}
+                {/*
+                  Blended, not framed — and the frame was covering for the wrong
+                  diagnosis.
+
+                  Sampled at its own edges the plate's ground is rgb(0,4,38),
+                  which is *darker* than the masthead's rgb(3,13,34), not
+                  lighter as assumed. The rectangle was not the plate standing
+                  out against the section; it was the section's aurora lighting
+                  the area around a plate darker than it. The ring and shadow
+                  then drew that boundary deliberately.
+
+                  So: a pool of the plate's own ground, extended well past it,
+                  which removes the step entirely — the tone ramps from the
+                  section into the plate instead of meeting it at an edge. The
+                  feather then only has to soften what is left.
+
+                  That feather is asymmetric because the artwork is, and the
+                  numbers matter: measured at a threshold low enough to catch
+                  background sparkle, the left edge looks 0.66% clear and cannot
+                  be faded at all. Measured at the first *sustained* run of real
+                  subject — six consecutive columns, which is an icon or a
+                  letter rather than a speck — it is 3.95% clear on the left and
+                  4.71% on the right. The first reading bought a 3px fade that
+                  hid nothing; the second allows 24px.
+
+                  Holds sit just inside each: 6% top (against 7.89% clear), 3%
+                  left, 3.5% right, and 1.1% at the bottom, which is the one
+                  genuinely tight edge — the pedestal's glow runs to within
+                  1.5% of it — and also the one that needs a feather least,
+                  since that glow already fades on its own.
+                */}
+                <div
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -inset-x-16 -inset-y-12 -z-10 bg-[radial-gradient(closest-side,#000426_58%,rgba(0,4,38,.6)_80%,transparent_100%)]"
+                />
                 <Image
-                  src={dch.heroArt.src}
-                  alt={dch.heroArt.alt}
-                  width={1402}
-                  height={1122}
+                  src={dch.banner.src}
+                  alt={dch.banner.alt}
+                  width={1824}
+                  height={862}
                   priority
                   quality={82}
-                  sizes="(min-width: 1024px) 46vw, 92vw"
-                  className="h-auto w-full select-none [mask-composite:intersect] [mask-image:linear-gradient(180deg,transparent_0%,#000_9%,#000_91%,transparent_100%),linear-gradient(90deg,transparent_0%,#000_9%,#000_91%,transparent_100%)]"
+                  sizes="(min-width: 1424px) calc(50vw + 12rem), (min-width: 1024px) 56vw, 92vw"
+                  className="h-auto w-full select-none [mask-composite:intersect] [mask-image:linear-gradient(180deg,transparent_0%,#000_6%,#000_98.9%,transparent_100%),linear-gradient(90deg,transparent_0%,#000_3%,#000_96.5%,transparent_100%)]"
                 />
               </div>
             </Reveal>
@@ -318,8 +514,12 @@ export default function DigitalCurrencyHubPage() {
                       screen; on one line it is 60, and the height it gives back
                       goes to the render. Still outlined — a ring rather than a
                       fill, so the four read as a set and not as four buttons. */}
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sky-400 ring-1 ring-white/20 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/item:scale-110 group-hover/item:text-white group-hover/item:ring-sky-400">
-                    <Icon name={pillar.icon as IconName} className="h-[1.1rem] w-[1.1rem]" strokeWidth={1.6} />
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-sky-400 ring-1 ring-white/20 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/item:scale-110 group-hover/item:text-white group-hover/item:ring-sky-400 md:h-14 md:w-14">
+                    <Icon
+                      name={pillar.icon as IconName}
+                      className="h-[1.375rem] w-[1.375rem] md:h-[1.625rem] md:w-[1.625rem]"
+                      strokeWidth={1.6}
+                    />
                   </span>
                   <span className="flex min-w-0 flex-col gap-1">
                     <span className="text-[0.875rem] leading-snug font-semibold text-white">
@@ -393,7 +593,9 @@ export default function DigitalCurrencyHubPage() {
                         />
                       </span>
 
-                      <h3 className="text-[0.9375rem] leading-snug">{capability.title}</h3>
+                      <h3 className="text-[0.9375rem] leading-snug">
+                        {capability.title}
+                      </h3>
 
                       {/* Short rule under the title, then the full-width bar at
                           the foot — both in the card's own tone, which is what
@@ -423,8 +625,8 @@ export default function DigitalCurrencyHubPage() {
 
             An earlier pass split this two-up-plus-one because the middle column
             was carrying 660px of dead white: a grid row is only ever as short
-            as its tallest member, and nothing inside Deployment Options grew to
-            meet it. The answer was not to break the row but to let its contents
+            as its tallest member, and nothing inside the commercial column grew
+            to meet it. The answer was not to break the row but to let its contents
             claim it — every list here is now `flex-1` and every card inside is
             too, so a column with two cards gives each of them half the height
             rather than leaving the remainder blank. That is what the design
@@ -438,67 +640,173 @@ export default function DigitalCurrencyHubPage() {
           <div className="grid items-stretch gap-5 lg:grid-cols-3">
             {/* Technology stack */}
             <Reveal>
-            <Panel>
-              <PanelHead
-                icon="layers"
-                title={dch.technology.eyebrow}
-                intro={dch.technology.intro}
-              />
-              <div className="flex flex-1 flex-col px-4 py-5 xl:px-5">
-                {/* One per row, as the design lists them, hairline-ruled between
+              <Panel>
+                <PanelHead
+                  icon="layers"
+                  title={dch.technology.eyebrow}
+                  intro={dch.technology.intro}
+                />
+                <div className="flex flex-1 flex-col px-4 py-5 xl:px-5">
+                  {/* One per row, as the design lists them, hairline-ruled between
                     but not above the first — the band is already the boundary. */}
-                <ul className="flex flex-1 flex-col">
-                  {dch.technology.items.map((item, i) => {
-                    const tone = TONES[i % TONES.length];
-                    return (
-                      <li
-                        key={item.title}
-                        className="group/item flex flex-1 items-center gap-3 border-t border-line py-3.5 first:border-t-0"
-                      >
-                        <span
-                          className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ring-1 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/item:scale-110 group-hover/item:[transform:perspective(520px)_rotateY(-12deg)] ${tone.tile} ${tone.hoverTile}`}
+                  <ul className="flex flex-1 flex-col">
+                    {dch.technology.items.map((item, i) => {
+                      const tone = TONES[i % TONES.length];
+                      return (
+                        <li
+                          key={item.title}
+                          className="group/item flex flex-1 items-center gap-3 border-t border-line py-3.5 first:border-t-0"
                         >
-                          <Icon name={item.icon as IconName} className="h-5 w-5" strokeWidth={1.6} />
-                        </span>
-                        <div className="flex min-w-0 flex-1 flex-col gap-1">
-                          <h3 className="text-[0.875rem] leading-snug">{item.title}</h3>
-                          <p className="text-[0.8125rem] leading-relaxed text-ink-2">{item.body}</p>
-                        </div>
-                      </li>
-                    );
-                  })}
-                </ul>
+                          <span
+                            className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ring-1 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/item:scale-110 group-hover/item:[transform:perspective(520px)_rotateY(-12deg)] ${tone.tile} ${tone.hoverTile}`}
+                          >
+                            <Icon
+                              name={item.icon as IconName}
+                              className="h-5 w-5"
+                              strokeWidth={1.6}
+                            />
+                          </span>
+                          <div className="flex min-w-0 flex-1 flex-col gap-1">
+                            <h3 className="text-[0.875rem] leading-snug">
+                              {item.title}
+                            </h3>
+                            <p className="text-[0.8125rem] leading-relaxed text-ink-2">
+                              {item.body}
+                            </p>
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ul>
 
-                {/* The tinted footnote the design closes the column on. Shield
+                  {/* The tinted footnote the design closes the column on. Shield
                     rather than tick, and set in ink at semibold — it is a claim
                     about the build, not another list row. */}
-                <div className="mt-4 flex items-start gap-3 rounded-[1.25rem] bg-navy-50/70 px-4 py-3.5 ring-1 ring-navy-100">
-                  <Icon
-                    name="shield"
-                    className="mt-0.5 h-4 w-4 shrink-0 text-navy-600"
-                    strokeWidth={1.8}
-                  />
-                  <p className="text-[0.8125rem] leading-relaxed font-semibold text-ink">
-                    {dch.technology.note}
-                  </p>
+                  <div className="mt-4 flex items-start gap-3 rounded-[1.25rem] bg-navy-50/70 px-4 py-3.5 ring-1 ring-navy-100">
+                    <Icon
+                      name="shield"
+                      className="mt-0.5 h-4 w-4 shrink-0 text-navy-600"
+                      strokeWidth={1.8}
+                    />
+                    <p className="text-[0.8125rem] leading-relaxed font-semibold text-ink">
+                      {dch.technology.note}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </Panel>
-          </Reveal>
+              </Panel>
+            </Reveal>
 
-          {/* Deployment options */}
-          <Reveal>
-            <Panel>
-              <PanelHead icon="cloud" title={dch.deployment.eyebrow} />
-              <div className="flex flex-1 flex-col px-4 py-5 xl:px-5">
-                <h3 className="text-[1.0625rem] leading-snug">
-                  {dch.deployment.lead}
-                </h3>
-                <p className="mt-2.5 text-[0.8125rem] leading-relaxed text-ink-2">
-                  {dch.deployment.body}
-                </p>
+            {/* Deployment models — where it runs */}
+            <Reveal>
+              <Panel>
+                <PanelHead
+                  icon="nodes"
+                  title={dch.deployment.modelDetail.eyebrow}
+                  intro={dch.deployment.modelDetail.intro}
+                />
+                <div className="flex flex-1 flex-col px-4 py-5 xl:px-5">
+                  <ol className="flex flex-1 flex-col gap-3">
+                    {dch.deployment.modelDetail.items.map((model, i) => {
+                      const tone = TONES[i % TONES.length];
+                      return (
+                        <li
+                          key={model.title}
+                          className={`group/item relative flex flex-col gap-3 overflow-hidden rounded-[1.25rem] p-3.5 ring-1 xl:p-4 transition-[transform,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 motion-reduce:hover:translate-y-0 ${tone.wash} ${tone.ring} ${tone.lift}`}
+                        >
+                          <span
+                            aria-hidden="true"
+                            className={`absolute inset-x-0 top-0 h-[3px] origin-left scale-x-0 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/item:scale-x-100 ${tone.bar}`}
+                          />
+                          <span className={tone.label}>
+                            <ModelArt kind={MODEL_ART[i % MODEL_ART.length]} />
+                          </span>
 
-                {/*
+                          {/* Numeral, icon and the title/body sit on one row; the
+                            blocks beneath run the card's width, indented past
+                            the numeral only. That is the design's own alignment
+                            and it is also what the vendor pills need — held in
+                            the title's column they wrap onto a second line and
+                            take the whole row's height with them. */}
+                          <div className="flex gap-3">
+                            <div className="flex shrink-0 gap-2">
+                              <span
+                                className={`flex h-10 w-10 items-center justify-center rounded-xl font-display text-[1.0625rem] leading-none font-bold text-white tabular xl:h-11 xl:w-11 xl:text-[1.1875rem] ${MODEL_NUMERAL[i % MODEL_NUMERAL.length]}`}
+                              >
+                                {String(i + 1).padStart(2, "0")}
+                              </span>
+                              <span
+                                className={`flex h-10 w-10 items-center justify-center rounded-xl ring-1 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/item:scale-110 group-hover/item:[transform:perspective(520px)_rotateY(-12deg)] xl:h-11 xl:w-11 ${tone.tile} ${tone.hoverTile}`}
+                              >
+                                <Icon
+                                  name={model.icon as IconName}
+                                  className="h-5 w-5"
+                                  strokeWidth={1.6}
+                                />
+                              </span>
+                            </div>
+
+                            <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+                              {/* Coloured, like the commercial cards' headings
+                                opposite. Those set their name in the card's own
+                                green or blue; these were plain ink, so the two
+                                columns treated an identical element two ways. */}
+                              <h3
+                                className={`text-[0.9375rem] leading-snug ${tone.label}`}
+                              >
+                                {model.title}
+                              </h3>
+                              <p className="text-[0.8125rem] leading-relaxed text-ink-2">
+                                {model.body}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="flex flex-col gap-3 pl-[2.875rem] xl:pl-[3.375rem]">
+                            {"environments" in model && model.environments && (
+                              <div className="flex flex-col gap-2">
+                                <p
+                                  className={`font-mono text-[0.6875rem] tracking-[0.14em] uppercase ${tone.label}`}
+                                >
+                                  Supported environments
+                                </p>
+                                <ul className="flex flex-wrap items-center gap-2">
+                                  {model.environments.map((env) => (
+                                    <li key={env.name}>
+                                      <VendorWordmark
+                                        name={env.name}
+                                        logo={env.logo ?? undefined}
+                                      />
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+                            )}
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ol>
+                </div>
+              </Panel>
+            </Reveal>
+            {/* Commercial models — how it is bought */}
+            <Reveal>
+              <Panel>
+                {/* `intro`, like the other two. This head used to carry a title
+                  alone while its opening line sat in the white below, which is
+                  what made the three navy bands three different heights — the
+                  one thing on this row that could not be made to line up by
+                  stretching anything. `dch.deployment.lead` is no longer set:
+                  it read "Flexible Deployment to Match Your Strategy", which
+                  belongs to the models column now that this one is Commercial
+                  Models. It stays in content/product.ts, unused. */}
+                <PanelHead
+                  icon="cloud"
+                  title={dch.deployment.eyebrow}
+                  intro={dch.deployment.intro}
+                />
+                <div className="flex flex-1 flex-col px-4 py-5 xl:px-5">
+                  {/*
                   The design outlines these two in different colours — green for
                   the licensed edition, blue for the hosted one — and that
                   outline is the only thing separating them, so it is kept and
@@ -510,167 +818,66 @@ export default function DigitalCurrencyHubPage() {
                   design's alignment, and it is also why the copy does not wrap
                   around a circle it has no business wrapping around.
                 */}
-                <ul className="mt-4 flex flex-1 flex-col gap-3">
-                  {dch.deployment.editions.map((edition, i) => {
-                    const licence = i === 0;
-                    const outline = licence
-                      ? "ring-green-500/40 hover:ring-green-500/70"
-                      : "ring-sky-500/40 hover:ring-sky-500/70";
-                    const wash = licence
-                      ? "bg-[linear-gradient(165deg,#ffffff_55%,rgba(1,172,50,.06))]"
-                      : "bg-[linear-gradient(165deg,#ffffff_55%,rgba(1,164,255,.07))]";
-                    const disc = licence
-                      ? "bg-[radial-gradient(circle,rgba(1,172,50,.16),rgba(1,172,50,.06))] text-green-600"
-                      : "bg-[radial-gradient(circle,rgba(1,164,255,.18),rgba(1,164,255,.06))] text-sky-600";
-                    const heading = licence ? "text-green-600" : "text-sky-600";
-                    return (
-                      <li
-                        key={edition.name}
-                        className={`group/item relative flex flex-1 flex-col overflow-hidden rounded-[1.25rem] p-5 ring-1 transition-[transform,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1.5 motion-reduce:hover:translate-y-0 ${wash} ${outline}`}
-                      >
-                        <span className={licence ? "text-green-600" : "text-sky-600"}>
-                          <EditionArt kind={licence ? "skyline" : "stack"} />
-                        </span>
-
-                        <div className="relative grid grid-cols-[auto_1fr] items-center gap-x-4 gap-y-3">
+                  <ul className="flex flex-1 flex-col gap-3">
+                    {dch.deployment.editions.map((edition, i) => {
+                      const licence = i === 0;
+                      const outline = licence
+                        ? "ring-green-500/40 hover:ring-green-500/70"
+                        : "ring-sky-500/40 hover:ring-sky-500/70";
+                      const wash = licence
+                        ? "bg-[linear-gradient(165deg,#ffffff_55%,rgba(1,172,50,.06))]"
+                        : "bg-[linear-gradient(165deg,#ffffff_55%,rgba(1,164,255,.07))]";
+                      const disc = licence
+                        ? "bg-[radial-gradient(circle,rgba(1,172,50,.16),rgba(1,172,50,.06))] text-green-600"
+                        : "bg-[radial-gradient(circle,rgba(1,164,255,.18),rgba(1,164,255,.06))] text-sky-600";
+                      const heading = licence
+                        ? "text-green-600"
+                        : "text-sky-600";
+                      return (
+                        <li
+                          key={edition.name}
+                          className={`group/item relative flex flex-1 flex-col overflow-hidden rounded-[1.25rem] p-5 ring-1 transition-[transform,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1.5 motion-reduce:hover:translate-y-0 ${wash} ${outline}`}
+                        >
                           <span
-                            className={`flex h-14 w-14 items-center justify-center rounded-full transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/item:scale-110 ${disc}`}
+                            className={
+                              licence ? "text-green-600" : "text-sky-600"
+                            }
                           >
-                            <Icon
-                              name={licence ? "layers" : "cloud"}
-                              className="h-6 w-6"
-                              strokeWidth={1.6}
-                            />
+                            <EditionArt kind={licence ? "skyline" : "stack"} />
                           </span>
 
-                          <h4
-                            className={`text-[0.9375rem] leading-tight font-bold tracking-[0.05em] uppercase ${heading}`}
-                          >
-                            {edition.name}
-                            {edition.aside && (
-                              <span className="mt-0.5 block text-[0.8125rem]">
-                                ({edition.aside})
-                              </span>
-                            )}
-                          </h4>
-
-                          <p className="col-start-2 text-[0.8125rem] leading-relaxed text-ink-2">
-                            {edition.body}
-                          </p>
-                        </div>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </div>
-            </Panel>
-          </Reveal>
-
-            {/* Deployment models */}
-            <Reveal>
-            <Panel>
-              <PanelHead
-                icon="nodes"
-                title={dch.deployment.modelDetail.eyebrow}
-                intro={dch.deployment.modelDetail.intro}
-              />
-              <div className="flex flex-1 flex-col px-4 py-5 xl:px-5">
-                <ol className="flex flex-1 flex-col gap-3">
-                  {dch.deployment.modelDetail.items.map((model, i) => {
-                    const tone = TONES[i % TONES.length];
-                    return (
-                      <li
-                        key={model.title}
-                        className={`group/item relative flex flex-col gap-3 overflow-hidden rounded-[1.25rem] p-3.5 ring-1 xl:p-4 transition-[transform,box-shadow] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-1 motion-reduce:hover:translate-y-0 ${tone.wash} ${tone.ring} ${tone.lift}`}
-                      >
-                        <span
-                          aria-hidden="true"
-                          className={`absolute inset-x-0 top-0 h-[3px] origin-left scale-x-0 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/item:scale-x-100 ${tone.bar}`}
-                        />
-
-                        {/* Numeral, icon and the title/body sit on one row; the
-                            blocks beneath run the card's width, indented past
-                            the numeral only. That is the design's own alignment
-                            and it is also what the vendor pills need — held in
-                            the title's column they wrap onto a second line and
-                            take the whole row's height with them. */}
-                        <div className="flex gap-3">
-                          <div className="flex shrink-0 gap-2">
+                          <div className="relative grid grid-cols-[auto_1fr] items-center gap-x-4 gap-y-3">
                             <span
-                              className={`flex h-10 w-10 items-center justify-center rounded-xl font-display text-[1.0625rem] leading-none font-bold text-white tabular xl:h-11 xl:w-11 xl:text-[1.1875rem] ${MODEL_NUMERAL[i % MODEL_NUMERAL.length]}`}
-                            >
-                              {String(i + 1).padStart(2, "0")}
-                            </span>
-                            <span
-                              className={`flex h-10 w-10 items-center justify-center rounded-xl ring-1 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/item:scale-110 group-hover/item:[transform:perspective(520px)_rotateY(-12deg)] xl:h-11 xl:w-11 ${tone.tile} ${tone.hoverTile}`}
+                              className={`flex h-14 w-14 items-center justify-center rounded-full transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/item:scale-110 ${disc}`}
                             >
                               <Icon
-                                name={model.icon as IconName}
-                                className="h-5 w-5"
+                                name={licence ? "layers" : "cloud"}
+                                className="h-6 w-6"
                                 strokeWidth={1.6}
                               />
                             </span>
-                          </div>
 
-                          <div className="flex min-w-0 flex-1 flex-col gap-1.5">
-                            <h3 className="text-[0.9375rem] leading-snug">{model.title}</h3>
-                            <p className="text-[0.8125rem] leading-relaxed text-ink-2">
-                              {model.body}
-                            </p>
-                          </div>
-                        </div>
-
-                        <div className="flex flex-col gap-3 pl-[2.875rem] xl:pl-[3.375rem]">
-                          {"environments" in model && model.environments && (
-                            <div className="flex flex-col gap-2">
-                              <p
-                                className={`font-mono text-[0.6875rem] tracking-[0.14em] uppercase ${tone.label}`}
-                              >
-                                Supported environments
-                              </p>
-                              <ul className="flex flex-wrap items-center gap-2">
-                                {model.environments.map((env) => (
-                                  <li key={env.name}>
-                                    <VendorWordmark name={env.name} logo={env.logo ?? undefined} />
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          )}
-
-                          {/* The label takes the card's tone, as the design has
-                              it — green on the third, blue on the first two —
-                              which is what tells the three apart at a glance
-                              once you are past the numeral. */}
-                          <div className="flex flex-col gap-1.5">
-                            <p
-                              className={`font-mono text-[0.6875rem] tracking-[0.14em] uppercase ${tone.label}`}
+                            <h4
+                              className={`text-[0.9375rem] leading-tight font-bold tracking-[0.05em] uppercase ${heading}`}
                             >
-                              Best suited for
+                              {edition.name}
+                              {edition.aside && (
+                                <span className="mt-0.5 block text-[0.8125rem]">
+                                  ({edition.aside})
+                                </span>
+                              )}
+                            </h4>
+
+                            <p className="col-start-2 text-[0.8125rem] leading-relaxed text-ink-2">
+                              {edition.body}
                             </p>
-                            <ul className="flex flex-col gap-1">
-                              {model.bestFor.map((audience) => (
-                                <li
-                                  key={audience}
-                                  className="flex items-start gap-2 text-[0.75rem] leading-snug text-ink-2"
-                                >
-                                  <Icon
-                                    name="check"
-                                    className={`mt-0.5 h-3.5 w-3.5 shrink-0 ${tone.check}`}
-                                    strokeWidth={2.6}
-                                  />
-                                  {audience}
-                                </li>
-                              ))}
-                            </ul>
                           </div>
-                        </div>
-                      </li>
-                    );
-                  })}
-                </ol>
-              </div>
-            </Panel>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              </Panel>
             </Reveal>
           </div>
         </div>
@@ -729,7 +936,9 @@ export default function DigitalCurrencyHubPage() {
             <div className="flex flex-col items-center gap-2.5 text-center">
               <h2 className="h-display-3">
                 One Platform.{" "}
-                <span className="text-brand-gradient">Endless Possibilities.</span>
+                <span className="text-brand-gradient">
+                  Endless Possibilities.
+                </span>
               </h2>
               <p className="max-w-2xl text-[0.9375rem] leading-relaxed text-ink-2 md:text-[1rem]">
                 {dch.architecture.subline}
@@ -776,12 +985,16 @@ export default function DigitalCurrencyHubPage() {
                   the only place on the page carrying these six relationships,
                   and alt text alone would not hold them. */}
               <figcaption className="sr-only">
-                {dch.architecture.top.title} — {dch.architecture.top.body} — connects by{" "}
-                {dch.architecture.top.note.toLowerCase()} to the {dch.architecture.centre.brand}{" "}
-                {dch.architecture.centre.title}, {dch.architecture.centre.body}.{" "}
-                {dch.architecture.bank.title}: {dch.architecture.bank.body} It serves{" "}
+                {dch.architecture.top.title} — {dch.architecture.top.body} —
+                connects by {dch.architecture.top.note.toLowerCase()} to the{" "}
+                {dch.architecture.centre.brand} {dch.architecture.centre.title},{" "}
+                {dch.architecture.centre.body}. {dch.architecture.bank.title}:{" "}
+                {dch.architecture.bank.body} It serves{" "}
                 {dch.architecture.participants
-                  .map((participant) => `${participant.title} — ${participant.body}`)
+                  .map(
+                    (participant) =>
+                      `${participant.title} — ${participant.body}`,
+                  )
                   .join(" ")}
               </figcaption>
             </figure>
@@ -807,7 +1020,11 @@ export default function DigitalCurrencyHubPage() {
                 }`}
               >
                 <span className="flex h-11 w-11 items-center justify-center rounded-full text-green-400 ring-1 ring-white/20 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover/item:scale-110 group-hover/item:text-white group-hover/item:ring-green-400">
-                  <Icon name={attribute.icon as IconName} className="h-5 w-5" strokeWidth={1.6} />
+                  <Icon
+                    name={attribute.icon as IconName}
+                    className="h-5 w-5"
+                    strokeWidth={1.6}
+                  />
                 </span>
                 <span className="text-[0.9375rem] leading-snug font-semibold text-white">
                   {attribute.title}
@@ -843,7 +1060,11 @@ export default function DigitalCurrencyHubPage() {
                   {dch.closingBar.line}
                 </p>
               </div>
-              <ButtonLink href="/contact" icon="arrowRight" className="shrink-0">
+              <ButtonLink
+                href="/contact"
+                icon="arrowRight"
+                className="shrink-0"
+              >
                 {dch.closingBar.cta}
               </ButtonLink>
             </div>

@@ -28,7 +28,11 @@ export const digitalCurrencyHub = {
       body: "Built with privacy, compliance and resilience.",
       icon: "shield",
     },
-    { title: "Interoperable", body: "Works across networks, rails and systems.", icon: "nodes" },
+    {
+      title: "Interoperable",
+      body: "Works across networks, rails and systems.",
+      icon: "nodes",
+    },
     {
       title: "Scalable",
       body: "Enterprise-grade infrastructure for unlimited scale.",
@@ -93,12 +97,36 @@ export const digitalCurrencyHub = {
       },
     ],
     attributes: [
-      { title: "Secure", body: "Enterprise-grade security and data protection.", icon: "shield" },
-      { title: "Compliant", body: "Built for regulatory compliance and auditability.", icon: "check" },
-      { title: "Scalable", body: "Cloud-native platform built to scale with growing demand.", icon: "layers" },
-      { title: "Interoperable", body: "Seamless integration with existing systems and ecosystems.", icon: "nodes" },
-      { title: "Intelligent", body: "Real-time monitoring, analytics and operational insights.", icon: "spark" },
-      { title: "Open & Flexible", body: "API-first architecture for innovation and ecosystem enablement.", icon: "code" },
+      {
+        title: "Secure",
+        body: "Enterprise-grade security and data protection.",
+        icon: "shield",
+      },
+      {
+        title: "Compliant",
+        body: "Built for regulatory compliance and auditability.",
+        icon: "check",
+      },
+      {
+        title: "Scalable",
+        body: "Cloud-native platform built to scale with growing demand.",
+        icon: "layers",
+      },
+      {
+        title: "Interoperable",
+        body: "Seamless integration with existing systems and ecosystems.",
+        icon: "nodes",
+      },
+      {
+        title: "Intelligent",
+        body: "Real-time monitoring, analytics and operational insights.",
+        icon: "spark",
+      },
+      {
+        title: "Open & Flexible",
+        body: "API-first architecture for innovation and ecosystem enablement.",
+        icon: "code",
+      },
     ],
     footer: {
       title: "Secure. Interoperable. Future-Ready.",
@@ -158,7 +186,7 @@ export const digitalCurrencyHub = {
     },
     {
       title: "APIs & Integration",
-      body: "RESTful APIs and SDKs for seamless bank and fintech integrations.",
+      body: "RESTful APIs and SDKs for seamless bank, merchant, corporate, government and PSP integrations.",
       icon: "chip",
     },
   ],
@@ -207,7 +235,11 @@ export const digitalCurrencyHub = {
     ],
     note: "Designed for mission-critical, vault-like reliability and deployed with regulated financial environments.",
   },
-  designedFor: ["Commercial Banks", "Digital Banks", "Licensed Payment Institutions"],
+  designedFor: [
+    "Commercial Banks",
+    "Digital Banks",
+    "Licensed Payment Institutions",
+  ],
   benefits: [
     "Accelerate Retail CBDC readiness",
     "Reduce implementation complexity",
@@ -216,20 +248,53 @@ export const digitalCurrencyHub = {
     "Support future digital money initiatives",
   ],
   deployment: {
-    eyebrow: "Deployment options",
+    /*
+      "Commercial models", not "Deployment options" — the client's rename, and
+      the accurate one. This column is how the platform is *bought* (a licence
+      you run, or a platform we run for you); `modelDetail` below is where it
+      *runs*. Under the old name the two columns read as the same subject twice.
+    */
+    eyebrow: "Commercial models",
     lead: "Flexible Deployment to Match Your Strategy",
     body: "The Digital Currency Hub\u2122 is built for flexibility. Easily deploy in environments that meet your compliance, residency and operational needs.",
+    /*
+      The band line for this column, and the one place on this page whose
+      words are not the client's own verbatim.
+
+      `body` above was written when the column was called Deployment Options.
+      It is two sentences about deployment environments, which now says what
+      the Deployment Models band beside it already says, and it runs to three
+      lines where the other two bands run to two — so the three navy bands
+      came out uneven again. `lead` has the same problem: "Flexible
+      Deployment to Match Your Strategy" is about deployment, not about how
+      the platform is bought.
+
+      This summarises the two cards underneath it and claims nothing beyond
+      them: the client defines License Edition as "deploy in your own data
+      center or private cloud environment" and Hosted Platform as "a fully
+      managed, cloud hosted platform". Both originals stay above, unused.
+    */
+    intro:
+      "Licensed to run in your own environment, or delivered as a fully managed platform.",
     editions: [
       {
         name: "License Edition",
         body: "Deploy in your own data center or private cloud environment, with full control, customization and data ownership.",
-        traits: ["Your infrastructure", "Full operational control", "Enterprise integration"],
+        traits: [
+          "Your infrastructure",
+          "Full operational control",
+          "Enterprise integration",
+        ],
       },
       {
         name: "Hosted Platform",
         aside: "Platform as a Service",
         body: "Accelerate go-to-market with a fully managed, cloud hosted platform. We handle infrastructure, scalability, uptime and operations.",
-        traits: ["Fully managed", "Faster implementation", "Reduced operational load"],
+        traits: [
+          "Fully managed",
+          "Faster implementation",
+          "Reduced operational load",
+        ],
       },
     ],
     models: [
@@ -247,17 +312,22 @@ export const digitalCurrencyHub = {
      * with none set they render as wordmarks. See `VendorWordmark` — the marks
      * themselves are not in this project and are trademarks with published
      * brand rules, so they have to be supplied rather than approximated.
+     *
+     * `bestFor` is commented out rather than deleted. The client asked for the
+     * "Best suited for" lists to come off these three cards; the words are the
+     * only record of who each model is for, so they stay here against the day
+     * that changes back.
      */
     modelDetail: {
       eyebrow: "Deployment models",
       lead: "Run it where your obligations require.",
       intro:
-        "Flexible deployment options to meet your security, regulatory and operational needs.",
+        "Flexible deployment models to meet your security, regulatory and operational needs.",
       items: [
         {
           title: "Private Cloud",
           body: "Deploy within a bank-controlled private cloud environment with greater control over data, security and infrastructure.",
-          bestFor: ["Single Tenant", "Regulated & Financial Institutions", "High security environment"],
+          // bestFor: ["Single Tenant", "Regulated & Financial Institutions", "High security environment"],
           icon: "lock",
         },
         {
@@ -268,21 +338,40 @@ export const digitalCurrencyHub = {
             { name: "Microsoft Azure", logo: null as string | null },
             { name: "Google Cloud", logo: null as string | null },
           ],
-          bestFor: ["Cost Effective", "Elastic", "Rapid Implementation", "Full suite of services"],
+          // bestFor: ["Cost Effective", "Elastic", "Rapid Implementation", "Full suite of services"],
           icon: "cloud",
         },
         {
           title: "On-Premise / Bank Data Centre",
           body: "Deploy within the institution's own data centre where regulatory, data residency or infrastructure policies require local deployment.",
-          bestFor: [
-            "Regulated Institutions",
-            "Sovereign environments",
-            "Institutions with strict data residency requirements",
-          ],
+          // bestFor: [
+          //   "Regulated Institutions",
+          //   "Sovereign environments",
+          //   "Institutions with strict data residency requirements",
+          // ],
           icon: "building",
         },
       ],
     },
+  },
+  /**
+   * The masthead artwork.
+   *
+   * This sits in the hero's right column. It replaced `heroArt` below, which is
+   * kept, unused — that render is 1402x1122 and set its four labels at 12.3px
+   * in the same column; this one is 1824x862 and sets its six near 8px, which
+   * is the trade the client asked for.
+   *
+   * Client-supplied, and shown whole: it is drawn to its own edges (27px clear
+   * on the left, 31px on the right) and its six labels are 20px glyph runs
+   * across 1824px, so it holds above 11px only while it paints wider than
+   * about 1000px. The shell gives it 1264px, where those labels land near
+   * 14px. It is never cropped vertically — the labels run from the top of the
+   * frame to well past its middle, so trimming the band would take them.
+   */
+  banner: {
+    src: "/images/product-page-png.png",
+    alt: "A lit bulb on a pedestal at the centre of six linked fields — digital money, tokenized finance, open finance, programmable money, AI and intelligent finance, and emerging infrastructure",
   },
   /**
    * The bar the page design closes on. This is the only call to action the
@@ -296,11 +385,31 @@ export const digitalCurrencyHub = {
   },
   /** The closing strip. Six words, six lines. */
   attributes: [
-    { title: "Secure", body: "Enterprise-grade security across all layers.", icon: "shield" },
-    { title: "Scalable", body: "Built to handle millions of users and transactions.", icon: "bars" },
-    { title: "Modular", body: "Loose coupling for flexibility and faster evolution.", icon: "nodes" },
-    { title: "Cloud-Native", body: "Designed for cloud agility and modern operations.", icon: "cloud" },
-    { title: "Compliant", body: "Built for regulated financial ecosystems.", icon: "clipboard" },
+    {
+      title: "Secure",
+      body: "Enterprise-grade security across all layers.",
+      icon: "shield",
+    },
+    {
+      title: "Scalable",
+      body: "Built to handle millions of users and transactions.",
+      icon: "bars",
+    },
+    {
+      title: "Modular",
+      body: "Loose coupling for flexibility and faster evolution.",
+      icon: "nodes",
+    },
+    {
+      title: "Cloud-Native",
+      body: "Designed for cloud agility and modern operations.",
+      icon: "cloud",
+    },
+    {
+      title: "Compliant",
+      body: "Built for regulated financial ecosystems.",
+      icon: "clipboard",
+    },
     {
       title: "Future-Ready",
       body: "Built for the future of digital money and finance.",

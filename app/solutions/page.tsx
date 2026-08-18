@@ -308,12 +308,23 @@ export default function SolutionsPage() {
                         tone.bloom,
                       )}
                     />
-                    {/* The index, as a watermark. Decorative: the heading names
-                      the card, and a screen reader gains nothing from "01". */}
+                    {/*
+                    The index, as a watermark. Decorative: the heading names the
+                    card, and a screen reader gains nothing from "01".
+
+                    `top-6`, and it has to be positive. The card clips to its
+                    rounded corner with `overflow-hidden`, so anything above its
+                    top edge is cut — and the glyphs start higher than the box
+                    they sit in: IBM Plex Mono's ascent and descent total 1.3em
+                    against a 1em `leading-none`, so the ink overflows its own
+                    72px line box by 11px at the top. At `-top-3` that put the
+                    ink 23px past the edge and sliced the digits flat. 24px down
+                    lands them 13px inside it.
+                  */}
                     <span
                       aria-hidden="true"
                       className={cn(
-                        "pointer-events-none absolute -top-3 right-4 -z-10 font-mono text-[4.5rem] leading-none font-bold tabular-nums opacity-[0.07] transition-opacity duration-500 group-hover/disc:opacity-[0.13]",
+                        "pointer-events-none absolute top-6 right-5 -z-10 font-mono text-[4.5rem] leading-none font-bold tabular-nums opacity-[0.07] transition-opacity duration-500 group-hover/disc:opacity-[0.13]",
                         tone.mark,
                       )}
                     >
