@@ -8,10 +8,11 @@
  *
  *  1. "Financial Advisory" is set here as "Payment Modernization Advisory".
  *  2. The "Lending Integration" domain card is dropped, taking the grid from
- *     six cards to five. The lending work itself is not gone — it stays in
- *     Technology Engineering's list below as "Lending System Integrations
- *     (LOS / LMS)", and the Lending Integration Hub keeps its own card on
- *     /solutions/platforms.
+ *     six cards to five. Technology Engineering's list carried the lending work
+ *     after that as "Lending System Integrations (LOS / LMS)"; the client has
+ *     since replaced that line with "Banking System Integration", so lending is
+ *     named nowhere on this page. It keeps its own card on /solutions/platforms
+ *     as the Lending Integration Hub, which is now the only place it appears.
  *  3. The page runs to the delivery lifecycle and stops. The sections that
  *     follow it in the source file — Innovation Lab, Enterprise Impact and the
  *     final CTA — are not carried here: the Lab has its own page at /lab, and
@@ -95,7 +96,7 @@ export const disciplines: Discipline[] = [
     body: "Specialized software engineering delivering robust core banking decoupling, API gateways, and channel modernization.",
     points: [
       "Corporate & Retail Banking Channels",
-      "Lending System Integrations (LOS / LMS)",
+      "Banking System Integration",
       "Financial Systems Integration & Adapters",
       "Continuous Compliance & DevSecOps",
     ],
@@ -159,7 +160,12 @@ export const solutionDomains: SolutionDomain[] = [
     tag: "Digital Value",
     title: "Digital Value Interoperability",
     body: "Orchestrate and coordinate transactions across traditional clearing networks and emerging digital ledger environments.",
-    tags: ["Rail Adapters", "Settlement Flow", "Policy Compliance", "Reconciliation"],
+    tags: [
+      "Rail Adapters",
+      "Settlement Flow",
+      "Policy Compliance",
+      "Reconciliation",
+    ],
     icon: "globe",
     image: "/images/solution-playcard/solution-playcard-3.png",
     cta: { label: "Discuss Interoperability", href: "/contact" },
