@@ -81,7 +81,7 @@ if (SRC) {
 // need re-encoding. Originals move to source-assets/ so /public never carries
 // a 2MB PNG.
 const CAROUSEL_SRC = path.join(process.cwd(), "source-assets", "carousel");
-const PUBLIC_POSTER = path.join(OUT, "intelligent-platform-poster.jpeg");
+const POSTER_SRC = path.join(CAROUSEL_SRC, "intelligent-platform-poster.jpeg");
 
 // ...except where a later round went back to a full poster — headline column,
 // body paragraph, capability strip and footer band, all baked in — and the crop
@@ -89,16 +89,14 @@ const PUBLIC_POSTER = path.join(OUT, "intelligent-platform-poster.jpeg");
 // than taken as a fraction, because these compositions do not divide at a tidy
 // percentage the way the first set did.
 //
-// This poster is the one source file that stays in /public rather than moving
-// to source-assets, because unlike every other original here it is not just a
-// source: the homepage band shows it whole, so it is also a delivered asset.
-// It is pointed at directly rather than pre-encoded to WebP because it is
-// already a lossy JPEG — re-encoding would put a second generation of loss on
-// 14px type for an 8% saving at the quality that type needs, and next/image
-// derives the AVIF/WebP that actually ships either way.
+// The poster below lived in /public for a while, because the home page showed
+// it whole and it was therefore a delivered asset as well as a source. That
+// band came off at the client's request, so it is only a source again and
+// belongs here with the rest of them — nothing renders it, and a 1.7MB JPEG
+// that ships to nobody has no business in /public.
 const CAROUSEL_CROPS = [
   {
-    from: PUBLIC_POSTER,
+    from: POSTER_SRC,
     // A new name, not a new file under the old one. This artwork replaces
     // intelligent-platform.webp at a different aspect ratio, and the ratio is
     // baked into the box the plate paints into — so anything still holding the

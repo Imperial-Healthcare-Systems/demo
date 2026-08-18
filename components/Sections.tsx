@@ -18,7 +18,9 @@ import { DarkSection, Eyebrow, SectionHeading } from "@/components/Section";
 /* ------------------------------------------------------------------ context */
 
 export function IndustryContext() {
-  const [lead, accent] = industryContext.headline.split(industryContext.headlineAccent);
+  const [lead, accent] = industryContext.headline.split(
+    industryContext.headlineAccent,
+  );
 
   return (
     /*
@@ -41,7 +43,14 @@ export function IndustryContext() {
         fill="none"
       >
         {[170, 240, 310].map((r) => (
-          <circle key={r} cx="300" cy="300" r={r} stroke="currentColor" strokeWidth="1" />
+          <circle
+            key={r}
+            cx="300"
+            cy="300"
+            r={r}
+            stroke="currentColor"
+            strokeWidth="1"
+          />
         ))}
       </svg>
       <div className="shell">
@@ -55,7 +64,9 @@ export function IndustryContext() {
             <Reveal delay={60}>
               <h2 className="mt-5 text-[2rem] leading-[1.04] font-semibold tracking-[-0.038em] text-ink md:text-[2.5rem] xl:text-[2.875rem]">
                 {lead}
-                <span className="text-brand-gradient">{industryContext.headlineAccent}</span>
+                <span className="text-brand-gradient">
+                  {industryContext.headlineAccent}
+                </span>
                 {accent}
               </h2>
             </Reveal>
@@ -99,11 +110,18 @@ export function IndustryContext() {
                 {industryContext.shifts.map((shift, i) => (
                   <li key={shift.label} className="flex items-center">
                     {i > 0 && (
-                      <span aria-hidden="true" className="mx-2.5 hidden h-7 w-px bg-line xl:block" />
+                      <span
+                        aria-hidden="true"
+                        className="mx-2.5 hidden h-7 w-px bg-line xl:block"
+                      />
                     )}
                     <span className="group/shift flex items-center gap-2.5">
                       <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-navy-50 text-navy-600 ring-1 ring-navy-100 transition-colors duration-200 group-hover/shift:bg-navy-600 group-hover/shift:text-white group-hover/shift:ring-navy-600">
-                        <Icon name={shift.icon as IconName} className="h-4 w-4" strokeWidth={1.7} />
+                        <Icon
+                          name={shift.icon as IconName}
+                          className="h-4 w-4"
+                          strokeWidth={1.7}
+                        />
                       </span>
                       <span className="text-[0.8125rem] font-medium whitespace-nowrap text-ink">
                         {shift.label}
@@ -151,7 +169,11 @@ export function IndustryContext() {
           </div>
 
           {/* Gallery */}
-          <Reveal kind="right" delay={120} className="lg:col-span-6 xl:col-span-7">
+          <Reveal
+            kind="right"
+            delay={120}
+            className="lg:col-span-6 xl:col-span-7"
+          >
             <IndustryCarousel />
           </Reveal>
         </div>
@@ -188,7 +210,10 @@ export function FutureOfMoney() {
               <h3 className="text-lg text-white">{pillar.title}</h3>
               <ul className="flex flex-col gap-2">
                 {pillar.items.map((item) => (
-                  <li key={item} className="flex items-start gap-2.5 text-[0.875rem] text-ink-inv-2">
+                  <li
+                    key={item}
+                    className="flex items-start gap-2.5 text-[0.875rem] text-ink-inv-2"
+                  >
                     <span
                       aria-hidden="true"
                       className="mt-2 h-1 w-1 shrink-0 rounded-full bg-green-500"
@@ -244,7 +269,11 @@ export function FutureOfMoney() {
                 key={audience}
                 className="flex items-center gap-3 bg-white/[0.03] px-5 py-4 text-[0.875rem] text-ink-inv-2 transition-colors hover:bg-white/[0.07] hover:text-white"
               >
-                <Icon name="check" className="h-4 w-4 shrink-0 text-green-400" strokeWidth={2} />
+                <Icon
+                  name="check"
+                  className="h-4 w-4 shrink-0 text-green-400"
+                  strokeWidth={2}
+                />
                 {audience}
               </li>
             ))}
@@ -254,12 +283,18 @@ export function FutureOfMoney() {
         {/* Principles */}
         <div className="mt-14 grid gap-8 border-t border-white/10 pt-12 sm:grid-cols-2 lg:grid-cols-4">
           {futureOfMoney.principles.map((principle, i) => (
-            <Reveal key={principle.title} delay={i * 80} className="flex flex-col gap-2.5">
+            <Reveal
+              key={principle.title}
+              delay={i * 80}
+              className="flex flex-col gap-2.5"
+            >
               <div aria-hidden="true" className="rule-brand" />
               <h3 className="text-[0.9375rem] tracking-[0.04em] text-white uppercase">
                 {principle.title}
               </h3>
-              <p className="text-[0.875rem] leading-relaxed text-ink-inv-3">{principle.body}</p>
+              <p className="text-[0.875rem] leading-relaxed text-ink-inv-3">
+                {principle.body}
+              </p>
             </Reveal>
           ))}
         </div>
@@ -304,7 +339,10 @@ export function Proposition() {
                   key={node}
                   className="flex items-center gap-3 bg-white px-5 py-4 text-[0.875rem] font-medium text-ink transition-colors hover:bg-navy-50"
                 >
-                  <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-sky-500" />
+                  <span
+                    aria-hidden="true"
+                    className="h-1.5 w-1.5 rounded-full bg-sky-500"
+                  />
                   {node}
                 </li>
               ))}
@@ -312,7 +350,11 @@ export function Proposition() {
           </Reveal>
         </div>
 
-        <Reveal kind="right" delay={120} className="lg:col-span-6 xl:col-span-7">
+        <Reveal
+          kind="right"
+          delay={120}
+          className="lg:col-span-6 xl:col-span-7"
+        >
           <div className="relative aspect-[16/11] overflow-hidden rounded-[var(--radius-card)] shadow-[var(--shadow-lift)]">
             <Image
               src={proposition.image}
@@ -391,6 +433,11 @@ const REASON_TONES = [
 /**
  * The client's platform poster, shown whole.
  *
+ * NOT MOUNTED. It ran between Industry Context and Why OrbisMoneta and was
+ * taken off the home page at the client's request. Kept built and working, the
+ * way every other section this page has shed is kept — re-mounting it is one
+ * line in app/page.tsx. Everything below still holds if it goes back.
+ *
  * It is a picture of words, which decides almost everything here. Measured at
  * the file, its smallest type is a 14px glyph run across 1254px — so it stays
  * above 11px only while it paints wider than about 985px. The shell gives it
@@ -456,7 +503,9 @@ export function PlatformPoster() {
                       <p className="text-[0.9375rem] leading-snug font-semibold text-white">
                         {c.title}
                       </p>
-                      <p className="mt-1 text-[0.875rem] leading-relaxed text-ink-inv-2">{c.body}</p>
+                      <p className="mt-1 text-[0.875rem] leading-relaxed text-ink-inv-2">
+                        {c.body}
+                      </p>
                     </div>
                   </li>
                 ))}
@@ -586,7 +635,11 @@ export function WhyOrbisMoneta() {
                       tone.tile,
                     )}
                   >
-                    <Icon name={reason.icon as IconName} className="h-5 w-5" strokeWidth={1.6} />
+                    <Icon
+                      name={reason.icon as IconName}
+                      className="h-5 w-5"
+                      strokeWidth={1.6}
+                    />
                   </span>
 
                   <span
@@ -600,8 +653,12 @@ export function WhyOrbisMoneta() {
                   </span>
 
                   <div className="flex flex-col gap-1.5">
-                    <h3 className="text-[1.0625rem] leading-snug text-ink">{reason.title}</h3>
-                    <p className="text-[0.875rem] leading-relaxed text-ink-2">{reason.body}</p>
+                    <h3 className="text-[1.0625rem] leading-snug text-ink">
+                      {reason.title}
+                    </h3>
+                    <p className="text-[0.875rem] leading-relaxed text-ink-2">
+                      {reason.body}
+                    </p>
                   </div>
                 </Reveal>
               );
@@ -671,8 +728,12 @@ export function EngagementModel() {
               >
                 {phase.step}
               </span>
-              <h3 className="text-[1.0625rem] leading-snug text-ink">{phase.title}</h3>
-              <p className="text-[0.875rem] leading-relaxed text-ink-2">{phase.body}</p>
+              <h3 className="text-[1.0625rem] leading-snug text-ink">
+                {phase.title}
+              </h3>
+              <p className="text-[0.875rem] leading-relaxed text-ink-2">
+                {phase.body}
+              </p>
             </Reveal>
           ))}
         </ol>
@@ -712,11 +773,14 @@ export function ClosingCta() {
           <Reveal delay={60}>
             <h2 className="h-display-2 text-white">
               Ready to engineer the{" "}
-              <span className="text-brand-gradient-inv">future of money</span> with us?
+              <span className="text-brand-gradient-inv">future of money</span>{" "}
+              with us?
             </h2>
           </Reveal>
           <Reveal delay={120}>
-            <p className="text-[1.0625rem] leading-relaxed text-ink-inv-2">{closingCta.body}</p>
+            <p className="text-[1.0625rem] leading-relaxed text-ink-inv-2">
+              {closingCta.body}
+            </p>
           </Reveal>
 
           <Reveal delay={190}>
@@ -738,11 +802,23 @@ export function ClosingCta() {
             </ul>
           </Reveal>
 
-          <Reveal delay={260} className="mt-3 flex flex-wrap items-center gap-3">
-            <ButtonLink href={closingCta.primaryCta.href} tone="onDark" size="lg" icon="arrowRight">
+          <Reveal
+            delay={260}
+            className="mt-3 flex flex-wrap items-center gap-3"
+          >
+            <ButtonLink
+              href={closingCta.primaryCta.href}
+              tone="onDark"
+              size="lg"
+              icon="arrowRight"
+            >
               {closingCta.primaryCta.label}
             </ButtonLink>
-            <ButtonLink href={closingCta.secondaryCta.href} tone="onDarkGhost" size="lg">
+            <ButtonLink
+              href={closingCta.secondaryCta.href}
+              tone="onDarkGhost"
+              size="lg"
+            >
               {closingCta.secondaryCta.label}
             </ButtonLink>
           </Reveal>

@@ -7,7 +7,8 @@
  */
 
 export const hero = {
-  eyebrow: "Strategic Advisory · Platform Engineering · Financial Infrastructure",
+  eyebrow:
+    "Strategic Advisory · Platform Engineering · Financial Infrastructure",
   purposeLabel: "Our purpose",
   headline: ["Engineering the", "Future of Finance"],
   gradientFrom: 1,
@@ -48,7 +49,8 @@ export const hero = {
    and the Industries page itself still shows them.
    --------------------------------------------------------------------------- */
 
-export type AudienceTone = "navy" | "sky" | "green" | "gold" | "indigo" | "teal";
+export type AudienceTone =
+  "navy" | "sky" | "green" | "gold" | "indigo" | "teal";
 
 export type AudienceCard = {
   id: string;
@@ -250,12 +252,36 @@ export const carouselSlides: CarouselSlide[] = [
     subtitle: "The Foundation of Every Transaction",
     body: "Enterprise-grade security, compliance and resilience to protect what matters most — every time, everywhere.",
     points: [
-      { label: "Secure by", accent: "Design", detail: "Built with security at every layer" },
-      { label: "Strong", accent: "Encryption", detail: "Advanced encryption for data in transit and at rest" },
-      { label: "Zero Trust", accent: "Architecture", detail: "Verify continuously. Trust never." },
-      { label: "Compliance", accent: "Assured", detail: "Aligned with global regulations and standards" },
-      { label: "Resilient &", accent: "Reliable", detail: "High availability, fault tolerance and business continuity" },
-      { label: "Governance &", accent: "Transparency", detail: "Audit-ready, monitorable and accountable" },
+      {
+        label: "Secure by",
+        accent: "Design",
+        detail: "Built with security at every layer",
+      },
+      {
+        label: "Strong",
+        accent: "Encryption",
+        detail: "Advanced encryption for data in transit and at rest",
+      },
+      {
+        label: "Zero Trust",
+        accent: "Architecture",
+        detail: "Verify continuously. Trust never.",
+      },
+      {
+        label: "Compliance",
+        accent: "Assured",
+        detail: "Aligned with global regulations and standards",
+      },
+      {
+        label: "Resilient &",
+        accent: "Reliable",
+        detail: "High availability, fault tolerance and business continuity",
+      },
+      {
+        label: "Governance &",
+        accent: "Transparency",
+        detail: "Audit-ready, monitorable and accountable",
+      },
     ],
     image: "/images/carousel/tands.png",
     /* The six controls are drawn into the plate and appear nowhere else on the
@@ -437,7 +463,13 @@ export const futureOfMoney = {
   ],
   convergence: {
     title: "Interoperable Financial Infrastructure",
-    attributes: ["Secure", "Scalable", "Interoperable", "Compliant", "Intelligent"],
+    attributes: [
+      "Secure",
+      "Scalable",
+      "Interoperable",
+      "Compliant",
+      "Intelligent",
+    ],
   },
   platformBand: "OrbisMoneta — Powering the Future of Money",
   audiences: [
@@ -483,7 +515,12 @@ export const proposition = {
 };
 
 /**
- * The client's composed platform poster, shown whole.
+ * The client's composed platform poster.
+ *
+ * NOT RENDERED — the band it fed came off the home page at the client's
+ * request. Kept because `PlatformPoster` in components/Sections.tsx is kept,
+ * and because the measurements below are what any future placement of this
+ * artwork has to respect.
  *
  * Everything here except `image` and `alt` exists because the poster is a
  * picture of words. Its headline, its six labelled nodes and its five-item
@@ -513,15 +550,31 @@ export const platformPoster = {
   alt: "An AI processor at the centre of a neural network, linked to financial infrastructure, data-driven insights, risk and fraud management, intelligent automation, customer-centric experiences and cloud-native flexibility, above a lit globe and a skyline of financial centres",
   /** The poster's own footer strip, as text. */
   commitments: [
-    { title: "Secure by design", body: "Built for trust and resilience", icon: "shield" },
-    { title: "Scalable & resilient", body: "Elastic by design. Always on.", icon: "cloud" },
+    {
+      title: "Secure by design",
+      body: "Built for trust and resilience",
+      icon: "shield",
+    },
+    {
+      title: "Scalable & resilient",
+      body: "Elastic by design. Always on.",
+      icon: "cloud",
+    },
     {
       title: "Interoperable & open",
       body: "Seamless connectivity across ecosystems",
       icon: "nodes",
     },
-    { title: "Built for impact", body: "Empowering economies and communities", icon: "user" },
-    { title: "Partnership focused", body: "Collaborate. Co-create. Drive change.", icon: "share" },
+    {
+      title: "Built for impact",
+      body: "Empowering economies and communities",
+      icon: "user",
+    },
+    {
+      title: "Partnership focused",
+      body: "Collaborate. Co-create. Drive change.",
+      icon: "share",
+    },
   ],
 } as const;
 

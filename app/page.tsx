@@ -5,7 +5,6 @@ import { AudienceMarquee } from "@/components/AudienceMarquee";
 import {
   EngagementModel,
   IndustryContext,
-  PlatformPoster,
   WhyOrbisMoneta,
 } from "@/components/Sections";
 
@@ -35,6 +34,7 @@ export const metadata: Metadata = {
  *   · ServicesIndex · InsightsTeaser → components/home/parked-sections.tsx
  *   · Proposition · FutureOfMoney · ClosingCta → components/home/sections.tsx
  *   · RequestToConnect → components/conversion/request-to-connect.tsx
+ *   · PlatformPoster → components/Sections.tsx
  *
  * None of it has been deleted. See the note at the top of parked-sections.tsx.
  */
@@ -49,11 +49,6 @@ export default function HomePage() {
       <HeroCarousel />
       <AudienceMarquee />
       <IndustryContext />
-      {/* The client's platform poster, whole. It sits here because the section
-          above says what the market is doing and the one below says why us —
-          this is the what, in between, and it is the only place on the page
-          where the poster's own headline is not competing with a live one. */}
-      <PlatformPoster />
       <WhyOrbisMoneta />
       {/* The client's four-phase engagement model, closing the page on how a
           project actually runs. It is the same content the Industries page
