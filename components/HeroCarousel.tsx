@@ -150,7 +150,8 @@ const FRAMES: Frame[] = [
       crop.
     */
     ratio: PLATE_RATIO[slide.id],
-    mask: slide.id === "trust-and-security" ? PLATE_MASK_TIGHT_SIDES : PLATE_MASK,
+    mask:
+      slide.id === "trust-and-security" ? PLATE_MASK_TIGHT_SIDES : PLATE_MASK,
     /* Covers at every width. Below lg that fills the stage behind the copy,
        where the veil runs at 88–95% and the plate is texture. From lg the box
        carries the plate's own ratio, so covering it crops nothing. */
@@ -183,7 +184,10 @@ export function HeroCarousel() {
     return () => query.removeEventListener("change", apply);
   }, []);
 
-  const go = useCallback((next: number) => setActive(((next % COUNT) + COUNT) % COUNT), []);
+  const go = useCallback(
+    (next: number) => setActive(((next % COUNT) + COUNT) % COUNT),
+    [],
+  );
 
   useEffect(() => {
     if (!playing || held || reduced) return;
@@ -196,7 +200,9 @@ export function HeroCarousel() {
     if (!section) return;
     window.scrollTo({
       top: section.offsetTop + section.offsetHeight - 72,
-      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "auto"
+        : "smooth",
     });
   };
 
@@ -256,7 +262,9 @@ export function HeroCarousel() {
               aria-hidden={!isActive}
               className={cn(
                 "absolute inset-0 transition-opacity ease-[cubic-bezier(0.22,1,0.36,1)]",
-                isActive ? "opacity-100 duration-700" : "opacity-0 duration-500",
+                isActive
+                  ? "opacity-100 duration-700"
+                  : "opacity-0 duration-500",
               )}
             >
               <div className="absolute inset-0">
@@ -348,7 +356,12 @@ export function HeroCarousel() {
                     isActive && "anim-art-in",
                   )}
                 >
-                  <div className={cn("absolute inset-0", !frame.bleed && frame.mask)}>
+                  <div
+                    className={cn(
+                      "absolute inset-0",
+                      !frame.bleed && frame.mask,
+                    )}
+                  >
                     <div className="anim-float absolute inset-0">
                       <Image
                         src={frame.src}
@@ -411,10 +424,16 @@ export function HeroCarousel() {
         <div className="stagger-rise flex max-w-xl flex-col gap-5 self-center md:gap-6 lg:max-w-[40rem] xl:max-w-[44rem]">
           <p className="flex flex-wrap items-center gap-x-2 gap-y-1.5 font-mono text-[0.625rem] uppercase tracking-[0.18em] text-gold-400 sm:text-[0.6875rem] sm:tracking-[0.2em]">
             {hero.eyebrow.split(" · ").map((part, i, all) => (
-              <span key={part} className="flex items-center gap-2 whitespace-nowrap">
+              <span
+                key={part}
+                className="flex items-center gap-2 whitespace-nowrap"
+              >
                 {part}
                 {i < all.length - 1 && (
-                  <span aria-hidden="true" className="h-1 w-1 rounded-full bg-gold-400/50" />
+                  <span
+                    aria-hidden="true"
+                    className="h-1 w-1 rounded-full bg-gold-400/50"
+                  />
                 )}
               </span>
             ))}
@@ -426,15 +445,37 @@ export function HeroCarousel() {
             <span className="text-brand-gradient-inv">{hero.headline[1]}</span>
           </h1>
 
-          <p className="max-w-xl text-[1.0625rem] leading-relaxed text-ink-inv-2 md:text-[1.1875rem]">
+          {/*
+            No `max-w-xl` here any more, and a step down in size from `md`.
+
+            This paragraph is the client's positioning line and runs 369
+            characters where the one before it ran 145. Held at the 36rem the
+            short line sat in, it set to eight lines of 19px directly under a
+            display headline — a wall of text where the hero wants a sentence.
+            Letting it take the copy column it already sits in (40rem at lg,
+            44rem at xl) and easing the size to 17px takes it to four.
+
+            It keeps `text-pretty` so the last line never comes down as a single
+            orphaned word, which at this length it otherwise does.
+          */}
+          <p className="text-[1rem] leading-relaxed text-pretty text-ink-inv-2 md:text-[1.0625rem]">
             {hero.subheadline}
           </p>
 
           <div className="flex flex-wrap items-center gap-3">
-            <ButtonLink href={hero.primaryCta.href} tone="onDark" size="lg" icon="arrowRight">
+            <ButtonLink
+              href={hero.primaryCta.href}
+              tone="onDark"
+              size="lg"
+              icon="arrowRight"
+            >
               {hero.primaryCta.label}
             </ButtonLink>
-            <ButtonLink href={hero.secondaryCta.href} tone="onDarkGhost" size="lg">
+            <ButtonLink
+              href={hero.secondaryCta.href}
+              tone="onDarkGhost"
+              size="lg"
+            >
               {hero.secondaryCta.label}
             </ButtonLink>
           </div>
@@ -469,7 +510,9 @@ export function HeroCarousel() {
         <div className="shell flex h-16 items-center justify-end">
           <div className="flex items-center gap-3 sm:gap-4">
             <p className="hidden font-mono text-[0.6875rem] tabular text-ink-inv-3 sm:block">
-              <span className="text-white">{String(active + 1).padStart(2, "0")}</span>
+              <span className="text-white">
+                {String(active + 1).padStart(2, "0")}
+              </span>
               {" / "}
               {String(COUNT).padStart(2, "0")}
             </p>
@@ -492,7 +535,9 @@ export function HeroCarousel() {
                       <span
                         className={cn(
                           "relative block h-1.5 overflow-hidden rounded-full bg-white/25 transition-[width,background-color] duration-400 ease-[cubic-bezier(0.22,1,0.36,1)]",
-                          isActive ? "w-10" : "w-1.5 group-hover/dot:bg-white/50",
+                          isActive
+                            ? "w-10"
+                            : "w-1.5 group-hover/dot:bg-white/50",
                         )}
                       >
                         {isActive && (
@@ -520,8 +565,16 @@ export function HeroCarousel() {
             <span aria-hidden="true" className="h-5 w-px bg-white/15" />
 
             <div className="flex shrink-0 items-center gap-2">
-              <RailButton label="Previous image" icon="chevronLeft" onClick={() => go(active - 1)} />
-              <RailButton label="Next image" icon="chevronRight" onClick={() => go(active + 1)} />
+              <RailButton
+                label="Previous image"
+                icon="chevronLeft"
+                onClick={() => go(active - 1)}
+              />
+              <RailButton
+                label="Next image"
+                icon="chevronRight"
+                onClick={() => go(active + 1)}
+              />
               {/*
                 Pause is shown at every width, not from sm up as it was. On a
                 phone there is no hover, so the pointer cannot hold the rotation

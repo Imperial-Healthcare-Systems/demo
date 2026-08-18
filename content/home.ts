@@ -12,8 +12,14 @@ export const hero = {
   purposeLabel: "Our purpose",
   headline: ["Engineering the", "Future of Finance"],
   gradientFrom: 1,
+  /*
+    The client's own positioning line, at their length. It runs 383 characters
+    against the 145 it replaced — long enough that the hero's copy column has to
+    be given to it rather than the `max-w-xl` the shorter line sat in; see the
+    note in components/HeroCarousel.tsx.
+  */
   subheadline:
-    "We help financial institutions design, build and modernize intelligent, resilient and interoperable financial infrastructure for a connected world.",
+    "OrbisMoneta is a financial technology company that designs, engineers, and delivers secure, intelligent, and interoperable platforms for banks, financial institutions, payment networks, fintechs, market infrastructures, global enterprises, and governments—enabling the next generation of payments, digital assets, tokenized economies, and AI-powered financial services.",
   primaryCta: { label: "Contact Us", href: "/contact" },
   secondaryCta: { label: "Explore Our Solutions", href: "/advisory" },
   audienceLabel: "Serving across the financial ecosystem",
