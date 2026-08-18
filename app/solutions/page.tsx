@@ -394,10 +394,11 @@ export default function SolutionsPage() {
       {/* Functional solution domains */}
       <section id="solution-areas" className="section bg-surface">
         <div className="shell">
+          {/* No eyebrow and no intro. "Functional Solution Domains" was the
+              eyebrow above "Where we build"; the client has promoted it to the
+              heading, so leaving it in both places would print it twice. */}
           <SectionHeading
-            eyebrow="Functional Solution Domains"
-            title="Where we build"
-            intro="Five domains, each pairing domain practitioners with engineers."
+            title="Functional Solution Domains"
             className="mb-14"
           />
 
