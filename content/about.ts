@@ -402,14 +402,6 @@ export const partnersPage = {
       markInImage: true,
     },
     {
-      tier: "Tier 02",
-      title: "Implementation Partners",
-      body: "Systems integrators, boutique consultancies and specialist engineering firms accredited to deploy and extend OrbisMoneta platforms — extending our delivery capacity across geographies and verticals.",
-      image: "/images/implementation-partners.png",
-      icon: "globe",
-      markInImage: true,
-    },
-    {
       tier: "Tier 03",
       title: "Strategic Alliances",
       body: "Payment networks, standards bodies, regulatory sandboxes and industry consortia we co-innovate with — helping shape the interoperability standards and policy frameworks that next-generation financial infrastructure will require.",
@@ -418,6 +410,28 @@ export const partnersPage = {
       markInImage: false,
     },
   ],
+  /**
+   * PARKED — the Implementation Partners tier, taken off the page at the
+   * client's request and kept whole.
+   *
+   * It sat between Technology Partners and Strategic Alliances. Restoring it
+   * is this object moved back into `tiers` in that position; the artwork is
+   * still at /images/implementation-partners.png and nothing else has to
+   * change, because the page numbers the tiers from their position rather than
+   * from the label stored here.
+   *
+   * That is also why the label below reads "Tier 02" and would be right again
+   * the moment it goes back: the number on the card is derived, so the two can
+   * never disagree.
+   */
+  parkedTier: {
+    tier: "Tier 02",
+    title: "Implementation Partners",
+    body: "Systems integrators, boutique consultancies and specialist engineering firms accredited to deploy and extend OrbisMoneta platforms — extending our delivery capacity across geographies and verticals.",
+    image: "/images/implementation-partners.png",
+    icon: "globe",
+    markInImage: true,
+  },
   cta: {
     headline: "Become an OrbisMoneta partner.",
     body: "Join a network co-building enterprise payments, digital money and AI infrastructure for financial institutions worldwide.",

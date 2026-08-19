@@ -144,7 +144,28 @@ export default function PartnersPage() {
             <Eyebrow>Our partner ecosystem</Eyebrow>
           </Reveal>
 
-          <ol className="grid auto-rows-fr gap-6 lg:grid-cols-3">
+          {/*
+            Columns follow the count, and so does the width of the row.
+
+            Three tiers get three across. With one parked, two across fills the
+            row rather than leaving a third of it empty and looking like a card
+            failed to load — but two cards spread over the full 84rem shell are
+            660px each, and the render inside is `h-auto w-full`, so the card
+            grows as tall as it is wide. Two tiers at full width were half as
+            big again as three had been.
+
+            Capping the row at 60rem puts each card back to about 468px, near
+            the 432 they measured at three-across, and centring it keeps the
+            pair under the middle of the section instead of stranding 400px of
+            empty canvas on one side.
+          */}
+          <ol
+            className={`grid auto-rows-fr gap-6 ${
+              partnersPage.tiers.length >= 3
+                ? "lg:grid-cols-3"
+                : "lg:mx-auto lg:max-w-[60rem] lg:grid-cols-2"
+            }`}
+          >
             {partnersPage.tiers.map((tier, i) => {
               const tone = TIER_TONES[i % TIER_TONES.length];
               return (
@@ -215,18 +236,28 @@ export default function PartnersPage() {
                   </div>
 
                   <div className="relative flex flex-1 flex-col gap-2 px-7 pt-10 pb-7">
-                    {/* Oversized numeral, sunk into the corner. */}
+                    {/*
+                      Oversized numeral, sunk into the corner — and counted
+                      from this card's position rather than from the `tier`
+                      string in the content.
+
+                      That matters the moment a tier is parked. With the middle
+                      one taken off the page, the stored labels would have
+                      printed "01" beside "03" and read as a card having failed
+                      to render. Derived, the sequence is always contiguous
+                      however many are shown.
+                    */}
                     <span
                       aria-hidden="true"
                       className={`pointer-events-none absolute right-5 bottom-3 font-display text-[3.75rem] leading-none font-bold tabular transition-colors duration-300 ${tone.ghost}`}
                     >
-                      {tier.tier.replace("Tier ", "")}
+                      {String(i + 1).padStart(2, "0")}
                     </span>
 
                     <span
                       className={`font-mono text-[0.75rem] md:text-[0.6875rem] tracking-[0.18em] uppercase ${tone.label}`}
                     >
-                      {tier.tier}
+                      Tier {String(i + 1).padStart(2, "0")}
                     </span>
                     <h2 className="text-[1.25rem] leading-snug text-white">
                       {tier.title}
