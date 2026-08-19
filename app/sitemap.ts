@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getAllInsights } from "@/lib/insights-store";
+import { legalDocuments, type LegalDocumentKey } from "@/content/legal";
 import { site } from "@/content/site";
 
 /** Regenerated on the same cadence as the listing, for the same reason. */
@@ -40,6 +41,19 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: insight.publishedAt ? new Date(insight.publishedAt) : now,
       changeFrequency: "monthly" as const,
       priority: 0.6,
+    })),
+    /*
+      The legal documents. Low priority, because nobody arrives at this site
+      looking for them first — but listed, because the people who do go looking
+      are procurement and vendor-risk teams deciding whether to deal with us,
+      and a policy nothing links to is a policy that looks like it does not
+      exist. Their own dates drive lastModified, so a revision is picked up.
+    */
+    ...(Object.keys(legalDocuments) as LegalDocumentKey[]).map((key) => ({
+      url: `${site.url}/legal/${key}`,
+      lastModified: new Date(legalDocuments[key].effective),
+      changeFrequency: "yearly" as const,
+      priority: 0.3,
     })),
   ];
 }
