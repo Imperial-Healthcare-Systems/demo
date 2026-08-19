@@ -483,8 +483,6 @@
 }
 .marquee-track {
   animation: om-marquee var(--marquee-duration, 48s) linear infinite;
-  /* Set by the `reverse` prop. Same keyframes, same distance, opposite sign. */
-  animation-direction: var(--marquee-direction, normal);
 }
 .marquee:hover .marquee-track,
 .marquee:focus-within .marquee-track {

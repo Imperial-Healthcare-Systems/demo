@@ -311,7 +311,10 @@ export default function LabPage() {
             panel, edge to edge, while everything above it is held to the
             centred measure.
           */}
-          <div className="mt-10 -mb-6 bg-[linear-gradient(90deg,var(--color-navy-800)_0%,var(--color-navy-600)_50%,var(--color-navy-800)_100%)] py-5 md:-mb-7 md:py-6">
+          <div
+            id="core-capabilities"
+            className="mt-10 -mb-6 bg-[linear-gradient(90deg,var(--color-navy-800)_0%,var(--color-navy-600)_50%,var(--color-navy-800)_100%)] py-5 md:-mb-7 md:py-6"
+          >
             <div className="flex flex-col gap-3 pl-5 sm:flex-row sm:items-center sm:gap-6 md:pl-8 xl:pl-10">
               <p className="shrink-0 font-mono text-[0.9375rem] font-semibold tracking-[0.14em] text-green-400 uppercase md:text-[1.0625rem]">
                 {coreCapabilities.lead}
@@ -321,15 +324,19 @@ export default function LabPage() {
                 className="hidden h-5 w-px shrink-0 bg-white/25 sm:block"
               />
               {/*
-                Slower than About's 38s and running the other way. Two identical
-                tickers on one site read as the same element rendered twice by
-                mistake; a different pace and direction makes this the same
-                component doing its job in a second place.
+                Right to left, like every other ticker on the site — the client
+                asked for it and they are right: a strip that travels the other
+                way reads as running backwards, because text is read in the
+                direction this one now moves.
+
+                Slower than About's 38s, which is the whole difference between
+                the two now. That is enough: they sit on different pages, on
+                different grounds, and matching their direction costs nothing
+                that mattered.
               */}
               <Marquee
                 items={coreCapabilities.items}
                 duration={46}
-                reverse
                 copies={4}
                 onDark
                 itemClassName="text-white"
