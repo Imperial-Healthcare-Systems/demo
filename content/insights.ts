@@ -72,8 +72,8 @@ export type Insight = {
   media?: InsightBlock[];
 };
 
-export const insightCategories: (InsightCategory | "All")[] = [
-  "All",
+/** The taxonomy, in the order the filter row reads it. */
+const CATEGORY_ORDER: InsightCategory[] = [
   "CBDCs & Digital Money",
   "Stablecoins",
   "Enterprise Payments",
@@ -284,9 +284,17 @@ const insights: Insight[] = [
         GenAI piece. That is a typo in a real institution's name rather than a
         matter of style, and it would have been the site's typo once published.
 
-    None of them has a cover image. `InsightCover` draws its tonal ground for an
-    entry with no `cover`, which is what these use; add one to any entry and it
-    takes over with no other change.
+    All seven carry the client's own cover, the GenAI piece included — its
+    artwork arrived after the rest. `InsightCover` still draws its tonal ground
+    for any entry with no `cover`, so the fallback is there for the next
+    article rather than in use by this set.
+
+    Two of the seven are worth knowing about. The CBDCs vs Stablecoins file
+    arrived with a white band and a colour strip across its foot, which
+    scripts/prepare-assets.mjs cuts and pads back to 16:9 in the artwork's own
+    ground. And the P27 map is 330x153 — under half the width the article hero
+    paints it at, so it is soft there in a way no encoding setting can fix. A
+    larger export of that one would be worth asking for.
   */
   {
     slug: "the-genai-wall-effect",
@@ -312,6 +320,10 @@ const insights: Insight[] = [
       href: "/advisory#ai-for-financial-services",
     },
     coverTone: "navy",
+    cover: {
+      src: "/images/insights/the-genai-wall-effect.webp",
+      alt: "A brick wall labelled “THE GenAI WALL” splitting the frame: on the left, headed “GAP BRIDGED”, insiders and adjacent outsiders work at laptops with an AI assistant over “conceptual tasks”; on the right, headed “GAP REMAINS”, distant outsiders sit apart over “execution tasks”",
+    },
     body: [
       {
         type: "paragraph",
@@ -553,6 +565,10 @@ const insights: Insight[] = [
       href: "/advisory#digital-money-cbdcs",
     },
     coverTone: "green",
+    cover: {
+      src: "/images/insights/stablecoins-rewriting-the-rules.webp",
+      alt: "A dark world map crossed by dotted routes linking three gold dollar coins, a padlock standing under each, with a candlestick chart and columns of binary behind — titled “Stablecoins and the Future of Payments: Evidence from Financial Markets”",
+    },
     body: [
       { type: "paragraph", text: "The debate is over." },
       {
@@ -785,6 +801,10 @@ const insights: Insight[] = [
       href: "/advisory#digital-money-cbdcs",
     },
     coverTone: "sky",
+    cover: {
+      src: "/images/insights/the-economics-of-money.webp",
+      alt: "Titled “The Economics of Money — From Paper Currency to Programmable Value”: stacked rupee notes and gold coins beside a networked globe and a handset showing a rupee mark, with panels headed “Dollar Dominance — Why It Exists” and “The New Cross-Border Payment Revolution”",
+    },
     body: [
       {
         type: "paragraph",
@@ -903,6 +923,10 @@ const insights: Insight[] = [
       href: "/advisory#digital-money-cbdcs",
     },
     coverTone: "navy",
+    cover: {
+      src: "/images/insights/cbdcs-and-stablecoins.webp",
+      alt: "Two lit coins side by side on near-black — a cent mark labelled CBDCs and a dollar mark labelled STABLECOINS — with “vs” between them",
+    },
     body: [
       {
         type: "paragraph",
@@ -1129,6 +1153,10 @@ const insights: Insight[] = [
       href: "/advisory#cross-border-payments",
     },
     coverTone: "sky",
+    cover: {
+      src: "/images/insights/glocal-payments.webp",
+      alt: "“Glocal Payments: Seamless Interoperability” set over a view looking straight up between two lit office towers",
+    },
     body: [
       {
         type: "paragraph",
@@ -1289,6 +1317,10 @@ const insights: Insight[] = [
       href: "/advisory#digital-money-cbdcs",
     },
     coverTone: "green",
+    cover: {
+      src: "/images/insights/cash-2-0.webp",
+      alt: "“Cash 2.0” set over a photograph of stacked Indian rupee banknotes",
+    },
     body: [
       {
         type: "paragraph",
@@ -1394,6 +1426,10 @@ const insights: Insight[] = [
       href: "/advisory#payment-systems-fmi",
     },
     coverTone: "gold",
+    cover: {
+      src: "/images/insights/p27-nordic-payment.webp",
+      alt: "A map of the Nordics, with Norway, Sweden, Finland and Denmark picked out in colour",
+    },
     body: [
       {
         type: "paragraph",
@@ -1441,6 +1477,23 @@ const insights: Insight[] = [
       },
     ],
   },
+];
+
+/**
+ * PARKED. The nine headline-and-outline entries the listing carried before the
+ * client's own articles arrived.
+ *
+ * They were the approved headlines from the content document with an editorial
+ * standfirst and a section outline each, standing in until copy existed. Eight
+ * finished articles later the client asked for the listing to be those eight
+ * and nothing else — a card that opens onto "full copy in preparation" is a
+ * promise the site does not need to make any more.
+ *
+ * Held rather than deleted, on the same terms as components/ParkedSections.tsx:
+ * the headlines are the client's, and any one of them becoming a real article
+ * is this entry moved back into `insights` with a `body` attached.
+ */
+export const parkedOutlines: Insight[] = [
   {
     slug: "designing-retail-cbdc-for-privacy",
     title:
@@ -1674,6 +1727,20 @@ export const insightsPage = {
   intro:
     "Research, analysis and field notes from practitioners engineering financial infrastructure — covering digital money, payments, AI, risk and the evolving regulatory landscape.",
 };
+
+/**
+ * The filter row, derived rather than declared.
+ *
+ * It used to be the full taxonomy, which was right while nine outlines covered
+ * most of it. With the listing down to the client's eight articles, two of
+ * those chips — Digital Assets and Open Finance — matched nothing, so tapping
+ * either returned "no insights match those filters" from a control the page
+ * itself had offered. A chip appears here when an article is filed under it.
+ */
+export const insightCategories: (InsightCategory | "All")[] = [
+  "All",
+  ...CATEGORY_ORDER.filter((c) => insights.some((i) => i.category === c)),
+];
 
 export function getAllInsights(): Insight[] {
   return insights;

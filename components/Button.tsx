@@ -156,15 +156,24 @@ export function TextLink({
   children,
   className,
   onDark = false,
+  scroll,
 }: {
   href: string;
   children: React.ReactNode;
   className?: string;
   onDark?: boolean;
+  /**
+   * Passed through to `next/link`. `false` leaves the scroll offset alone on
+   * navigation, which is what a link back to a listing that restores its own
+   * position wants — Next would otherwise jump to the top and the restore
+   * would land a frame later as a visible correction.
+   */
+  scroll?: boolean;
 }) {
   return (
     <Link
       href={href}
+      scroll={scroll}
       className={cn(
         "group/link inline-flex items-center gap-1.5 text-sm font-medium tracking-[-0.01em] transition-colors",
         onDark ? "text-sky-400 hover:text-white" : "text-navy-600 hover:text-navy-800",

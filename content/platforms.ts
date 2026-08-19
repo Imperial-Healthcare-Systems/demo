@@ -11,26 +11,35 @@
  * earlier list did not have. The superseded pair is kept, commented out, at the
  * foot of `content/solutions.ts`.
  *
- * Note what the status badges mean, because they are the one thing here that
- * makes a claim: `mvp` and `dev` are the client's own labels for these two
- * platforms — "MVP / FIRST PLATFORM" and "IN DEVELOPMENT". Neither says a
- * platform is generally available, and the copy should not be edited into
- * saying so.
+ * Note what the status badge means, because it is the one thing here that
+ * makes a claim: "LAUNCHING SOON" is the client's own label for the Lending
+ * Integration Hub, replacing their earlier "IN DEVELOPMENT" at their request.
+ * It does not say the platform is generally available and the copy should not
+ * be edited into saying so.
+ *
+ * Digital Currency Hub has no badge at all now — "MVP / FIRST PLATFORM" came
+ * off at the client's request. `status` stays because it keys the card's
+ * colour, which is the green one either way.
  */
 
 export type PlatformStatus = "mvp" | "dev";
 
 export type ProprietaryPlatform = {
   id: string;
+  /** Keys the card's colour and its button. Independent of the badge. */
   status: PlatformStatus;
-  /** The badge text exactly as the client's page sets it. */
-  statusLabel: string;
+  /** The badge text. Omit it and no badge is drawn — the icon tile stands
+      alone at the head of the card. */
+  statusLabel?: string;
   title: string;
   subtitle: string;
   body: string;
-  /** Capability chips under the description. */
+  /** Capability chips under the description. Empty draws nothing. */
   capabilities: string[];
-  /** Deployment or value boxes. One or two; the layout follows the count. */
+  /**
+   * Deployment or value boxes. One or two; the layout follows the count, and
+   * an empty list draws nothing.
+   */
   boxes: { title: string; body: string }[];
   cta: { label: string; href: string };
   icon: string;
@@ -47,29 +56,20 @@ export const proprietaryPlatforms: ProprietaryPlatform[] = [
   {
     id: "digital-currency-hub",
     status: "mvp",
-    statusLabel: "MVP / First platform",
     title: "Digital Currency Hub™",
     subtitle: "Bank-Ready Digital Money Infrastructure",
     body: "A modular digital money infrastructure platform designed to enable commercial banks to participate in retail CBDC and emerging digital-money ecosystems through secure wallet management, token processing, and core banking interoperability.",
-    capabilities: [
-      "Digital Wallet",
-      "Token Management",
-      "Transaction Processing",
-      "Programmable Money",
-      "Security & HSM",
-      "Core Banking APIs",
-      "Operations & Monitoring",
-    ],
-    boxes: [
-      {
-        title: "License Edition",
-        body: "Deploy within your own infrastructure or cloud with full operational control.",
-      },
-      {
-        title: "Hosted Platform",
-        body: "Fully managed cloud-hosted deployment to accelerate operational onboarding.",
-      },
-    ],
+    /*
+      Empty at the client's request. What came off: the seven capability chips
+      — Digital Wallet, Token Management, Transaction Processing, Programmable
+      Money, Security & HSM, Core Banking APIs, Operations & Monitoring — and
+      the two deployment boxes, License Edition and Hosted Platform.
+
+      All of it is still on the product page this card links to, which is where
+      it is set out at length rather than as a row of chips.
+    */
+    capabilities: [],
+    boxes: [],
     /* The source file sends this to its contact anchor. This platform has a
        product page here, which is the more useful destination. */
     cta: { label: "Explore Digital Currency Hub™", href: "/products/digital-currency-hub" },
@@ -78,19 +78,15 @@ export const proprietaryPlatforms: ProprietaryPlatform[] = [
   {
     id: "lending-integration-hub",
     status: "dev",
-    statusLabel: "In development",
+    statusLabel: "Launching soon",
     title: "Lending Integration Hub",
     subtitle: "Connecting the Lending Ecosystem",
     body: "A modular integration platform designed to connect lending origination, servicing, banking, credit and fintech ecosystems through standardized APIs and integration services without point-to-point friction.",
-    capabilities: [
-      "LOS & LMS Integration",
-      "Core Banking Connectors",
-      "Credit Bureau APIs",
-      "KYC & Identity",
-      "Event-Driven Architecture",
-      "Partner Gateways",
-      "Observability",
-    ],
+    /* Off at the client's request, as on the card beside it: LOS & LMS
+       Integration, Core Banking Connectors, Credit Bureau APIs, KYC &
+       Identity, Event-Driven Architecture, Partner Gateways, Observability.
+       The Integration Value box below stays. */
+    capabilities: [],
     boxes: [
       {
         title: "Integration Value",

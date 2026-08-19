@@ -108,7 +108,23 @@ export function SiteFooter() {
         </div>
 
         {/* Legal bar */}
-        <div className="flex flex-col gap-4 border-t border-white/10 py-7 md:flex-row md:items-center md:justify-between">
+        {/*
+          Three ends, not two: brand left, legal links centred, builder credit
+          right, at the client's request.
+
+          `grid-cols-[1fr_auto_1fr]` rather than three equal columns, because
+          the centre has to be centred on the *bar* and the three blocks are
+          nothing like the same width — the brand sentence runs to ~400px and
+          the credit to ~130. Equal thirds would centre the links in a column
+          that is itself off-centre once the side blocks disagree; sizing the
+          middle to its content and splitting the remainder evenly puts them on
+          the bar's true midline whatever the sides do.
+
+          Stacked below lg. The three-across needs the links' ~330px plus two
+          side columns wide enough to hold a 400px sentence without shredding
+          it, which is not there at md.
+        */}
+        <div className="flex flex-col gap-4 border-t border-white/10 py-7 lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-6">
           <div className="flex flex-col gap-1.5 text-[0.75rem] text-ink-inv-3">
             {/*
               The mark stands in for the brand name in this sentence, so the
@@ -130,54 +146,36 @@ export function SiteFooter() {
             </p>
             <p>{site.legal.copyright}</p>
           </div>
+          <ul className="flex flex-wrap items-center gap-x-6 gap-y-2 lg:justify-center">
+            {legalNav.map((link) => (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  className="text-[0.75rem] text-ink-inv-3 transition-colors hover:text-white"
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
           {/*
-            Legal links and the builder credit share the right end of the bar.
-            They are one group rather than two children of the bar itself: the
-            bar is `justify-between`, so a third child would push the legal
-            links into the middle of it and break the two-ended balance the
-            brand block on the left is set against.
-
-            They only sit side by side from lg. Measured at 768, where the bar
-            first becomes a row: the brand sentence takes ~400px of the 704
-            available, and links plus credit want ~370 — so both wrapped, the
-            three legal links onto two lines and the credit into "Built by" /
-            "Imperial". Stacked until lg, the group is as wide as the links
-            alone and everything stays on one line.
-
-            The rule between them appears with the row for the same reason —
-            stacked it would be a stray horizontal mark.
-
-            `md:items-end` covers the band in between, md to lg, where the bar
-            is already a row and this group already sits at its right end: the
-            credit is pulled flush with the links above it rather than hanging
-            off their left. Below md the bar is stacked and the group runs the
-            full width from the left, so it stays as it is.
+            The rule that used to sit between the links and this credit has gone
+            with the regrouping. It read as a separator while the two were one
+            block at the right end; with the credit alone at the far right it
+            would hang in the middle of a wide gap, marking a join that is no
+            longer there. The gap separates them now.
           */}
-          <div className="flex flex-col gap-3 md:items-end lg:flex-row lg:items-center lg:gap-6">
-            <ul className="flex flex-wrap items-center gap-x-6 gap-y-2">
-              {legalNav.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-[0.75rem] text-ink-inv-3 transition-colors hover:text-white"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-            <p className="text-[0.75rem] whitespace-nowrap text-ink-inv-3 lg:border-l lg:border-white/10 lg:pl-6">
-              {site.legal.builtBy.prefix}{" "}
-              <a
-                href={site.legal.builtBy.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-medium text-ink-inv-2 transition-colors hover:text-sky-400"
-              >
-                {site.legal.builtBy.label}
-              </a>
-            </p>
-          </div>
+          <p className="text-[0.75rem] whitespace-nowrap text-ink-inv-3 lg:justify-self-end">
+            {site.legal.builtBy.prefix}{" "}
+            <a
+              href={site.legal.builtBy.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-ink-inv-2 transition-colors hover:text-sky-400"
+            >
+              {site.legal.builtBy.label}
+            </a>
+          </p>
         </div>
       </div>
     </footer>

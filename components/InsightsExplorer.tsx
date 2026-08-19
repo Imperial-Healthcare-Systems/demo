@@ -1,6 +1,6 @@
 "use client";
 
-import { useDeferredValue, useMemo, useState } from "react";
+import { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import {
   insightCategories,
   insightTypes,
@@ -15,6 +15,44 @@ import { InsightCard } from "./InsightCard";
 const PAGE_SIZE = 6;
 
 /**
+ * Where the listing keeps its place while the reader is off in an article.
+ *
+ * Session storage, not local: the place you were in a list is a property of
+ * this visit, not of this browser, and a filter set restored a week later
+ * would read as the site having lost the plot rather than kept it.
+ */
+const RETURN_KEY = "om:insights-return";
+
+type SavedView = {
+  category: InsightCategory | "All";
+  types: InsightType[];
+  query: string;
+  visible: number;
+  scrollY: number;
+};
+
+function saveView(view: SavedView) {
+  try {
+    sessionStorage.setItem(RETURN_KEY, JSON.stringify(view));
+  } catch {
+    /* see readView */
+  }
+}
+
+function readView(): SavedView | null {
+  try {
+    const raw = sessionStorage.getItem(RETURN_KEY);
+    if (!raw) return null;
+    const v = JSON.parse(raw) as SavedView;
+    return v && typeof v === "object" ? v : null;
+  } catch {
+    // Private-mode Safari throws on sessionStorage. Losing the place is a
+    // smaller failure than a listing that will not render.
+    return null;
+  }
+}
+
+/**
  * Listing-page filtering. Deliberately shows heading, excerpt and metadata
  * only — the full article lives on its own page. Filtering happens in the
  * client against data passed down from the server component, so swapping the
@@ -27,6 +65,101 @@ export function InsightsExplorer({ insights }: { insights: Insight[] }) {
   const [visible, setVisible] = useState(PAGE_SIZE);
 
   const deferredQuery = useDeferredValue(query);
+
+  /*
+    Coming back to where you left.
+
+    A reader who has filtered to ISO 20022, loaded another page of results and
+    scrolled halfway down opens an article — and every one of those is React
+    state that dies the moment this component unmounts. Coming back rebuilt the
+    default view at the top of the page, which is the reader doing their
+    filtering again.
+
+    So the view is written to session storage as it changes and read back on
+    mount. Three effects, in this order, and the order is what makes it work.
+  */
+
+  /* 1. Restore. Runs once, before anything below has had a chance to write, so
+        it is always reading the record the *previous* visit left. */
+  const pendingScroll = useRef<number | null>(null);
+  /*
+    The one place this component sets state from inside an effect, and the rule
+    against it is suspended for exactly these four lines. Restoring from session
+    storage cannot be done anywhere else: read during render it would put the
+    client's first pass out of step with the server's HTML, which is a
+    hydration mismatch rather than a cascading render. It runs once, on mount,
+    and never again.
+  */
+  useEffect(() => {
+    const saved = readView();
+    if (!saved) {
+      // No record: the reader has not been here in this session, and the back
+      // link that brought them suppressed its own scroll reset in case there
+      // was one. Start at the top like any other first visit.
+      window.scrollTo(0, 0);
+      return;
+    }
+    /* eslint-disable react-hooks/set-state-in-effect */
+    if (saved.category) setCategory(saved.category);
+    if (Array.isArray(saved.types)) setTypes(saved.types);
+    if (typeof saved.query === "string") setQuery(saved.query);
+    if (typeof saved.visible === "number") {
+      setVisible(Math.max(PAGE_SIZE, saved.visible));
+    }
+    /* eslint-enable react-hooks/set-state-in-effect */
+    if (typeof saved.scrollY === "number") pendingScroll.current = saved.scrollY;
+  }, []);
+
+  /*
+    2. Scroll, once the restored view is tall enough to take it.
+
+    This runs after every render on purpose. The offset cannot be applied in the
+    effect above: at that point the list still holds its first six cards, the
+    document is shorter than the offset, and the browser would clamp the scroll
+    to the bottom of a short page. So it waits for the commit where the restored
+    `visible` count has actually painted its rows.
+  */
+  useEffect(() => {
+    const y = pendingScroll.current;
+    if (y == null) return;
+    if (document.documentElement.scrollHeight < y + window.innerHeight) return;
+    pendingScroll.current = null;
+    window.scrollTo(0, y);
+  });
+
+  /* 3. Save. Skips its first run, which is the one carrying nothing but the
+        defaults — without that guard it would overwrite the record between
+        effect 1 reading it and the restored state landing. */
+  const firstSave = useRef(true);
+  useEffect(() => {
+    if (firstSave.current) {
+      firstSave.current = false;
+      return;
+    }
+    saveView({ category, types, query, visible, scrollY: window.scrollY });
+  }, [category, types, query, visible]);
+
+  /*
+    4. The offset, which moves far more often than the filters do, so it is
+    written from a frame-throttled scroll listener rather than through the
+    effect above. Re-subscribed when the view changes, which is what keeps the
+    payload current without a ref read during render.
+  */
+  useEffect(() => {
+    let frame = 0;
+    const onScroll = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        saveView({ category, types, query, visible, scrollY: window.scrollY });
+      });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, [category, types, query, visible]);
 
   const results = useMemo(() => {
     const q = deferredQuery.trim().toLowerCase();

@@ -93,6 +93,35 @@ export default async function InsightPage({ params }: Params) {
           <div className="shell">
             <div className="grid gap-10 lg:grid-cols-12 lg:gap-14">
               <div className="flex flex-col gap-6 lg:col-span-7">
+                {/*
+                  The way back, at the top of the article rather than only at
+                  the foot of it — a reader who opens a piece, reads two
+                  paragraphs and wants the list again should not have to scroll
+                  past the whole thing to find the door.
+
+                  `scroll={false}` because the listing restores its own offset:
+                  Next would otherwise reset to the top on navigation and the
+                  restored position would land as a visible jump a frame later.
+                  With no saved view the listing scrolls to the top itself, so
+                  the direct-landing case is covered too.
+
+                  A plain link, not `router.back()`. Back would work when the
+                  reader came from the listing and take them somewhere else
+                  entirely when they did not — from a related-article card, a
+                  search result, a shared URL. This goes to the listing every
+                  time, and the listing is what remembers where they were.
+                */}
+                <Link
+                  href="/insights"
+                  scroll={false}
+                  className="group/back -mt-2 inline-flex w-fit items-center gap-2 text-[0.8125rem] font-medium text-ink-2 transition-colors hover:text-navy-600"
+                >
+                  <span className="flex h-7 w-7 items-center justify-center rounded-full ring-1 ring-line transition-[background-color,color,box-shadow] duration-200 group-hover/back:bg-navy-600 group-hover/back:text-white group-hover/back:ring-navy-600">
+                    <Icon name="arrowLeft" className="h-3.5 w-3.5" strokeWidth={2} />
+                  </span>
+                  Back to insights
+                </Link>
+
                 <div className="flex flex-wrap items-center gap-2.5">
                   <span className="rounded-full bg-navy-600 px-3 py-1 font-mono text-[0.625rem] uppercase tracking-[0.14em] text-white">
                     {insight.category}
@@ -252,7 +281,9 @@ export default async function InsightPage({ params }: Params) {
               )}
 
               <div className="mt-12 flex flex-wrap items-center justify-between gap-6 border-t border-line pt-8">
-                <TextLink href="/insights">Back to all insights</TextLink>
+                <TextLink href="/insights" scroll={false}>
+                  Back to all insights
+                </TextLink>
                 <ShareLinks url={url} title={insight.title} />
               </div>
             </div>

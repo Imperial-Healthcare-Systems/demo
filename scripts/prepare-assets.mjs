@@ -307,15 +307,82 @@ if (existsSync(SECTION_SRC)) {
 // otherwise; `withoutEnlargement` holds the line.
 const INSIGHT_SRC = path.join(process.cwd(), "source-assets", "insights");
 
+/*
+  Per-file repairs, applied before the resize.
+
+  Only one file needs one. The CBDCs vs Stablecoins cover arrived with a white
+  band and a strip of orange and pink across its foot — the bottom 90px of a
+  1200x675 file, and plainly the edge of whatever it was captured from rather
+  than part of the artwork. Scanning up from the bottom for the first row whose
+  mean brightness drops back under 40 puts the artwork's own end at row 584.
+
+  Cutting there alone would leave a 2.051 image in a 16:9 box, which
+  `object-cover` would trim by 6.7% a side — and "STABLECOINS" ends at 93.3% of
+  the width, so the last letter would go. So the cut is padded back to 16:9 with
+  the artwork's own ground: #01182a, the median of its bottom ten rows, which
+  makes the join invisible.
+*/
+const INSIGHT_FIXES = {
+  "cbdcs-and-stablecoins.jpg": (img) =>
+    img
+      .extract({ left: 0, top: 0, width: 1200, height: 585 })
+      .extend({ bottom: 90, background: "#01182a" }),
+};
+
 if (existsSync(INSIGHT_SRC)) {
   await mkdir(path.join(OUT, "insights"), { recursive: true });
   const covers = (await readdir(INSIGHT_SRC)).filter((f) => /\.(png|jpe?g)$/i.test(f));
   for (const file of covers) {
-    await sharp(path.join(INSIGHT_SRC, file))
+    const fix = INSIGHT_FIXES[file];
+    const base = sharp(path.join(INSIGHT_SRC, file));
+    await (fix ? fix(base) : base)
       .resize({ width: 1280, withoutEnlargement: true })
       .webp({ quality: 82, effort: 6 })
       .toFile(path.join(OUT, "insights", file.replace(/\.(png|jpe?g)$/i, ".webp")));
-    console.log("→ insights/" + file.replace(/\.(png|jpe?g)$/i, ".webp"));
+    console.log("→ insights/" + file.replace(/\.(png|jpe?g)$/i, ".webp"), fix ? "(repaired)" : "");
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Leadership portraits.
+//
+// Re-encoded and nothing else: no crop, no pad, each one keeps the shape it
+// was taken at. They arrived at 1181x1331 and 1409x1116, and both a 4:5 crop
+// and a 4:5 pad were tried first. The crop took 18% off each side of the
+// landscape one, straight through the crossed arms. The pad filled the frame
+// with a blurred copy of the same photograph and left a visible seam where the
+// picture met the fill, which reads as a rendering fault rather than a
+// treatment. So the card takes the picture's own ratio instead — the two sit
+// at slightly different heights beside each other, which is what an honest
+// pair of portraits looks like.
+//
+// 720 on the long edge for a card that paints at 256px, which is what a 2x
+// screen asks for with a little in hand.
+const PORTRAIT_SRC = path.join(process.cwd(), "source-assets", "leadership");
+
+if (existsSync(PORTRAIT_SRC)) {
+  await mkdir(path.join(OUT, "leadership"), { recursive: true });
+  const portraits = (await readdir(PORTRAIT_SRC)).filter((f) => /\.(png|jpe?g)$/i.test(f));
+  for (const file of portraits) {
+    /*
+      Re-encoded and nothing else — no crop, no pad. The card is built to take
+      each portrait at the shape it was taken at, so the only job here is
+      getting a 2MB PNG down to web weight.
+
+      The suffix is a cache key as much as a name. Next's optimizer caches by
+      URL, so changed bytes at an unchanged path serve stale from
+      .next/cache/images and from any browser that has already seen them —
+      which is exactly what happened twice while these were being fitted, once
+      when the plain names went from a 4:5 crop to the full frame, and again
+      when Prasanna's photograph was replaced with a portrait-orientation one.
+      Changing the suffix along with the treatment is what stops that.
+    */
+    const out = path.join(OUT, "leadership", file.replace(/\.(png|jpe?g)$/i, "-portrait.webp"));
+    const { width, height } = await sharp(path.join(PORTRAIT_SRC, file))
+      .resize({ width: 720, height: 720, fit: "inside", withoutEnlargement: true })
+      .webp({ quality: 84, effort: 6 })
+      .toFile(out);
+    console.log("→ leadership/" + path.basename(out), `${width}x${height}`);
   }
 }
 

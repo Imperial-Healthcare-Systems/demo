@@ -121,7 +121,22 @@ export default function PlatformsPage() {
                   id={p.id}
                   delay={i * 100}
                   className={cn(
-                    "flex h-full flex-col justify-between rounded-[20px] border p-8 md:p-10",
+                    /*
+                      `min-h` because the cards were emptied, not resized.
+
+                      Seven chips and two deployment boxes came off the first
+                      card and seven chips off the second, which took the pair
+                      from 608px to a little over 400 — the client asked for the
+                      card size and the spacing to stand. 38rem is the height
+                      they measured at before the cut, so the block keeps its
+                      mass and `justify-between` spends the difference between
+                      the copy and the button rather than closing up.
+
+                      Only from lg, where the two sit side by side. Stacked on a
+                      phone they are naturally taller than this anyway, and a
+                      floor there would be dead space nobody asked for.
+                    */
+                    "flex h-full flex-col justify-between rounded-[20px] border p-8 md:p-10 lg:min-h-[38rem]",
                     tone.card,
                   )}
                 >
@@ -130,18 +145,20 @@ export default function PlatformsPage() {
                       {/* `.badge` — the dot is `::before` in the client's CSS;
                           here it is a real element so it can be aria-hidden.
                           The label beside it is what a screen reader reads. */}
-                      <span
-                        className={cn(
-                          "inline-flex items-center gap-1.5 rounded border px-2.5 py-1 font-mono text-[0.72rem] font-bold tracking-[0.06em] uppercase",
-                          tone.badge,
-                        )}
-                      >
+                      {p.statusLabel && (
                         <span
-                          aria-hidden="true"
-                          className={cn("h-1.5 w-1.5 rounded-full", tone.dot)}
-                        />
-                        {p.statusLabel}
-                      </span>
+                          className={cn(
+                            "inline-flex items-center gap-1.5 rounded border px-2.5 py-1 font-mono text-[0.72rem] font-bold tracking-[0.06em] uppercase",
+                            tone.badge,
+                          )}
+                        >
+                          <span
+                            aria-hidden="true"
+                            className={cn("h-1.5 w-1.5 rounded-full", tone.dot)}
+                          />
+                          {p.statusLabel}
+                        </span>
+                      )}
                       <span
                         className={cn(
                           "flex h-9 w-9 items-center justify-center rounded-lg ring-1",
@@ -166,20 +183,24 @@ export default function PlatformsPage() {
                       {p.body}
                     </p>
 
-                    {/* `.caps-tag-list` */}
-                    <ul className="mt-6 flex flex-wrap gap-2">
-                      {p.capabilities.map((c) => (
-                        <li
-                          key={c}
-                          className={cn(
-                            "rounded border bg-white/[0.04] px-2.5 py-1 text-[0.74rem] font-semibold text-[#cbd5e1]",
-                            GRAPHITE_BORDER,
-                          )}
-                        >
-                          {c}
-                        </li>
-                      ))}
-                    </ul>
+                    {/* `.caps-tag-list`. Guarded, because an empty list still
+                        carries its own top margin — 24px of nothing under the
+                        description on both cards, which are empty now. */}
+                    {p.capabilities.length > 0 && (
+                      <ul className="mt-6 flex flex-wrap gap-2">
+                        {p.capabilities.map((c) => (
+                          <li
+                            key={c}
+                            className={cn(
+                              "rounded border bg-white/[0.04] px-2.5 py-1 text-[0.74rem] font-semibold text-[#cbd5e1]",
+                              GRAPHITE_BORDER,
+                            )}
+                          >
+                            {c}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
 
                     {/*
                       `.deployment-models` is two-up; the lending card has a
@@ -187,27 +208,29 @@ export default function PlatformsPage() {
                       off the count rather than the platform, so a third box or a
                       second single would both land correctly.
                     */}
-                    <ul
-                      className={cn(
-                        "mt-6 grid gap-3",
-                        p.boxes.length > 1 && "sm:grid-cols-2",
-                      )}
-                    >
-                      {p.boxes.map((b) => (
-                        <li
-                          key={b.title}
-                          className={cn(
-                            "rounded-md border bg-white/[0.02] p-3.5 text-[0.8rem]",
-                            GRAPHITE_BORDER,
-                          )}
-                        >
-                          <p className="font-bold text-white">{b.title}</p>
-                          <p className="mt-1 leading-relaxed text-[#94a3b8]">
-                            {b.body}
-                          </p>
-                        </li>
-                      ))}
-                    </ul>
+                    {p.boxes.length > 0 && (
+                      <ul
+                        className={cn(
+                          "mt-6 grid gap-3",
+                          p.boxes.length > 1 && "sm:grid-cols-2",
+                        )}
+                      >
+                        {p.boxes.map((b) => (
+                          <li
+                            key={b.title}
+                            className={cn(
+                              "rounded-md border bg-white/[0.02] p-3.5 text-[0.8rem]",
+                              GRAPHITE_BORDER,
+                            )}
+                          >
+                            <p className="font-bold text-white">{b.title}</p>
+                            <p className="mt-1 leading-relaxed text-[#94a3b8]">
+                              {b.body}
+                            </p>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </div>
 
                   {/*

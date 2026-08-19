@@ -176,18 +176,54 @@ export const leadershipPage = {
   headlineAccent: "OrbisMoneta",
   intro:
     "A senior team of financial infrastructure practitioners, product leaders and engineers guiding OrbisMoneta's strategy, platforms and client engagements.",
+  /**
+   * The two profiles the client has supplied, photographs and all. The
+   * placeholder cards that stood beside them — "Additional Leadership Profile
+   * / Profile coming soon", driven by `pendingProfiles` — came off with them:
+   * a page that names two people and then draws two empty slots is a page
+   * announcing what it has not got.
+   *
+   * `bio` is an array because these are several paragraphs each, and running
+   * them together makes a wall. Prasanna's arrived as one block; the break
+   * here is at his own sentence boundary, between the career and what he does
+   * at OrbisMoneta, and no wording changed with it.
+   *
+   * `photo` carries its own dimensions because the card renders each portrait
+   * at the shape it was taken at rather than cropping both into one frame —
+   * see scripts/prepare-assets.mjs for why. Both are 639x720 as it stands,
+   * since the client replaced Prasanna's landscape photograph with a
+   * portrait-orientation one; the per-photo dimensions stay because that is a
+   * fact about the current files, not a rule the layout depends on.
+   *
+   * Two corrections to the supplied copy, both plainly slips: "As OrbisMonata"
+   * is set as "At OrbisMoneta", and his LinkedIn address arrived as
+   * "inkedin.com/in/prasannalohar".
+   */
   people: [
     {
       name: "Sanjay Bhoite",
       initials: "SB",
       role: "Chief Executive Officer & Chief Product Strategist",
-      bio: "Sanjay Bhoite is a financial infrastructure strategist and product innovation leader with nearly 30 years of global experience in payments and financial technology. Having partnered with 75+ banks, financial institutions, central banks and national payment organizations, he specializes in payment modernization, digital currencies, tokenization, AI-driven financial services and enterprise financial platforms. At OrbisMoneta, he is shaping the next generation of financial infrastructure by transforming emerging industry trends into secure, scalable and future-ready products for financial institutions worldwide.",
-      photo: null as string | null,
+      bio: [
+        "Sanjay Bhoite is a financial infrastructure strategist and product innovation leader with nearly 30 years of global experience across payments and financial technology. He has worked with 75+ banks and financial institutions, as well as central banks and national payment and clearing organizations, across India, the UK, USA, the Middle East, and Africa.",
+        "His expertise spans CBDC, RTGS, UPI, ACH/Nacha, NACH, US RTP, payment hubs, instant payments, cross-border payments, ISO 20022, liquidity management, digital currencies, and next-generation financial platforms. He has also driven global product strategy, market entry, and commercialization for payment solutions through his earlier venture, including the creation of an award-winning 0-to-1 NACH platform.",
+        "At OrbisMoneta, Sanjay leads product strategy, innovation, technology, and market strategy, transforming emerging trends in digital money, tokenization, AI, and financial interoperability into enterprise products and platforms for the Future of Finance.",
+      ],
+      photo: { src: "/images/leadership/sanjay-bhoite-portrait.webp", width: 639, height: 720 },
+      linkedin: "https://www.linkedin.com/in/sanjay-bhoite-5803761",
+    },
+    {
+      name: "Prasanna Lohar",
+      initials: "PL",
+      role: "Chief Growth & Market Strategy Officer",
+      bio: [
+        "Prasanna Lohar is an award-winning CXO, banking and financial-services transformation leader with 25+ years of experience across banking, payments, microfinance, technology and fintech. His career spans DCB Bank, Union Bank of India, Worldline, Mastek, Samsung Research, EY and leading fintech organizations, with deep expertise across digital banking, core banking, payments, cards, lending, mobile banking, API banking, enterprise architecture and digital transformation. As former Chief Innovation Officer, Chief Digital Officer and Enterprise Architect at DCB Bank and Innovation & Transformation Advisor to Union Bank of India, he has led technology-driven innovation across the financial-services ecosystem.",
+        "At OrbisMoneta, his work combines banking and financial-services expertise with AI, Blockchain, Web3, CBDC, tokenization, Open Banking and Digital Public Infrastructure, helping banks, fintechs and institutions build the next generation of financial ecosystem.",
+      ],
+      photo: { src: "/images/leadership/prasanna-lohar-portrait.webp", width: 639, height: 720 },
+      linkedin: "https://www.linkedin.com/in/prasannalohar",
     },
   ],
-  pendingProfiles: 2,
-  pendingLabel: "Additional Leadership Profile",
-  pendingNote: "Profile coming soon",
 };
 
 export const careersPage = {

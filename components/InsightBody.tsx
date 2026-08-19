@@ -51,8 +51,14 @@ export function InsightBody({ blocks }: { blocks: InsightBlock[] }) {
 
           case "quote":
             return (
+              /* Grey, at the client's request — `text-ink-2` rather than the
+                 near-black `text-ink` these were set in. 7.5:1 on white, so it
+                 still clears AA comfortably at this size. The navy rule beside
+                 it stays: it is the mark that says "quote", not type, and
+                 greying it too would leave the block with nothing to hold it
+                 apart from the paragraphs around it. */
               <figure key={i} className="my-2 border-l-2 border-navy-600 pl-6">
-                <blockquote className="font-display text-[1.25rem] leading-[1.24] font-semibold tracking-[-0.03em] text-ink md:text-[1.5rem]">
+                <blockquote className="font-display text-[1.25rem] leading-[1.24] font-semibold tracking-[-0.03em] text-ink-2 md:text-[1.5rem]">
                   {block.text}
                 </blockquote>
                 {block.attribution && (
