@@ -95,7 +95,7 @@ export function RfqDialog() {
             type="button"
             onClick={closeRfq}
             aria-label="Close"
-            className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-ink-2 transition-colors hover:bg-surface hover:text-ink"
+            className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-ink-2 transition-colors hover:bg-surface hover:text-ink md:h-9 md:w-9"
           >
             <Icon name="close" className="h-4.5 w-4.5" strokeWidth={2} />
           </button>

@@ -105,7 +105,7 @@ function CapabilityGlyph({ icon, tone }: { icon: IconName; tone: (typeof TONES)[
 export function CapabilityDeck() {
   return (
     <div className="flex flex-col gap-5">
-      <p className="font-mono text-[0.625rem] uppercase tracking-[0.18em] text-sky-400">
+      <p className="font-mono text-[0.75rem] md:text-[0.625rem] uppercase tracking-[0.18em] text-sky-400">
         Core capabilities
       </p>
 

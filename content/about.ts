@@ -1,3 +1,5 @@
+import { coreCapabilities } from "@/content/capabilities";
+
 export const aboutPage = {
   eyebrow: "About OrbisMoneta",
   headline: "Engineering the Future of Finance",
@@ -53,11 +55,49 @@ export const aboutPage = {
       title: "Why Institutions Choose OrbisMoneta",
       body: "Our approach is built upon practical experience rather than theoretical consulting. Unlike traditional advisory firms or pure software vendors, OrbisMoneta combines strategic thinking with product engineering and implementation expertise. Clients choose us because we understand how financial infrastructure operates inside banks, payment networks, fintechs and regulated institutions — and because we have successfully delivered mission-critical payment systems at enterprise scale.",
     },
-    {
-      title: "Our Vision",
-      body: "To become one of the world's most trusted financial infrastructure companies, powering the next generation of payments, digital assets and intelligent financial ecosystems.",
-    },
   ],
+  /**
+   * The vision, lifted out of `story`.
+   *
+   * It was the fourth of four equal blocks in a two-by-two grid — the same
+   * type, the same weight and the same 15px body as "What We Do" beside it.
+   * A vision statement that looks exactly like the paragraph next to it is not
+   * a vision statement, it is a paragraph. It has its own section now.
+   *
+   * `accent` is the phrase painted in the brand gradient, and it has to appear
+   * in `statement` verbatim — the renderer splits the sentence on it rather
+   * than storing the line twice, so a reworded statement carries its own
+   * highlight along with it.
+   *
+   * The wording is the client's, unchanged.
+   */
+  vision: {
+    label: "Our vision",
+    statement:
+      "To become one of the world's most trusted financial infrastructure companies, powering the next generation of payments, digital assets and intelligent financial ecosystems.",
+    accent: "most trusted financial infrastructure companies",
+  },
+  /**
+   * AWAITING CLIENT COPY — deliberately null, not written.
+   *
+   * The client asked for the vision and the mission to be given a premium
+   * treatment. The vision above is theirs, from the content document. There is
+   * no mission statement anywhere in the material they supplied: every use of
+   * the word in their documents is "mission-critical systems", which is a
+   * different thing entirely.
+   *
+   * Writing one would mean inventing a statement of corporate purpose and
+   * publishing it under their name, so this stays null and the section renders
+   * the vision alone. Fill it in and the layout becomes a two-up on its own —
+   * no other change needed:
+   *
+   *   mission: {
+   *     label: "Our mission",
+   *     statement: "…the client's words…",
+   *     accent: "…a phrase inside that sentence…",
+   *   },
+   */
+  mission: null as { label: string; statement: string; accent: string } | null,
   philosophy: {
     label: "Innovation philosophy",
     quote:
@@ -132,17 +172,12 @@ export const aboutPage = {
    * unattributed phrases going past need something standing still that says
    * what they are.
    */
-  capabilities: {
-    lead: "Core Capabilities",
-    items: [
-      "Digital Currency",
-      "Tokenization",
-      "Digital Assets",
-      "Cross-Border Modernization",
-      "AI for Financial Services",
-      "ISO 20022 Modernization",
-    ],
-  },
+  /*
+    The list moved to content/capabilities.ts when the Innovation Lab page
+    started running the same strip. Referenced here rather than copied, so the
+    two bars can never disagree about what the six capabilities are.
+  */
+  capabilities: coreCapabilities,
   /**
    * NOT RENDERED. The twelve areas of expertise this ticker used to run, and
    * the eyebrow over them. Replaced by the six above at the client's request.

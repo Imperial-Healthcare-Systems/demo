@@ -145,7 +145,34 @@ export const primaryNav: NavItem[] = [
   */
   { label: "Innovation Lab", href: "/lab" },
   { label: "Partners", href: "/partners" },
-  { label: "Insights", href: "/insights" },
+  /*
+    Insights is a menu now, not a bare tab.
+
+    Events sits beside the articles because both are "what OrbisMoneta is
+    publishing and doing" — the client asked for it under Insights in the bar.
+    Its URL is /events rather than /insights/events on purpose: an article
+    slugged "events" would be shadowed by a static segment of the same name,
+    and a route that can be made unreachable by typing a headline is a trap
+    nobody would think to look for.
+  */
+  {
+    label: "Insights",
+    href: "/insights",
+    menu: [
+      {
+        label: "All insights",
+        href: "/insights",
+        icon: "document",
+        description: "Research, analysis and field notes from the team.",
+      },
+      {
+        label: "Events",
+        href: "/events",
+        icon: "calendar",
+        description: "Where to meet us, and what we have spoken at.",
+      },
+    ],
+  },
   {
     /*
       Two links, and they are the two pages that are actually about the
@@ -205,8 +232,8 @@ export const footerNav = [
         href: "/solutions#payment-infrastructure-modernization",
       },
       {
-        label: "Digital Banking & Channels",
-        href: "/solutions#digital-banking-channels",
+        label: "Digital Banking Modernization",
+        href: "/solutions#digital-banking-modernization",
       },
       { label: "Digital Money & CBDC", href: "/solutions#digital-money-cbdc" },
       {
@@ -264,6 +291,7 @@ export const footerNav = [
       { label: "Innovation Lab", href: "/lab" },
       { label: "Partners", href: "/partners" },
       { label: "Insights", href: "/insights" },
+      { label: "Events", href: "/events" },
     ],
   },
   {

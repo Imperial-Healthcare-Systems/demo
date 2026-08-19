@@ -36,15 +36,30 @@ export type InsightBlock =
       title: string;
     };
 
-export type InsightCategory =
-  | "CBDCs & Digital Money"
-  | "Stablecoins"
-  | "Enterprise Payments"
-  | "Cross-Border"
-  | "AI & Risk"
-  | "Digital Assets"
-  | "ISO 20022"
-  | "Open Finance";
+/**
+ * A category is any string.
+ *
+ * It was a union of the eight the client had named, which was right while the
+ * only way to add one was to edit this file. The admin portal lets them create
+ * a category by typing it, so a closed union would mean the database could
+ * hold a value the types say is impossible — and the compiler would be
+ * enforcing a rule the product no longer has.
+ *
+ * `SUGGESTED_CATEGORIES` keeps the eight as what they actually are now: the
+ * list the editor offers first, not the list of what is allowed.
+ */
+export type InsightCategory = string;
+
+export const SUGGESTED_CATEGORIES = [
+  "CBDCs & Digital Money",
+  "Stablecoins",
+  "Enterprise Payments",
+  "Cross-Border",
+  "AI & Risk",
+  "Digital Assets",
+  "ISO 20022",
+  "Open Finance",
+] as const;
 
 export type InsightType = "Analysis" | "Research" | "Field Note";
 
@@ -61,7 +76,13 @@ export type Insight = {
   author: string;
   authorRole: string;
   publishedAt: string | null;
-  status: "published" | "in-preparation";
+  /**
+   * `draft` is new, and is what the admin portal writes when a post is saved
+   * but not published. Nothing public reads a draft: the listing, the sitemap
+   * and the article route all filter to `published`, so an unfinished piece
+   * has no URL to leak and no card to appear on.
+   */
+  status: "published" | "draft" | "in-preparation";
   /** Ties the article back to the relevant OrbisMoneta capability. */
   relatedService?: { label: string; href: string };
   coverTone: "navy" | "sky" | "green" | "gold";
@@ -1741,6 +1762,13 @@ export const insightCategories: (InsightCategory | "All")[] = [
   "All",
   ...CATEGORY_ORDER.filter((c) => insights.some((i) => i.category === c)),
 ];
+
+/**
+ * Everything below is the seed's own view of itself, and is what the site
+ * serves when no database is configured. lib/insights-store.ts is the real
+ * entry point now — it reads Supabase when there is one and falls back to
+ * these exact functions when there is not.
+ */
 
 export function getAllInsights(): Insight[] {
   return insights;

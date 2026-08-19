@@ -231,9 +231,34 @@ export function HeroCarousel() {
       ref={sectionRef}
       aria-label="OrbisMoneta — engineering the future of finance"
       onKeyDown={onKeyDown}
-      onMouseEnter={() => setHeld(true)}
-      onMouseLeave={() => setHeld(false)}
-      onFocusCapture={() => setHeld(true)}
+      /*
+        No mouse hold. It used to stop the moment the pointer crossed it, which
+        meant the carousel froze for anyone reading the copy — the pointer rests
+        over the hero constantly and the reader never asked for it to stop.
+        Pausing is now only what the pause button does, at the client's request.
+
+        Focus still holds it, and that is a different case worth keeping: a
+        keyboard user tabbing along the dots is working inside the control, and
+        having the slide change underneath them mid-tab moves the thing they are
+        aiming at. WCAG 2.2.2 is satisfied either way by the pause button.
+      */
+      onFocusCapture={(e) => {
+        /*
+          Keyboard focus only — `:focus-visible`, not plain focus.
+
+          Plain focus broke Play. Clicking the button focuses it, focus set the
+          hold, and the hold outranked `playing` — so pressing Play resumed
+          nothing and the only way out was to move the pointer off the hero,
+          which is not a thing anyone would guess. Measured: paused, pressed
+          Play, waited two slide intervals, still on the same image.
+
+          `:focus-visible` is exactly the distinction wanted here. It is true
+          when focus arrived by keyboard and false when it arrived by a click,
+          so tabbing along the dots still freezes the slide being aimed at,
+          while clicking a control does not.
+        */
+        if ((e.target as HTMLElement).matches(":focus-visible")) setHeld(true);
+      }}
       onBlurCapture={(e) => {
         if (!e.currentTarget.contains(e.relatedTarget as Node)) setHeld(false);
       }}
@@ -498,7 +523,7 @@ export function HeroCarousel() {
       */}
       <div className="shell relative flex flex-1 items-center pt-24 pb-8 md:pt-28 md:pb-10">
         <div className="stagger-rise flex max-w-xl flex-col gap-5 self-center md:gap-6 lg:max-w-[40rem] xl:max-w-[44rem]">
-          <p className="flex flex-wrap items-center gap-x-2 gap-y-1.5 font-mono text-[0.625rem] uppercase tracking-[0.18em] text-gold-400 sm:text-[0.6875rem] sm:tracking-[0.2em]">
+          <p className="flex flex-wrap items-center gap-x-2 gap-y-1.5 font-mono text-[0.75rem] uppercase tracking-[0.18em] text-gold-400 sm:text-[0.6875rem] sm:tracking-[0.2em]">
             {hero.eyebrow.split(" · ").map((part, i, all) => (
               <span
                 key={part}
@@ -606,7 +631,7 @@ export function HeroCarousel() {
                       onClick={() => go(i)}
                       aria-label={`Show image ${i + 1} of ${COUNT}: ${frame.label}`}
                       aria-current={isActive ? "true" : undefined}
-                      className="group/dot flex h-10 cursor-pointer items-center px-1.5"
+                      className="group/dot flex h-11 cursor-pointer items-center px-2.5 md:h-10 md:px-1.5"
                     >
                       <span
                         className={cn(
@@ -703,7 +728,7 @@ function RailButton({
       type="button"
       onClick={onClick}
       aria-label={label}
-      className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full text-white ring-1 ring-white/20 transition-colors hover:bg-white/10 hover:ring-white/45"
+      className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-white ring-1 ring-white/20 md:h-10 md:w-10 transition-colors hover:bg-white/10 hover:ring-white/45"
     >
       <Icon name={icon} className="h-4 w-4" strokeWidth={2} />
     </button>

@@ -140,12 +140,12 @@ export function EngagementSlider() {
               type="button"
               onClick={() => setExpanded(false)}
               aria-label="Collapse"
-              className="absolute top-3 right-3 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full text-ink-inv-2 transition-colors hover:bg-white/10 hover:text-white"
+              className="absolute top-2 right-2 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-ink-inv-2 transition-colors hover:bg-white/10 hover:text-white md:top-3 md:right-3 md:h-9 md:w-9"
             >
               <Icon name="close" className="h-4 w-4" strokeWidth={2} />
             </button>
 
-            <p className="pr-9 font-mono text-[0.5625rem] font-medium tracking-[0.2em] text-green-400 uppercase">
+            <p className="pr-9 font-mono text-[0.75rem] md:text-[0.5625rem] font-medium tracking-[0.2em] text-green-400 uppercase">
               Talk to us
             </p>
 
@@ -215,7 +215,22 @@ export function EngagementSlider() {
           aria-expanded={expanded}
           aria-label={expanded ? "Close contact panel" : "Open contact panel"}
           className={cn(
-            "pointer-events-auto group/tab ml-[var(--gap)] flex w-[var(--tab)] shrink-0 cursor-pointer flex-col items-center gap-3 rounded-l-2xl bg-white py-5",
+            "pointer-events-auto group/tab ml-[var(--gap)] flex w-[var(--tab)] shrink-0 cursor-pointer flex-col items-center gap-3 rounded-l-2xl bg-white",
+            /*
+              On a phone the tab is a button, not a column.
+
+              Fixed to the right edge, the full tab is a ~250px vertical bar
+              that lands on top of whatever is beside it — measured sitting
+              over a category chip on /insights, so a control the reader wants
+              to press was behind one they did not ask for. The wordmark is
+              what makes it that tall, and it is the part carrying least: the
+              green disc already says there is something to open.
+
+              So below md the label is dropped and it becomes a short tab. It
+              still overlays the page — every floating CTA does — but it now
+              covers a corner rather than a third of the screen edge.
+            */
+            "py-3 md:py-5",
             "shadow-[0_18px_44px_-16px_rgba(3,13,34,.55)] ring-1 ring-line",
             // How far the tab leans out. Read by the `om-tab-nudge` keyframes
             // as well as the hover state below, so the two cannot disagree.
@@ -235,11 +250,11 @@ export function EngagementSlider() {
             "motion-reduce:animate-none",
           )}
         >
-          <span className="text-[0.8125rem] font-semibold tracking-[-0.01em] text-ink [writing-mode:vertical-rl] rotate-180">
+          <span className="hidden text-[0.8125rem] font-semibold tracking-[-0.01em] text-ink [writing-mode:vertical-rl] rotate-180 md:block">
             OrbisMoneta
           </span>
 
-          <span className="relative flex h-8 w-8 items-center justify-center rounded-full bg-[linear-gradient(150deg,#3ecb6a,#017a26)] text-white">
+          <span className="relative flex h-9 w-9 items-center justify-center rounded-full bg-[linear-gradient(150deg,#3ecb6a,#017a26)] text-white md:h-8 md:w-8">
             {!expanded && (
               <span
                 aria-hidden="true"

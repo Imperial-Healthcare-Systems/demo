@@ -49,8 +49,22 @@ export const site = {
   // directed to the right desk — see contactRoutes.
   email: "info@orbismoneta.com",
   social: [
-    { label: "LinkedIn", href: "https://www.linkedin.com/company/orbismoneta" },
-    { label: "X / Twitter", href: "https://x.com/orbismoneta" },
+    /*
+      The company page by its numeric id, which is the address that cannot
+      go stale if the vanity name changes.
+
+      NOT the URL as supplied. The client sent the .../admin/dashboard/
+      form, which is the page's management screen: it only opens for
+      someone signed in as an administrator of that page, and sends
+      everybody else to a login wall. This is the public face of the same
+      page.
+    */
+    { label: "LinkedIn", href: "https://www.linkedin.com/company/144497971/" },
+    // The handle exactly as the client gave it. Worth one look before launch:
+    // it reads as "OrbisMoneta" with "in" run on, which is either the India
+    // handle or a slip — and a social link pointing at a free username nobody
+    // owns is worse than no link at all.
+    { label: "X / Twitter", href: "https://x.com/OrbisMonetain" },
   ],
   legal: {
     brandLine: "OrbisMoneta is a brand of Monetanova Technologies Pvt. Ltd.",

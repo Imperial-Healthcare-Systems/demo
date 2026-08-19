@@ -1,6 +1,61 @@
 import Image from "next/image";
 import type { InsightBlock } from "@/content/insights";
 import { Icon } from "@/components/Icon";
+import { INLINE_LINK, safeUrl } from "@/lib/insight-schema";
+
+/**
+ * Turns `[text](https://example.com)` inside prose into a real link.
+ *
+ * The client asked to be able to put links in an article, and this is the one
+ * piece of markdown the editor understands — the notation everybody already
+ * knows from chat, LinkedIn drafts and GitHub.
+ *
+ * It returns React elements, never HTML. Nothing here is ever handed to
+ * `dangerouslySetInnerHTML`, so text that happens to contain angle brackets is
+ * text and not markup, and the address goes through `safeUrl` on the way out:
+ * a `javascript:` URL typed into the editor renders as plain text rather than
+ * as a link that would run script from this origin when clicked.
+ */
+function inline(text: string): React.ReactNode {
+  // Fast path — most paragraphs have no link in them at all.
+  if (!text.includes("](")) return text;
+
+  const nodes: React.ReactNode[] = [];
+  let cursor = 0;
+
+  // `matchAll` rather than a stateful `exec` loop: INLINE_LINK is a shared
+  // module-level regex with the /g flag, and `exec` would carry `lastIndex`
+  // between calls, so the second paragraph on a page would start matching
+  // halfway through itself.
+  for (const match of text.matchAll(INLINE_LINK)) {
+    const [whole, label, href] = match;
+    const at = match.index ?? 0;
+    if (at > cursor) nodes.push(text.slice(cursor, at));
+
+    const safe = safeUrl(href);
+    if (safe) {
+      const external = /^https?:/i.test(safe);
+      nodes.push(
+        <a
+          key={at}
+          href={safe}
+          {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+          className="text-navy-600 underline decoration-navy-600/30 underline-offset-[3px] transition-colors hover:decoration-navy-600"
+        >
+          {label}
+        </a>,
+      );
+    } else {
+      // Refused. Show what was written rather than dropping it silently —
+      // an author who mistypes an address should see their words, not a gap.
+      nodes.push(whole);
+    }
+    cursor = at + whole.length;
+  }
+
+  if (cursor < text.length) nodes.push(text.slice(cursor));
+  return nodes;
+}
 
 /**
  * Renders the rich content of an insight. Supports prose, lists, pull quotes,
@@ -22,7 +77,7 @@ export function InsightBody({ blocks }: { blocks: InsightBlock[] }) {
           case "paragraph":
             return (
               <p key={i} className="text-[1.0625rem] leading-[1.75] text-ink-2">
-                {block.text}
+                {inline(block.text)}
               </p>
             );
 
@@ -42,7 +97,7 @@ export function InsightBody({ blocks }: { blocks: InsightBlock[] }) {
                         className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-sky-500"
                       />
                     )}
-                    {item}
+                    {inline(item)}
                   </li>
                 ))}
               </Tag>
@@ -62,7 +117,7 @@ export function InsightBody({ blocks }: { blocks: InsightBlock[] }) {
                   {block.text}
                 </blockquote>
                 {block.attribution && (
-                  <figcaption className="mt-3 font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-ink-3">
+                  <figcaption className="mt-3 font-mono text-[0.75rem] md:text-[0.6875rem] uppercase tracking-[0.16em] text-ink-3">
                     {block.attribution}
                   </figcaption>
                 )}
@@ -78,7 +133,9 @@ export function InsightBody({ blocks }: { blocks: InsightBlock[] }) {
                 <Icon name="spark" className="h-5 w-5 shrink-0 text-navy-600" strokeWidth={1.6} />
                 <div className="flex flex-col gap-1.5">
                   <h3 className="text-[1rem]">{block.title}</h3>
-                  <p className="text-[0.9375rem] leading-relaxed text-ink-2">{block.text}</p>
+                  <p className="text-[0.9375rem] leading-relaxed text-ink-2">
+                    {inline(block.text)}
+                  </p>
                 </div>
               </aside>
             );

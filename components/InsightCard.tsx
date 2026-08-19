@@ -156,10 +156,10 @@ export function InsightCard({
 
       <div className="flex flex-1 flex-col gap-3 p-6">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
-          <span className="rounded-full bg-navy-50 px-2.5 py-1 font-mono text-[0.625rem] uppercase tracking-[0.12em] text-navy-600">
+          <span className="rounded-full bg-navy-50 px-2.5 py-1 font-mono text-[0.75rem] md:text-[0.625rem] uppercase tracking-[0.12em] text-navy-600">
             {insight.category}
           </span>
-          <span className="font-mono text-[0.625rem] uppercase tracking-[0.12em] text-ink-3">
+          <span className="font-mono text-[0.75rem] md:text-[0.625rem] uppercase tracking-[0.12em] text-ink-3">
             {insight.type}
           </span>
         </div>
@@ -178,7 +178,7 @@ export function InsightCard({
         </p>
 
         <div className="mt-auto flex items-center justify-between gap-4 pt-3">
-          <div className="flex items-center gap-3 text-[0.6875rem] text-ink-3">
+          <div className="flex items-center gap-3 text-[0.75rem] md:text-[0.6875rem] text-ink-3">
             <span className="flex items-center gap-1.5">
               <Icon name="clock" className="h-3.5 w-3.5" />
               <span className="tabular">{minutes} min read</span>

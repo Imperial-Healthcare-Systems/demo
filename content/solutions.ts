@@ -135,7 +135,7 @@ export const solutionDomains: SolutionDomain[] = [
     image: "/images/solution-playcard/solution-playcard-2.png",
     /* The source file points this at its own `#platforms` anchor. The platform
        it means is the Digital Currency Hub, which has a product page here. */
-    cta: { label: "Explore CBDC Hub", href: "/products/digital-currency-hub" },
+    cta: { label: "Explore Digital Currency Hub", href: "/products/digital-currency-hub" },
   },
   {
     id: "open-banking-open-finance",
@@ -173,14 +173,14 @@ export const solutionDomains: SolutionDomain[] = [
     cta: { label: "Discuss Payments", href: "/contact" },
   },
   {
-    id: "digital-banking-channels",
+    id: "digital-banking-modernization",
     tag: "Channels",
-    title: "Digital Banking & Channels",
+    title: "Digital Banking Modernization",
     body: "Transform customer and corporate digital touchpoints through domain-led mobile, web, and API banking engineering.",
     tags: ["Corporate Cash", "Mobile Banking", "Onboarding", "API Banking"],
     icon: "phone",
     image: "/images/solution-playcard/solution-playcard-5.png",
-    cta: { label: "Discuss Channels", href: "/contact" },
+    cta: { label: "Discuss Digital Banking", href: "/contact" },
   },
 ];
 

@@ -15,6 +15,7 @@ export function Marquee({
   separator = true,
   onDark = false,
   copies = 2,
+  reverse = false,
 }: {
   items: readonly string[];
   duration?: number;
@@ -37,6 +38,19 @@ export function Marquee({
    * behind it.
    */
   copies?: number;
+  /**
+   * Run the track right-to-left instead of left-to-right.
+   *
+   * `animation-direction`, not a second keyframe set — the travel distance is
+   * already correct and only its sign changes, so reversing the same animation
+   * keeps the two directions from drifting apart if the distance is ever
+   * retuned.
+   *
+   * Used where a page carries a second ticker: two identical strips at the
+   * same speed in the same direction read as the same element rendered twice
+   * by mistake.
+   */
+  reverse?: boolean;
 }) {
   const row = (ariaHidden: boolean) => (
     <ul
@@ -83,6 +97,7 @@ export function Marquee({
           {
             "--marquee-duration": `${duration}s`,
             "--marquee-copies": copies,
+            ...(reverse ? { "--marquee-direction": "reverse" } : {}),
           } as React.CSSProperties
         }
       >

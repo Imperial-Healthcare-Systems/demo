@@ -53,7 +53,7 @@ export function ExperienceSlider() {
       aria-label="Leadership and payment experience"
     >
       <div className="flex items-center justify-between gap-4">
-        <p className="font-mono text-[0.625rem] uppercase tracking-[0.18em] text-sky-400">
+        <p className="font-mono text-[0.75rem] md:text-[0.625rem] uppercase tracking-[0.18em] text-sky-400">
           {aboutPage.experience.eyebrow}
         </p>
         <div className="flex items-center gap-1.5">
@@ -61,7 +61,7 @@ export function ExperienceSlider() {
             type="button"
             aria-label="Previous"
             onClick={() => setActive((a) => (a - 1 + slides.length) % slides.length)}
-            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-white ring-1 ring-white/20 transition-colors hover:bg-white/10"
+            className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-white ring-1 ring-white/20 transition-colors hover:bg-white/10 md:h-8 md:w-8"
           >
             <Icon name="chevronLeft" className="h-3.5 w-3.5" strokeWidth={2} />
           </button>
@@ -69,7 +69,7 @@ export function ExperienceSlider() {
             type="button"
             aria-label="Next"
             onClick={() => setActive((a) => (a + 1) % slides.length)}
-            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full text-white ring-1 ring-white/20 transition-colors hover:bg-white/10"
+            className="flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-white ring-1 ring-white/20 transition-colors hover:bg-white/10 md:h-8 md:w-8"
           >
             <Icon name="chevronRight" className="h-3.5 w-3.5" strokeWidth={2} />
           </button>
@@ -88,7 +88,7 @@ export function ExperienceSlider() {
                 isActive ? "opacity-100" : "pointer-events-none opacity-0",
               )}
             >
-              <p className="font-mono text-[0.625rem] uppercase tracking-[0.18em] text-ink-inv-3">
+              <p className="font-mono text-[0.75rem] md:text-[0.625rem] uppercase tracking-[0.18em] text-ink-inv-3">
                 {slide.label}
               </p>
               {/*
@@ -145,7 +145,7 @@ export function ExperienceSlider() {
               one-line value and a two-line value put their labels at different
               heights and the row reads as misaligned rather than as a set.
             */}
-            <span className="mt-auto font-mono text-[0.5625rem] leading-snug tracking-[0.14em] text-ink-inv-3 uppercase">
+            <span className="mt-auto font-mono text-[0.75rem] md:text-[0.5625rem] leading-snug tracking-[0.14em] text-ink-inv-3 uppercase">
               {tile.label}
             </span>
           </li>

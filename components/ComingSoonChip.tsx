@@ -28,7 +28,7 @@ export function ComingSoonChip({
   return (
     <span
       className={cn(
-        "inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-[0.625rem] font-medium tracking-[0.14em] uppercase ring-1",
+        "inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-1 font-mono text-[0.75rem] md:text-[0.625rem] font-medium tracking-[0.14em] uppercase ring-1",
         onDark
           ? "bg-white/8 text-sky-300 ring-white/20"
           : "bg-navy-600/8 text-navy-600 ring-navy-600/15",

@@ -81,7 +81,7 @@ export function CapabilityOrbit() {
                 <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-navy-50 text-navy-600">
                   <Icon name={MARKS[label] ?? "nodes"} className="h-4 w-4" strokeWidth={1.7} />
                 </span>
-                <span className="font-mono text-[0.6875rem] tracking-[0.12em] text-ink uppercase">
+                <span className="font-mono text-[0.75rem] md:text-[0.6875rem] tracking-[0.12em] text-ink uppercase">
                   {label}
                 </span>
               </span>

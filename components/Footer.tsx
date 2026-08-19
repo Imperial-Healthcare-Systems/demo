@@ -37,7 +37,7 @@ export function SiteFooter() {
           {/* Brand + contact */}
           {/* Gives up a column's width so the links can run to five. */}
           <div className="flex flex-col gap-6 lg:col-span-3">
-            <Link href="/" aria-label={`${site.name} — home`} className="w-fit">
+            <Link href="/" aria-label={`${site.name} — home`} className="flex min-h-11 w-fit items-center md:min-h-0 md:block">
               <BrandMark tone="dark" className="h-9" />
             </Link>
             <p className="max-w-sm text-[0.875rem] leading-relaxed text-ink-inv-2">
@@ -57,7 +57,7 @@ export function SiteFooter() {
               </div>
               <a
                 href={`mailto:${site.email}`}
-                className="flex items-center gap-3 transition-colors hover:text-white"
+                className="flex min-h-11 items-center gap-3 transition-colors hover:text-white md:min-h-0"
               >
                 <Icon name="mail" className="h-4 w-4 shrink-0 text-sky-400" />
                 {site.email}
@@ -72,7 +72,7 @@ export function SiteFooter() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={s.label}
-                  className="flex h-10 w-10 items-center justify-center rounded-full text-ink-inv-2 ring-1 ring-white/15 transition-colors hover:bg-white/10 hover:text-white hover:ring-white/40"
+                  className="flex h-10 w-10 max-md:h-11 max-md:w-11 items-center justify-center rounded-full text-ink-inv-2 ring-1 ring-white/15 transition-colors hover:bg-white/10 hover:text-white hover:ring-white/40"
                 >
                   <Icon name={s.label === "LinkedIn" ? "linkedin" : "x"} className="h-4 w-4" />
                 </a>
@@ -86,7 +86,7 @@ export function SiteFooter() {
               <nav key={column.title} aria-labelledby={`footer-${column.title}`}>
                 <h2
                   id={`footer-${column.title}`}
-                  className="mb-4 font-mono text-[0.625rem] font-medium uppercase tracking-[0.18em] text-sky-400"
+                  className="mb-4 font-mono text-[0.75rem] md:text-[0.625rem] font-medium uppercase tracking-[0.18em] text-sky-400"
                 >
                   {column.title}
                 </h2>
@@ -95,7 +95,7 @@ export function SiteFooter() {
                     <li key={link.label + link.href}>
                       <Link
                         href={link.href}
-                        className="text-[0.8125rem] leading-snug text-ink-inv-2 transition-colors hover:text-white"
+                        className="flex min-h-11 items-center text-[0.8125rem] leading-snug text-ink-inv-2 transition-colors hover:text-white md:min-h-0 md:block"
                       >
                         {link.label}
                       </Link>
@@ -151,7 +151,7 @@ export function SiteFooter() {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className="text-[0.75rem] text-ink-inv-3 transition-colors hover:text-white"
+                  className="flex min-h-11 items-center text-[0.75rem] text-ink-inv-3 transition-colors hover:text-white md:min-h-0 md:block"
                 >
                   {link.label}
                 </Link>

@@ -458,7 +458,7 @@ function Group({
     <fieldset className="flex flex-col gap-5">
       <legend
         className={cn(
-          "mb-1 flex items-center gap-3 font-mono text-[0.6875rem] font-medium uppercase tracking-[0.16em]",
+          "mb-1 flex items-center gap-3 font-mono text-[0.75rem] md:text-[0.6875rem] font-medium uppercase tracking-[0.16em]",
           onDark ? "text-sky-400" : "text-navy-600",
         )}
       >

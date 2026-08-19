@@ -1,12 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter_Tight, IBM_Plex_Mono, Source_Serif_4 } from "next/font/google";
 import { site } from "@/content/site";
-import { SiteHeader } from "@/components/Header";
-import { SiteFooter } from "@/components/Footer";
-import { ConversionProvider } from "@/components/ConversionProvider";
-import { AnchorScroll } from "@/components/AnchorScroll";
-import { EngagementSlider } from "@/components/EngagementSlider";
-import { RfqDialog } from "@/components/RfqDialog";
 import "./globals.css";
 
 /**
@@ -117,28 +111,19 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-const organisationSchema = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  name: site.name,
-  legalName: site.legalEntity,
-  url: site.url,
-  logo: `${site.url}/images/brand/orbismoneta-logo.png`,
-  description: site.description,
-  slogan: site.tagline,
-  email: site.email,
-  address: {
-    "@type": "PostalAddress",
-    streetAddress:
-      "Skyline Icon, 7th Floor, Andheri – Kurla Rd, Mittal Industrial Estate, Marol",
-    addressLocality: site.address.locality,
-    addressRegion: site.address.region,
-    postalCode: site.address.postalCode,
-    addressCountry: site.address.country,
-  },
-  sameAs: site.social.map((s) => s.href),
-};
-
+/**
+ * The document, and nothing else.
+ *
+ * Everything that makes this look like the OrbisMoneta website — the header,
+ * the footer, the engagement slider, the enquiry dialog — moved down into
+ * app/(site)/layout.tsx when the admin portal arrived. The portal is a
+ * different application that happens to share a domain: it should not carry
+ * the marketing navigation, and a "Contact Us" button has no business on a
+ * screen for editing articles.
+ *
+ * `(site)` is a route group, so not one public URL changed. /about is still
+ * /about; it simply has a layout of its own now, which /admin does not share.
+ */
 export default function RootLayout({
   children,
 }: {
@@ -181,28 +166,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="antialiased">
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(organisationSchema),
-          }}
-        />
-        <a
-          href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-full focus:bg-navy-600 focus:px-5 focus:py-3 focus:text-sm focus:font-medium focus:text-white"
-        >
-          Skip to content
-        </a>
-        <ConversionProvider>
-          <AnchorScroll />
-          <SiteHeader />
-          <main id="main">{children}</main>
-          <SiteFooter />
-          <EngagementSlider />
-          <RfqDialog />
-        </ConversionProvider>
-      </body>
+      <body className="antialiased">{children}</body>
     </html>
   );
 }

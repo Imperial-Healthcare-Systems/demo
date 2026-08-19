@@ -181,7 +181,7 @@ export function FlipHint({ onDark = false }: { onDark?: boolean }) {
     <span
       aria-hidden="true"
       className={cn(
-        "mt-auto inline-flex items-center gap-1.5 pt-4 font-mono text-[0.625rem] tracking-[0.14em] uppercase transition-colors duration-200",
+        "mt-auto inline-flex items-center gap-1.5 pt-4 font-mono text-[0.75rem] md:text-[0.625rem] tracking-[0.14em] uppercase transition-colors duration-200",
         onDark
           ? "text-ink-inv-3 group-hover/flip:text-sky-400"
           : "text-navy-600 group-hover/flip:text-sky-600",

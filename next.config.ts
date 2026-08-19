@@ -1,23 +1,66 @@
 import type { NextConfig } from "next";
 
+/** The Supabase project's host, if this deployment has one. */
+const supabase = (() => {
+  const value = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (!value) return null;
+  try {
+    const url = new URL(value);
+    // Protocol comes from the URL rather than being assumed https, so a local
+    // or self-hosted instance on http is not silently rejected by the image
+    // optimiser with an error that points nowhere near the cause.
+    return { protocol: url.protocol.replace(":", ""), hostname: url.hostname, port: url.port };
+  } catch {
+    return null;
+  }
+})();
+
 const nextConfig: NextConfig = {
   images: {
     /**
-     * Next 16 only serves the qualities listed here — anything else is a 400
-     * from the image optimiser, not a fallback. Every `quality={…}` used in the
-     * app has to appear in this list or that image simply does not load.
+     * Next 16 serves only the qualities listed here. A `quality={…}` that is
+     * not on the list is NOT an error and NOT a fallback to the default — it
+     * is silently coerced to the nearest listed value (see the version 16
+     * upgrade guide, "qualities Default"). So a missing entry costs no visible
+     * failure and no log line; the image simply renders at a quality nobody
+     * chose, and the code goes on claiming otherwise.
      *
-     * It is easy to miss in development because a previously optimised file is
-     * served straight from `.next/cache/images`; the failure only shows up on a
-     * cold cache, which is exactly what a fresh clone or a CI build has.
+     * Which is what had happened: 72, 86 and 88 were in use and absent here,
+     * so they were being served at 75, 82 and 82. Every value used in the app
+     * is now listed. Grep before removing one:
      *
-     * Keep in sync with the values in use:
+     *     grep -rno "quality={[0-9]*}" app components
+     *
+     *   72  audience photography
      *   75  Next's default (brand marks are `unoptimized` and skip this)
      *   78  editorial photography
      *   80  hero carousel banners
-     *   82  hero globe, audience photography, insight covers
+     *   82  hero globe, insight covers
+     *   86  leadership portraits
+     *   88  the digital currency hub product shots
      */
-    qualities: [75, 78, 80, 82],
+    qualities: [72, 75, 78, 80, 82, 86, 88],
+
+    /**
+     * Cover images uploaded through the admin portal live in Supabase Storage,
+     * not in /public, so next/image needs to be told that host is allowed —
+     * without this every uploaded cover 400s.
+     *
+     * Derived from the same variable the app connects with, rather than
+     * hardcoded, so a project rename or a move to a different Supabase project
+     * cannot leave the two disagreeing. Absent when no database is configured,
+     * which is correct: nothing can have been uploaded yet.
+     */
+    remotePatterns: supabase
+      ? [
+          {
+            protocol: supabase.protocol as "http" | "https",
+            hostname: supabase.hostname,
+            ...(supabase.port ? { port: supabase.port } : {}),
+            pathname: "/storage/v1/object/public/**",
+          },
+        ]
+      : [],
   },
   async redirects() {
     return [

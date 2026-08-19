@@ -21,7 +21,7 @@ export function ShareLinks({ url, title }: { url: string; title: string }) {
 
   return (
     <div className="flex items-center gap-2">
-      <span className="mr-1 font-mono text-[0.625rem] uppercase tracking-[0.16em] text-ink-3">
+      <span className="mr-1 font-mono text-[0.75rem] md:text-[0.625rem] uppercase tracking-[0.16em] text-ink-3">
         Share
       </span>
       <a
@@ -29,7 +29,7 @@ export function ShareLinks({ url, title }: { url: string; title: string }) {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Share on LinkedIn"
-        className="flex h-10 w-10 items-center justify-center rounded-full text-ink-2 ring-1 ring-line transition-colors hover:bg-navy-50 hover:text-navy-600 hover:ring-navy-600"
+        className="flex h-10 w-10 max-md:h-11 max-md:w-11 items-center justify-center rounded-full text-ink-2 ring-1 ring-line transition-colors hover:bg-navy-50 hover:text-navy-600 hover:ring-navy-600"
       >
         <Icon name="linkedin" className="h-4 w-4" />
       </a>
@@ -38,7 +38,7 @@ export function ShareLinks({ url, title }: { url: string; title: string }) {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Share on X"
-        className="flex h-10 w-10 items-center justify-center rounded-full text-ink-2 ring-1 ring-line transition-colors hover:bg-navy-50 hover:text-navy-600 hover:ring-navy-600"
+        className="flex h-10 w-10 max-md:h-11 max-md:w-11 items-center justify-center rounded-full text-ink-2 ring-1 ring-line transition-colors hover:bg-navy-50 hover:text-navy-600 hover:ring-navy-600"
       >
         <Icon name="x" className="h-4 w-4" />
       </a>
@@ -46,7 +46,7 @@ export function ShareLinks({ url, title }: { url: string; title: string }) {
         type="button"
         onClick={copy}
         aria-label="Copy link"
-        className="flex h-10 cursor-pointer items-center gap-2 rounded-full px-4 text-[0.75rem] font-medium text-ink-2 ring-1 ring-line transition-colors hover:bg-navy-50 hover:text-navy-600 hover:ring-navy-600"
+        className="flex h-10 max-md:h-11 cursor-pointer items-center gap-2 rounded-full px-4 text-[0.75rem] font-medium text-ink-2 ring-1 ring-line transition-colors hover:bg-navy-50 hover:text-navy-600 hover:ring-navy-600"
       >
         <Icon name={copied ? "check" : "share"} className="h-4 w-4" strokeWidth={2} />
         {copied ? "Link copied" : "Copy link"}

@@ -207,7 +207,7 @@ export function SiteHeader() {
         <div className="shell flex h-16 items-center justify-between gap-6 lg:h-[4.5rem]">
           <Link
             href="/"
-            className="relative z-10 flex shrink-0 items-center"
+            className="relative z-10 flex h-11 shrink-0 items-center lg:h-auto"
             aria-label={`${site.name} — home`}
           >
             <BrandMark
@@ -236,15 +236,30 @@ export function SiteHeader() {
                     }}
                   >
                     {item.menu ? (
-                      <button
-                        type="button"
+                      /*
+                        A link, not a button.
+
+                        It was a button that only opened the dropdown, so
+                        clicking "About" went nowhere — the tab named a page it
+                        refused to take you to, and the only way in was the menu
+                        item underneath it. It navigates on click now, and still
+                        opens the menu on hover (from the <li>) and on focus, so
+                        a keyboard reaches the submenu without a pointer.
+
+                        `aria-haspopup` stays because there is still a popup and
+                        `aria-expanded` still reports its state. What changed is
+                        that the control's primary action is now the thing its
+                        label promises.
+                      */
+                      <Link
+                        href={item.href}
                         aria-expanded={expanded}
                         aria-haspopup="true"
-                        onClick={() =>
-                          setOpenPanel(expanded ? null : item.label)
-                        }
+                        aria-current={active ? "page" : undefined}
+                        onFocus={() => setOpenPanel(item.label)}
+                        onClick={() => setOpenPanel(null)}
                         className={cn(
-                          "relative flex cursor-pointer items-center gap-1.5 rounded-full px-3.5 py-2 text-[0.875rem] font-medium whitespace-nowrap transition-colors",
+                          "relative flex items-center gap-1.5 rounded-full px-3.5 py-2 text-[0.875rem] font-medium whitespace-nowrap transition-colors",
                           overlay
                             ? "text-white/85 hover:text-white"
                             : "text-ink-2 hover:text-navy-600",
@@ -265,7 +280,7 @@ export function SiteHeader() {
                           show={active || expanded}
                           overlay={overlay}
                         />
-                      </button>
+                      </Link>
                     ) : (
                       <Link
                         href={item.href}
@@ -603,7 +618,7 @@ export function MegaPanel({
         <div className="grid grid-cols-12 gap-6 p-6 xl:gap-8 xl:p-8">
           {/* Standfirst */}
           <div className="col-span-3 flex flex-col border-r border-line pr-6 xl:pr-8">
-            <p className="font-mono text-[0.625rem] uppercase tracking-[0.18em] text-navy-600">
+            <p className="font-mono text-[0.75rem] md:text-[0.625rem] uppercase tracking-[0.18em] text-navy-600">
               {panel.eyebrow}
             </p>
             <h2 className="mt-3 text-[1.1875rem] leading-[1.2] xl:text-[1.375rem]">
@@ -641,7 +656,7 @@ export function MegaPanel({
           >
             {panel.columns.map((col) => (
               <div key={col.title} className="flex flex-col">
-                <p className="mb-2 px-3 font-mono text-[0.625rem] tracking-[0.18em] text-ink-3 uppercase">
+                <p className="mb-2 px-3 font-mono text-[0.75rem] md:text-[0.625rem] tracking-[0.18em] text-ink-3 uppercase">
                   {col.title}
                 </p>
                 {col.links.map((link) => (
@@ -697,7 +712,7 @@ export function MegaPanel({
                 className="pointer-events-none absolute inset-x-0 bottom-0 h-44 bg-[radial-gradient(75%_100%_at_50%_100%,rgba(1,164,255,.30),transparent_72%)]"
               />
               <div className="relative flex flex-col gap-2.5">
-                <p className="font-mono text-[0.625rem] uppercase tracking-[0.18em] text-sky-400">
+                <p className="font-mono text-[0.75rem] md:text-[0.625rem] uppercase tracking-[0.18em] text-sky-400">
                   {panel.feature.eyebrow}
                 </p>
                 <h3 className="text-[1.0625rem] leading-snug text-white">

@@ -199,12 +199,36 @@ export function AudienceMarquee() {
   return (
     <section
       aria-labelledby="audiences-heading"
-      className="relative isolate overflow-hidden bg-abyss py-16 md:py-20"
+      /*
+        Light, at the client's request, and it is the right answer.
+
+        This was `bg-abyss` — the same near-black the hero sits on — so the two
+        ran together as one dark mass and this read as more hero. Darkening it
+        differently only half-fixed that: two dark sections in sequence still
+        need the reader to notice a shade. Going light makes the break
+        unarguable, and it puts the photography on a ground that lets it carry
+        the colour instead of competing with a navy field.
+
+        Dark, and a step lighter than the hero it follows.
+
+        This started as `bg-abyss` — the same near-black the hero sits on — so
+        the two ran together as one mass and this read as more hero. Light
+        grounds were tried and put back: the photography is what carries this
+        section, and it sits better on a dark field than on a pale one.
+
+        Navy-900 into navy-800 is the answer. Both are real blues rather than
+        the near-black above, and navy-800 through the middle is the most
+        saturated point of the band — so the section reads as lit from within
+        rather than as a flat panel, and the join with the hero is obvious
+        without a hard edge. The hairline at the top marks it anyway, since two
+        darks meeting need something to say where one ends.
+      */
+      className="relative isolate overflow-hidden border-t border-white/10 bg-[linear-gradient(180deg,var(--color-navy-900)_0%,var(--color-navy-800)_50%,var(--color-navy-900)_100%)] py-16 md:py-20"
     >
       {/* Soft brand light behind the row, so the black is not flat */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-1/3 -z-10 h-[28rem] bg-[radial-gradient(60%_50%_at_50%_50%,rgba(1,164,255,.10),transparent_70%)]"
+        className="pointer-events-none absolute inset-x-0 top-1/3 -z-10 h-[28rem] bg-[radial-gradient(60%_50%_at_50%_50%,rgba(1,164,255,.12),transparent_70%)]"
       />
 
       {/*
@@ -222,7 +246,11 @@ export function AudienceMarquee() {
       >
         {/* Heading column */}
         <div className="shell flex flex-col items-start gap-4 lg:w-auto lg:max-w-none lg:shrink-0 lg:basis-[19rem] lg:px-0 xl:basis-[22rem]">
-          <p className="font-mono text-[0.6875rem] font-medium tracking-[0.22em] text-sky-400 uppercase">
+          <p /* The logo green, matching the "Core Capabilities" label on the
+                 capability strips — the one colour on this site that marks a
+                 section label on a dark ground. 8.5:1 on navy-900, 7.9:1 at
+                 the band's lightest point. */
+              className="font-mono text-[0.75rem] md:text-[0.6875rem] font-medium tracking-[0.22em] text-green-400 uppercase">
             {audienceMarquee.eyebrow}
           </p>
           <h2

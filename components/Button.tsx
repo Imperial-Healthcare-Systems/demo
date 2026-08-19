@@ -49,7 +49,11 @@ const tones: Record<ButtonTone, string> = {
 };
 
 const sizes: Record<ButtonSize, string> = {
-  sm: "h-10 px-4 text-[0.8125rem] gap-1.5",
+  // 44px on phones, the designed 40 from md: up. `sm` is the size the
+  // in-page CTAs use ("Explore Digital Currency Hub", "Explore the service"),
+  // so this
+  // one line is most of the tap-target fix on the marketing pages.
+  sm: "h-11 md:h-10 px-4 text-[0.8125rem] gap-1.5",
   md: "h-12 px-6 text-sm gap-2",
   lg: "h-14 px-8 text-[0.9375rem] gap-2.5",
 };
@@ -175,7 +179,7 @@ export function TextLink({
       href={href}
       scroll={scroll}
       className={cn(
-        "group/link inline-flex items-center gap-1.5 text-sm font-medium tracking-[-0.01em] transition-colors",
+        "group/link inline-flex min-h-11 items-center gap-1.5 text-sm font-medium tracking-[-0.01em] transition-colors md:min-h-0",
         onDark ? "text-sky-400 hover:text-white" : "text-navy-600 hover:text-navy-800",
         className,
       )}

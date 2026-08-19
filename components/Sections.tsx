@@ -204,7 +204,7 @@ export function FutureOfMoney() {
               delay={i * 90}
               className="flex h-full flex-col gap-4 rounded-xl bg-white/[0.045] p-6 ring-1 ring-white/10 backdrop-blur-sm transition-colors hover:bg-white/[0.07]"
             >
-              <span className="font-mono text-[0.625rem] uppercase tracking-[0.18em] text-sky-400">
+              <span className="font-mono text-[0.75rem] md:text-[0.625rem] uppercase tracking-[0.18em] text-sky-400">
                 0{i + 1}
               </span>
               <h3 className="text-lg text-white">{pillar.title}</h3>
@@ -238,7 +238,7 @@ export function FutureOfMoney() {
               {futureOfMoney.convergence.attributes.map((attribute) => (
                 <li
                   key={attribute}
-                  className="font-mono text-[0.6875rem] uppercase tracking-[0.16em] text-ink-inv-2"
+                  className="font-mono text-[0.75rem] md:text-[0.6875rem] uppercase tracking-[0.16em] text-ink-inv-2"
                 >
                   {attribute}
                 </li>
@@ -254,7 +254,7 @@ export function FutureOfMoney() {
           <p className="font-display text-lg font-bold tracking-[0.04em] text-white uppercase md:text-xl">
             {futureOfMoney.centre.name}
           </p>
-          <p className="font-mono text-[0.6875rem] uppercase tracking-[0.18em] text-sky-300">
+          <p className="font-mono text-[0.75rem] md:text-[0.6875rem] uppercase tracking-[0.18em] text-sky-300">
             {futureOfMoney.centre.line}
           </p>
         </Reveal>

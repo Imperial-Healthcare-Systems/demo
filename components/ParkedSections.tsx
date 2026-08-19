@@ -67,7 +67,7 @@ export function ServicesIndex() {
                   className="h-6 w-6 text-navy-600"
                   strokeWidth={1.5}
                 />
-                <span className="font-mono text-[0.6875rem] tabular text-ink-3">
+                <span className="font-mono text-[0.75rem] md:text-[0.6875rem] tabular text-ink-3">
                   {service.index}
                 </span>
               </div>
@@ -84,7 +84,7 @@ export function ServicesIndex() {
                 {service.focusAreas.slice(0, 3).map((area) => (
                   <li
                     key={area}
-                    className="rounded-full bg-surface px-2.5 py-1 text-[0.6875rem] text-ink-3 ring-1 ring-line"
+                    className="rounded-full bg-surface px-2.5 py-1 text-[0.75rem] md:text-[0.6875rem] text-ink-3 ring-1 ring-line"
                   >
                     {area}
                   </li>

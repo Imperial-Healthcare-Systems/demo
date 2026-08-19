@@ -2,7 +2,6 @@
 
 import { useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import {
-  insightCategories,
   insightTypes,
   type Insight,
   type InsightCategory,
@@ -58,7 +57,23 @@ function readView(): SavedView | null {
  * client against data passed down from the server component, so swapping the
  * source for a CMS query later changes nothing here.
  */
-export function InsightsExplorer({ insights }: { insights: Insight[] }) {
+/**
+ * `categories` is a prop now, not an import.
+ *
+ * It used to be derived from the articles checked into the repository, which
+ * was the whole truth while that was the only place articles came from. Posts
+ * are written in the admin portal now, so the categories in use are only known
+ * once the database has been read — and this is a client component, which
+ * cannot read it. The server that already fetched the posts works them out and
+ * hands them down.
+ */
+export function InsightsExplorer({
+  insights,
+  categories,
+}: {
+  insights: Insight[];
+  categories: (InsightCategory | "All")[];
+}) {
   const [category, setCategory] = useState<InsightCategory | "All">("All");
   const [types, setTypes] = useState<InsightType[]>([]);
   const [query, setQuery] = useState("");
@@ -218,7 +233,7 @@ export function InsightsExplorer({ insights }: { insights: Insight[] }) {
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <span className="flex items-center gap-2 font-mono text-[0.625rem] uppercase tracking-[0.16em] text-ink-3">
+            <span className="flex items-center gap-2 font-mono text-[0.75rem] md:text-[0.625rem] uppercase tracking-[0.16em] text-ink-3">
               <Icon name="filter" className="h-3.5 w-3.5" strokeWidth={2} />
               Type
             </span>
@@ -231,7 +246,8 @@ export function InsightsExplorer({ insights }: { insights: Insight[] }) {
                   aria-pressed={on}
                   onClick={() => toggleType(type)}
                   className={cn(
-                    "cursor-pointer rounded-full px-3.5 py-1.5 text-[0.75rem] font-medium transition-colors",
+                    "inline-flex min-h-11 items-center rounded-full px-4 py-1.5 text-[0.75rem] font-medium transition-colors md:min-h-0 md:px-3.5",
+                    "cursor-pointer",
                     on
                       ? "bg-navy-600 text-white"
                       : "bg-white text-ink-2 ring-1 ring-line hover:ring-navy-600",
@@ -245,7 +261,7 @@ export function InsightsExplorer({ insights }: { insights: Insight[] }) {
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          {insightCategories.map((item) => {
+          {categories.map((item) => {
             const on = category === item;
             return (
               <button
@@ -257,7 +273,7 @@ export function InsightsExplorer({ insights }: { insights: Insight[] }) {
                   setVisible(PAGE_SIZE);
                 }}
                 className={cn(
-                  "cursor-pointer rounded-full px-4 py-2 text-[0.8125rem] font-medium transition-colors",
+                  "inline-flex min-h-11 cursor-pointer items-center rounded-full px-4 py-2 text-[0.8125rem] font-medium transition-colors md:min-h-0",
                   on
                     ? "bg-ink text-white"
                     : "bg-surface text-ink-2 ring-1 ring-line hover:bg-white hover:ring-line-strong",

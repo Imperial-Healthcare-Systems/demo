@@ -190,7 +190,7 @@ export function ArtCarousel({
                     onClick={() => go(i)}
                     aria-label={`Show image ${i + 1} of ${count}: ${slide.label}`}
                     aria-current={isActive ? "true" : undefined}
-                    className="group/dot flex h-7 cursor-pointer items-center px-1"
+                    className="group/dot flex h-11 cursor-pointer items-center px-2.5 md:h-7 md:px-1"
                   >
                     <span
                       className={cn(
@@ -222,7 +222,7 @@ export function ArtCarousel({
               type="button"
               onClick={() => setPlaying((p) => !p)}
               aria-label={playing ? "Pause the gallery" : "Play the gallery"}
-              className="ml-0.5 flex h-7 w-7 cursor-pointer items-center justify-center rounded-full text-navy-600 transition-colors hover:bg-navy-600 hover:text-white"
+              className="ml-0.5 flex h-11 w-11 cursor-pointer items-center justify-center rounded-full text-navy-600 transition-colors hover:bg-navy-600 hover:text-white md:h-7 md:w-7"
             >
               <Icon name={playing ? "minus" : "play"} className="h-3.5 w-3.5" strokeWidth={2} />
             </button>
