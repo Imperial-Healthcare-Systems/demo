@@ -123,9 +123,21 @@ export function ArtCarousel({
       role="group"
       aria-roledescription="carousel"
       aria-label={label}
-      onMouseEnter={() => setHeld(true)}
-      onMouseLeave={() => setHeld(false)}
-      onFocusCapture={() => setHeld(true)}
+      /*
+        No mouse hold, matching the hero. It used to stop the moment the
+        pointer crossed it, and the pointer rests over this gallery constantly
+        while the copy beside it is being read — so the thing froze for people
+        who never asked it to. Pausing is what the pause button does.
+
+        Focus still holds it, and narrowly: `:focus-visible`, not plain focus.
+        Plain focus broke Play on the hero for exactly this reason — clicking
+        the button focuses it, the focus set the hold, and the hold outranked
+        `playing`, so pressing Play resumed nothing. Keyboard focus still
+        freezes the slide a tabbing reader is aiming at.
+      */
+      onFocusCapture={(e) => {
+        if ((e.target as HTMLElement).matches(":focus-visible")) setHeld(true);
+      }}
       onBlurCapture={(e) => {
         if (!e.currentTarget.contains(e.relatedTarget as Node)) setHeld(false);
       }}

@@ -258,6 +258,43 @@ export const leadershipPage = {
       photo: { src: "/images/leadership/prasanna-lohar-portrait.webp", width: 639, height: 720 },
       linkedin: "https://www.linkedin.com/in/prasannalohar",
     },
+    {
+      name: "Shiva Kumar N",
+      initials: "SK",
+      role: "Chief Europe Strategy & Partnerships Officer",
+      bio: [
+        "Shiva Kumar is a senior financial technology and payments executive with extensive international experience spanning central banks, global payments infrastructure, banking, consulting and digital assets. His career includes leadership roles at Ripple, SWIFT, Accenture, Standard Chartered Bank and the European Central Bank, giving him a distinctive perspective across traditional financial infrastructure and the emerging digital financial ecosystem.",
+        "At OrbisMoneta, he leads Europe strategy and strategic partnerships, focusing on digital currencies, CBDCs, tokenization, real-time payments and next-generation financial infrastructure, while building relationships and business opportunities across the European financial ecosystem.",
+      ],
+      /*
+        No `linkedin`. The client supplied the photograph and the copy but not
+        a profile address, and a leadership card is the last place to guess at
+        one — the wrong profile under a real name is worse than no link. The
+        card renders the portrait unlinked until one arrives; adding it is this
+        one field.
+      */
+      photo: { src: "/images/leadership/shiva-kumar-n-portrait.webp", width: 638, height: 720 },
+    },
+    {
+      name: "Swapnil M",
+      initials: "SM",
+      role: "Chief Technology Officer & Chief Architect",
+      bio: [
+        "Swapnil is a technology and architecture leader focused on designing and building scalable, secure and enterprise-grade financial technology platforms. He brings expertise across software architecture, distributed systems, cloud-native technologies, integration platforms and engineering strategy.",
+        "At OrbisMoneta, Swapnil leads the company's technology vision, enterprise architecture and engineering strategy, shaping the technology foundation for its next-generation financial infrastructure platforms. He is responsible for defining the technology roadmap, building the engineering organization and architecting resilient platforms across payments, digital currency and financial infrastructure.",
+      ],
+      /*
+        No photograph yet, so this card draws the initials tile — the same
+        fallback the component has always had, not a bespoke placeholder. Drop
+        a portrait into source-assets/leadership/, run `npm run assets`, and add
+        `photo` here; nothing else changes.
+
+        Two corrections to the supplied copy, both plainly typing slips: a
+        double space in "Swapnil  is", and the surname given as "Swapnil M."
+        with a trailing stop that would have printed as "Swapnil M.." wherever
+        a sentence followed it.
+      */
+    },
   ],
 };
 

@@ -48,59 +48,80 @@ export default function LeadershipPage() {
                   picture there to have a ratio of its own.
                 */}
                 {person.photo ? (
-                  /*
-                    The photograph is the link.
+                  (() => {
+                    const portrait = (
+                      <Image
+                        src={person.photo.src}
+                        alt={`${person.name}, ${person.role}`}
+                        width={person.photo.width}
+                        height={person.photo.height}
+                        sizes="(max-width: 1024px) 16rem, 18vw"
+                        quality={86}
+                        className="h-auto w-full transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] [@media(hover:hover)]:group-hover/photo:scale-[1.04] motion-reduce:transition-none motion-reduce:group-hover/photo:scale-100"
+                      />
+                    );
 
-                    It replaces the "View full profile" pill that stood under
-                    the name: the client asked for the LinkedIn mark alone, on
-                    the picture, revealed on hover. It is also a better target
-                    than the pill ever was — the whole portrait, not a 48px row.
+                    /*
+                      No profile address, no link.
 
-                    The hover states are written as an explicit
-                    `@media (hover: hover)` rather than a bare `hover:` for a
-                    reason that decides whether this works on a phone at all. A
-                    touch screen has no hover: a tap fires :hover and leaves it
-                    stuck, so a mark that only appears on hover is either
-                    invisible or permanently on, depending on the browser. Here
-                    the badge is simply always visible on touch, and the
-                    reveal — scrim, lift, and the slow scale on the picture —
-                    only exists on devices with a pointer.
+                      The photograph is the LinkedIn link where there is a
+                      profile to open — the client asked for the mark alone, on
+                      the picture, revealed on hover, and it is a far better
+                      target than the pill it replaced: the whole portrait
+                      rather than a 48px row.
 
-                    `group-focus-visible` gives a keyboard the same reveal,
-                    otherwise tabbing to this link would light nothing up.
-                  */
-                  <a
-                    href={person.linkedin}
-                    target="_blank"
-                    rel="noreferrer"
-                    aria-label={`${person.name} on LinkedIn — opens in a new tab`}
-                    className="group/photo relative block w-full max-w-[16rem] overflow-hidden rounded-[var(--radius-card)] ring-1 ring-navy-900/10 transition-shadow duration-300 hover:shadow-[var(--shadow-lift)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-600"
-                  >
-                    <Image
-                      src={person.photo.src}
-                      alt={`${person.name}, ${person.role}`}
-                      width={person.photo.width}
-                      height={person.photo.height}
-                      sizes="(max-width: 1024px) 16rem, 18vw"
-                      quality={86}
-                      className="h-auto w-full transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] [@media(hover:hover)]:group-hover/photo:scale-[1.04] motion-reduce:transition-none motion-reduce:group-hover/photo:scale-100"
-                    />
+                      Where no address has been supplied the portrait renders
+                      bare. An <a> with no href is not a link — it is not
+                      focusable, it does nothing when clicked, and a hover mark
+                      promising a profile that does not open is worse than no
+                      mark at all.
+                    */
+                    if (!person.linkedin) {
+                      return (
+                        <span className="group/photo block w-full max-w-[16rem] overflow-hidden rounded-[var(--radius-card)] ring-1 ring-navy-900/10">
+                          {portrait}
+                        </span>
+                      );
+                    }
 
-                    {/* The scrim only exists to hold the mark off the picture.
-                        It never shows on touch, where the mark is on anyway and
-                        a permanent wash over the photograph would be damage. */}
-                    <span
-                      aria-hidden="true"
-                      className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,rgba(0,27,77,.72),rgba(0,27,77,.12)_45%,transparent_70%)] opacity-0 transition-opacity duration-300 [@media(hover:hover)]:group-hover/photo:opacity-100 [@media(hover:hover)]:group-focus-visible/photo:opacity-100"
-                    />
+                    return (
+                      <a
+                        href={person.linkedin}
+                        target="_blank"
+                        rel="noreferrer"
+                        aria-label={`${person.name} on LinkedIn — opens in a new tab`}
+                        className="group/photo relative block w-full max-w-[16rem] overflow-hidden rounded-[var(--radius-card)] ring-1 ring-navy-900/10 transition-shadow duration-300 hover:shadow-[var(--shadow-lift)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-600"
+                      >
+                        {portrait}
 
-                    <span
-                      aria-hidden="true"
-                      className="absolute right-3 bottom-3 flex h-11 w-11 items-center justify-center rounded-full bg-navy-600 text-white shadow-[0_10px_24px_-8px_rgba(3,13,34,.7)] transition-[opacity,translate] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] [@media(hover:hover)]:translate-y-2 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover/photo:translate-y-0 [@media(hover:hover)]:group-hover/photo:opacity-100 [@media(hover:hover)]:group-focus-visible/photo:translate-y-0 [@media(hover:hover)]:group-focus-visible/photo:opacity-100"
-                    >
-                      <Icon name="linkedin" className="h-5 w-5" />
-                    </span>
-                  </a>
+                        {/*
+                          The scrim only exists to hold the mark off the
+                          picture. It never shows on touch, where the mark is on
+                          anyway and a permanent wash over the photograph would
+                          be damage.
+
+                          The hover states are an explicit `@media (hover:hover)`
+                          rather than a bare `hover:` for a reason that decides
+                          whether this works on a phone at all. A touch screen
+                          has no hover: a tap fires :hover and leaves it stuck,
+                          so a mark that only appears on hover is either
+                          invisible or permanently on. Here the badge is simply
+                          always visible on touch.
+                        */}
+                        <span
+                          aria-hidden="true"
+                          className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,rgba(0,27,77,.72),rgba(0,27,77,.12)_45%,transparent_70%)] opacity-0 transition-opacity duration-300 [@media(hover:hover)]:group-hover/photo:opacity-100 [@media(hover:hover)]:group-focus-visible/photo:opacity-100"
+                        />
+
+                        <span
+                          aria-hidden="true"
+                          className="absolute right-3 bottom-3 flex h-11 w-11 items-center justify-center rounded-full bg-navy-600 text-white shadow-[0_10px_24px_-8px_rgba(3,13,34,.7)] transition-[opacity,translate] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] [@media(hover:hover)]:translate-y-2 [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover/photo:translate-y-0 [@media(hover:hover)]:group-hover/photo:opacity-100 [@media(hover:hover)]:group-focus-visible/photo:translate-y-0 [@media(hover:hover)]:group-focus-visible/photo:opacity-100"
+                        >
+                          <Icon name="linkedin" className="h-5 w-5" />
+                        </span>
+                      </a>
+                    );
+                  })()
                 ) : (
                   <div className="surface-deep flex aspect-[4/5] w-full max-w-[16rem] items-center justify-center overflow-hidden rounded-[var(--radius-card)] ring-1 ring-navy-900/10">
                     <span className="font-display text-[3rem] font-bold tracking-[-0.042em] text-white/85">

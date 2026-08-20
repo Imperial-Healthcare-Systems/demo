@@ -60,11 +60,7 @@ export const site = {
       page.
     */
     { label: "LinkedIn", href: "https://www.linkedin.com/company/144497971/" },
-    // The handle exactly as the client gave it. Worth one look before launch:
-    // it reads as "OrbisMoneta" with "in" run on, which is either the India
-    // handle or a slip — and a social link pointing at a free username nobody
-    // owns is worse than no link at all.
-    { label: "X / Twitter", href: "https://x.com/OrbisMonetain" },
+    { label: "X / Twitter", href: "https://x.com/OrbisMoneta" },
   ],
   legal: {
     brandLine: "OrbisMoneta is a brand of Monetanova Technologies Pvt. Ltd.",
