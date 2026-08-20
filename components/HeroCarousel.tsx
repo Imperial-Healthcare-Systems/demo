@@ -2,6 +2,13 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
+/*
+  `carouselSlides` is imported but unused while the hero is the globe alone.
+  Kept, with the plate machinery below, because restoring the posters is one
+  spread in FRAMES and having to rediscover the import first is friction for no
+  benefit. See the note in FRAMES for exactly what goes back.
+*/
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { carouselSlides, hero } from "@/content/home";
 import { capabilityTicker } from "@/content/site";
 import { cn } from "@/lib/utils";
@@ -132,7 +139,11 @@ const PLATE_MASK =
  *
  * Kept as a map rather than folded into a constant because it is keyed off the
  * slide id, and the next poster to arrive may well not be square.
+ *
+ * Unused while the posters live in the Industry Context gallery instead of the
+ * hero. It is the shape half of the parked plate path — see FRAMES.
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const PLATE_RATIO: Record<string, number> = {
   "global-solution-platform": 1254 / 1254,
   "intelligent-platform": 1254 / 1254,
@@ -150,28 +161,27 @@ const FRAMES: Frame[] = [
     sizes: "100vw",
     bleed: true,
   },
-  ...carouselSlides.map((slide) => ({
-    id: slide.id,
-    src: slide.image,
-    alt: slide.alt,
-    label: `${slide.title} ${slide.titleAccent}`,
-    ratio: PLATE_RATIO[slide.id],
-    /*
-      Contains, at every width.
+  /*
+    The four square posters used to follow the globe here, at the client's
+    request, and have moved to the Industry Context gallery further down the
+    page. The hero is the globe alone again.
 
-      The box already carries the plate's own ratio, so `cover` would fit it
-      exactly too — but only while the two agree to the pixel. `contain` is the
-      one that cannot cut: if a ratio ever drifts from its file, the plate
-      letterboxes inside its box instead of losing an edge, and a hairline of
-      ground is a far cheaper failure than a trimmed poster.
-    */
-    imageClass: "object-contain object-center",
-    // 1023, not 1024: the `lg:` styles that give the plate its own width start
-    // *at* 1024, so a `max-width: 1024px` condition would still be asking for a
-    // full-viewport asset on the first width that no longer needs one. Above
-    // that the plate is capped at 42rem tall, so 860 covers its widest.
-    sizes: "(max-width: 1023px) 100vw, 860px",
-  })),
+    Everything that carried them is deliberately left standing — PLATE_RATIO,
+    PLATE_MASK, the blended plate and its halo, the whole control bar. Putting
+    them back is restoring this one spread:
+
+      ...carouselSlides.map((slide) => ({
+        id: slide.id, src: slide.image, alt: slide.alt,
+        label: `${slide.title} ${slide.titleAccent}`,
+        ratio: PLATE_RATIO[slide.id],
+        imageClass: "object-contain object-center",
+        sizes: "(max-width: 1023px) 100vw, 860px",
+      })),
+
+    `contain` rather than `cover` in that block was the point: the box already
+    carries the plate's ratio, so cover fits exactly too — but only while the
+    two agree to the pixel, and contain cannot cut if one ever drifts.
+  */
 ];
 
 const COUNT = FRAMES.length;
@@ -200,7 +210,11 @@ export function HeroCarousel() {
   );
 
   useEffect(() => {
-    if (!playing || held || reduced) return;
+    // `COUNT < 2` first: with one frame `go(active + 1)` resolves back to the
+    // same index, so the timer would run for ever setting state to what it
+    // already is. Harmless to look at, wasteful, and it keeps a render loop
+    // ticking behind a static image.
+    if (COUNT < 2 || !playing || held || reduced) return;
     const timer = setTimeout(() => go(active + 1), SLIDE_MS);
     return () => clearTimeout(timer);
   }, [active, playing, held, reduced, go]);
@@ -608,7 +622,17 @@ export function HeroCarousel() {
           split only made sense while the left half of the hero was also
           changing. It isn't any more.
         */}
+        {/*
+          The bar itself stays whatever the frame count: it carries the divider
+          the scroll cue is seated on, and losing it would drop that control
+          into the artwork.
+
+          What it holds does not. A counter reading "01 / 01", a single dot and
+          a pair of arrows that return to the same image are three controls
+          that do nothing, which is worse than no controls at all.
+        */}
         <div className="shell flex h-16 items-center justify-end">
+          {COUNT > 1 && (
           <div className="flex items-center gap-3 sm:gap-4">
             <p className="hidden font-mono text-[0.6875rem] tabular text-ink-inv-3 sm:block">
               <span className="text-white">
@@ -693,6 +717,7 @@ export function HeroCarousel() {
               )}
             </div>
           </div>
+          )}
         </div>
       </div>
 

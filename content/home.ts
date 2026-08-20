@@ -422,6 +422,76 @@ export const industryContext = {
       alt: "Connected globe on a lit platform, ringed by five cards — real-time payments, digital currencies, tokenized assets, decentralized infrastructure and AI-powered intelligence",
       fit: "object-cover object-[center_46%]",
     },
+    /*
+      The four hero posters, moved here at the client's request. The globe
+      above still leads; these follow the plates that were already here.
+
+      `object-contain`, where every slide above covers — and that is measured,
+      not taste. This frame is 9:8 and these plates are square, so covering
+      removes 11.1% of their height. Scanned for their first sustained run of
+      lit subject, the margins are:
+
+                                 top     bottom
+        global solution        21.37%   16.99%
+        intelligent platform    6.70%    1.20%
+        trust and security      3.51%    0.96%
+        innovation led          6.30%    5.18%
+
+      A centred cover takes 5.55% off each end. Three of the four lose drawing,
+      and trust has 4.47% of margin in total against the 11.1% that must go —
+      there is no position that saves it. These plates carry their own baked
+      headlines, so a crop is a cut through type.
+
+      Contained, they letterbox by 5.55% down each side, and `ground` is that
+      plate's own edge colour sampled from the file — so the bars read as the
+      plate's field continuing rather than as a margin. That is the exception
+      the `ground` prop exists for.
+    */
+    {
+      src: "/images/carousel/global-solution-platform-square.webp",
+      label: "Global Solution Platform",
+      alt: "Global Solution Platform for Global Financial Institutions — a lit globe ringed by banking, server, payment, mobile and cloud nodes over a future-ready platform connecting financial ecosystems worldwide",
+      fit: "object-contain object-center",
+      ground: "bg-[#01081c]",
+    },
+    {
+      src: "/images/carousel/intelligent-platform-square.webp",
+      label: "Intelligent Platform",
+      alt: "Intelligent Platform for Global Financial Institutions — an AI core linked to analytics, risk, automation and decisioning services",
+      fit: "object-contain object-center",
+      ground: "bg-[#010616]",
+    },
+    {
+      src: "/images/carousel/trust-and-security-square.webp",
+      label: "Trust & Security",
+      alt: "Trust and Security — a shield and lock over layered controls for encryption, identity, compliance and resilient infrastructure",
+      fit: "object-contain object-center",
+      ground: "bg-[#010616]",
+    },
+    {
+      src: "/images/carousel/innovation-led-square.webp",
+      label: "Innovation Led",
+      alt: "Innovation Led — emerging financial technology concepts radiating from a central platform",
+      fit: "object-contain object-center",
+      ground: "bg-[#01081b]",
+    },
+  ],
+  /**
+   * PARKED — the six plates that sat between the globe and the four posters,
+   * taken out of the carousel at the client's request.
+   *
+   * Integration hub, Digital money network, Wallet network, Tokenized assets,
+   * Financial district and API infrastructure — everything that stood between
+   * the globe and the posters. Kept whole and in their original order, with the
+   * `fit` each one was tuned to: those `object-position` values were measured
+   * per file against the 9:8 frame, not guessed, and re-deriving them would be
+   * the expensive part of ever putting one back. Restoring any is the object
+   * moved into `gallery` at the position it came from.
+   *
+   * The files themselves are untouched in public/images/ and are no longer
+   * requested by the page, so they cost a visitor nothing while parked.
+   */
+  parkedGallery: [
     {
       src: "/images/page1-carousal-down3.png",
       label: "Integration hub",
@@ -459,6 +529,7 @@ export const industryContext = {
       fit: "object-cover object-center",
     },
   ],
+
   opening:
     "Money is becoming digital. Payments are becoming programmable. Assets are becoming tokenized. Intelligence is becoming embedded into financial infrastructure.",
   body: [
